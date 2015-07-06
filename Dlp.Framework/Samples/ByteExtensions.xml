@@ -1,0 +1,21 @@
+﻿<Docs>
+  <Members name="GetString">
+    <example>
+      <para>The following example shows how to convert a byte array to string using the extension method.</para>
+      <code lang="C#">
+        // String to be converted to a byte array.
+        string source = "source string";
+        
+        // Create a byte array from a string, using the StringExtensions.GetByte() extension method.
+        byte[] data = source.GetBytes();
+        
+        // Convert the byte array back to string, using whe ByteExtensions.GetString() extension method.
+        string result = data.GetString();
+
+        Console.WriteLine(result);
+
+        // Output: source string
+      </code>
+    </example>
+  </Members>
+</Docs>

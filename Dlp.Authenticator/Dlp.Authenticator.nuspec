@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Dlp.Authenticator.dll</id>
+    <version>0.3.1</version>
+    <authors>Eduardo Jonssen</authors>
+    <owners>DLP</owners>
+    <projectUrl>http://dlpnugetrepository.azurewebsites.net/docs/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Conector do serviço de autenticação Global Identity.</description>
+    <releaseNotes>Beta</releaseNotes>
+    <copyright>DLP Copyright 2015</copyright>
+    <tags>Database</tags>
+    <dependencies>
+      <dependency id="Dlp.Framework.dll" version="0.6.3" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\content\*.xdt" target="content" />
+  </files>
+</package>

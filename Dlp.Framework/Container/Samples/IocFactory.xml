@@ -1,0 +1,310 @@
+﻿<Docs>
+  <Members name="Register">
+    <example>
+      <para>The following example shows how to register an interface and get the registered component.</para>
+      <code>
+        // Register a component within the IocFactory container.
+        IocFactory.Register(
+        
+          // Register the interface IConfigurationUtility, specifying the ConfigurationUtility class as its concrete type.
+          Component.For&lt;IConfigurationutility&gt;()
+            .ImplementedBy&lt;ConfigurationUtility&gt;()
+        );
+        
+        // After the component has been registered, just use the Resolve method whenever you need to get an instance of the registered type.
+        // The following line creates a new instance of the ConfigurationUtility type.
+        IConfigurationUtility configurationUtility = IocFactory.Resolve&lt;IConfigurationutility&gt;();
+      </code>
+    </example>
+    <example>
+      <para>In this example, we register three types with the same interface. For cases like this, is a good practice to give a unique name for each type that implements the interface.</para>
+      <code>
+        // Register a component within the IocFactory container.
+        IocFactory.Register(
+
+          // Register the interface IAcquirer, specifying every type that implements the interface.
+          Component.For&lt;IAcquirer&gt;()
+            .ImplementedBy&lt;Stone&gt;("Stone")
+            .ImplementedBy&lt;Rede&gt;("Rede")
+            .ImplementedBy&lt;Cielo&gt;("Cielo")
+        );
+
+        // To retrieve the desired type, you can use a Factory method.
+        IAcquirer acquirer = AcquirerFactory.CreateAcquirer(1);
+      </code>
+      <para>
+        The implementation of the AcquirerFactory class could be something like the following:
+      </para>
+      <code>
+        // Acquirer fatory class.
+        public static class AcquirerFactory {
+        
+          // Create the acquirer instance based on the acquirerCode. Pay attention to the use of the IocFactory.ResolveByName method, instead of IocFactory.Resolve.
+          public static IAcquirer CreateAcquirer(int acquirerCode) {
+
+            IAcquirer aquirer = null;
+
+            // Validate the code for Stone acquirer.
+            if (acquirerCode = 1) {
+              aquirer = IocFactory.ResolveByName&lt;IAcquirer&gt;("Stone");
+            }
+          
+            // Validates the code for Rede acquirer.
+            if (acquirerCode = 2) {
+              acquirer = IocFactory.ResolveByName&lt;IAcquirer&gt;("Rede");
+            }
+
+            // Validates the code for Cielo acquirer.
+            if (acquirerCode = 3) {
+              acquirer = IocFactory.ResolveByName&lt;IAcquirer&gt;("Cielo");
+            }
+          
+            return acquirer;
+          }
+        }
+      </code>
+      <remarks>
+        <para>
+          When registering a type within an interface, if you do not specify the Name parameter, the type will be registered with System.Type.Fullname as the unique name. You can then reference any type by its fullname.
+        </para>
+        <para>
+          Also, keep in mind that when multiple types are associated with one interface and you do not specify the name of the type to be resolved in the IocFactory.Resolve method, the first registered type will be returned.
+          In the above example, if we call the 'IocFactory.Resolve&lt;IAcquirer&gt;()' method, the container is going to return a new instance of the 'Stone' type.
+        </para>
+      </remarks>
+    </example>
+    <example>
+      <para>
+        Sometimes your architecture demands the use of the singleton pattern. By default, every call to the IocFactory.Resolve() method initializes a new instance of the requested type. You can define a type to be treated as singleton, with a single line of code, when registering the type.
+        To do that, simply use the .AsSingleton() method after the implemented type that you want as a singleton.
+      </para>
+      <para>
+        In the following example, the 
+      </para>
+      <code>
+        // Register a component within the IocFactory container.
+        IocFactory.Register(
+
+          // Register the interface IAcquirer, specifying the Stone type to be treated as a singleton instance.
+          Component.For&lt;IAcquirer&gt;()
+            .ImplementedBy&lt;Stone&gt;().AsSingleton()
+            .ImplementedBy&lt;Rede&gt;()
+            .ImplementedBy&lt;Cielo&gt;()
+        );
+      </code>
+    </example>
+    <example>
+      <para>In many situations you may have to register multiples interfaces with its implementations, as for example, a set of repositories. As the next example illustrates, we have a namespace called Repository, containing several interfaces and its corresponding implementations. To register all the types from this namespace, you can proceed as follows:</para>
+      <code>
+        // Register a namespace within the IocFactory container.
+        IocFactory.Register(
+
+          // Register all the interfaces from the specified namespace in the current assembly.
+          // We know that two of the repositories must be treated as singleton, so we can manually specify that.
+          Component.FromThisAssembly("Dlp.Framework.Container.Repository")
+            .AsSingleton&lt;IAcquirer&gt;()
+            .AsSingleton&lt;IPaymentMethod&gt;()
+        );
+        
+        // If we have a repository named MerchantRepository, that implements the interface IMerchantRepository, then creating a new instance is as simple as calling the Resolve method.
+        IMerchantRepository merchantRepository = IocFactory.Resolve&lt;IMerchantRepository&gt;();
+      </code>
+      <remarks>
+        If you need to register types from another assembly, as for example, the repository is in another project, simply use the Component.FromAssembly, specifying the assembly where the types interfaces to be registered are.
+      </remarks>
+    </example>
+    <example>
+      <para>
+        One of the advantages of most of the Dependency Injection Containers is the ability to intercept calls to any method of the registered interfaces. The IocFactory provides this funcionality in a easy way.
+        The first thing is to create a class that implements the Dlp.Framework.Container.Interceptors.IInterceptor interface. This interface provides two methods, as shown in the following example.
+      </para>
+      <code>
+        using System;
+        using System.Linq;
+        using Dlp.Framework.Connector.Interceptors;
+
+        public sealed class MyInterceptor : IInterceptor {
+
+          // The BeforeCall method is called before the method of the registered type is executed.
+          public object BeforeCall(IInterceptorInput interceptorInput) {
+
+            // You can check and edit the params received in the interceptorInput param, before they are sent to the requested method.
+            
+            // The value that you specify here will be passed to the parameter correlationState of the AfterCall method.
+            return null;
+          }
+
+          // The AfterCall method is called after the method is executed. The correlationState param contains the data that you returned at the BeforeCall method.
+          public void AfterCall(IInterceptorOutput interceptorOutput, object correlationState) {
+            
+            // You can check and edit the values returned by the original method in the interceptorOutput param, before they are returned to the application.
+          }
+        }
+      </code>
+      <para>Having the interceptor class created, you can define the interceptor to be used for every registered interface. The following example will result in every call to any method of the interface IAcquirer to be intercepted by the MyInterceptor class.</para>
+      <code>
+        // Register a namespace within the IocFactory container.
+        IocFactory.Register(
+
+          // Register the interface IAcquirer, specifying the MyInterceptor to intercept any method call for that interface.
+          Component.For&lt;IAcquirer&gt;()
+            .ImplementedBy&lt;Stone&gt;()
+            .ImplementedBy&lt;Rede&gt;()
+            .ImplementedBy&lt;Cielo&gt;()
+            .Interceptor&lt;MyInterceptor&gt;()
+        );
+      </code>
+    </example>
+  </Members>
+  <Members name="Resolve">
+    <example>
+      <para>
+        The following example shows how to create an instance for a registered interface, using the IocFactory.Resolve method.
+      </para>
+      <code>
+        // Creates a new instance of the ConfigurationUtility type that implements the IConfigurationUtility interface.
+        IConfigurationUtility configurationUtility = IocFactory.Resolve&lt;IConfigurationUtility&gt;();
+      </code>
+      <remarks>
+        The IocFactory.Resolve method always creates a new instance of the requested type. If you want to keep the same instance for every call, you must register the type as a singleton.
+        Check the IocFactory.Register method to learn how to register types as singletons.
+      </remarks>
+    </example>
+    <example>
+      <para>
+        Sometimes the type to be instantiated needs some parameters in its constructor. The IocFactory.Resolve method allows you to pass parameters to the constructor of the type to be instantiated.
+        The next example shows how to instantiate a repository that requires the connection string to be set in the constructor.
+      </para>
+      <code>
+        // Gets the utility to access the web.config file.
+        IConfigurationUtility configurationUtility = IocFactory.Resolve&lt;IConfigurationUtility&gt;();
+        
+        // Retrieves the connection string.
+        string connectionString = configurationUtility.ConnectionString;
+        
+        // Instantiate the MerchantRepository setting the connectionString variable as a parameter for the constructor's type.
+        IMerchantRepository merchantRepository = IocFactory.Resolve&lt;IMerchantRepository&gt;(connectionString);
+      </code>
+    </example>
+    <example>
+      <para>
+        Another common situation occurs when a type needs another type as a constructor parameter. If both types are registered within the IocFactory container, this relationship is resolved automatically.
+        The following example illustrates this scenario.
+      </para>
+      <code>
+        // Interface providing access to elements of the web.config.
+        public interface IConfigurationUtility {
+
+          // Gets the connection string for the application.
+          string ConnectionString { get; }
+
+          // Gets the database connection timeout.
+          int ConnectionTimeoutInSeconds { get; }
+        }
+      </code>
+      <code>
+        // Type that implements the IConfigurationUtilityInterface.
+        public sealed class ConfigurationUtility : IConfigurationUtility {
+
+          // Default constructor.
+          public ConfigurationUtility() { }
+
+          // Implementation of the property provided by the interface. Retrieves the connection string from the web.config.
+          public string ConnectionString {
+            get { return ConfigurationManager.ConnectionStrings["DatabaseConnection"].ConnectionString; }
+          }
+
+          // Implementation of the property provided by the interface. Retrieves the connection timeout from the web.config.
+          public int ConnectionTimeoutInSeconds {
+            get { return Convert.ToInt32(ConfigurationManager.AppSettings["ConnectionTimeout"]); }
+          }
+        }
+      </code>
+      <code>
+        // Abstract class to be inherited by all the repositories.
+        public abstract class AbstractRepository {
+
+          // Constructor to be inherited by all the repositories.
+          protected AbstractRepository(IConfigurationUtility configurationUtility) {
+
+            this.ConfigurationUtility = configurationUtility;
+          }
+
+          // Stores the ConfigurationUtility instance.
+          private IConfigurationUtility ConfigurationUtility { get; set; }
+
+          // Exposes the connection string for the children classes.
+          protected string ConnectionString {
+            get { return this.ConfigurationUtility.ConnectionString; }
+          }
+
+          // Exposes the connection timeout for the children classes.
+          protected int ConnectionTimeoutInSeconds {
+            get { return this.ConfigurationUtility.ConnectionTimeoutInSeconds; }
+          }
+        }
+      </code>
+      <code>
+        // Interface to be implemented by the MerchantRepository.
+        public interface IMerchantRepository {
+        
+          // Gets the merchant name, given the merchantId.
+          string GetMerchantName(int merchantId);
+        }
+      </code>
+      <code>
+        // Class that implements the IMerchantRepository interface.
+        public sealed class MerchantRepository : AbstractRepository, IMerchantRepository {
+        
+          // Constructor that receives an instance of IConfigurationUtility.
+          public MerchantRepository(IConfigurationUtility configurationUtility) : base(configurationUtility) { }
+          
+          // Implementation of the GetMerchantName method.
+          public string GetMerchantName(int merchantId) {
+          
+            // Query to be used for searching the merchant.
+            string queryString = "SELECT MerchantName FROM Merchant WHERE MerchantId = @MerchantId";
+          
+            using(DatabaseConnector databaseConnector = new DatabaseConnector(this.ConnectionString, this.ConnectionTimeoutInSeconds)) {
+              
+              return databaseConnector.ExecuteScalar&lt;string&gt;(queryString, new { MerchantId = merchantId });
+            }
+          }
+        }
+      </code>
+      <para>
+        The above structure is a common pattern when working with repositories.
+        Pay attention to the MerchantRepository class and note that it does not have a default constructor. It contains only a constructor that receives the IConfigurationUtility interface.
+        The following example shows how to register and retrieves that repository.
+      </para>
+      <code>
+        public static void main() {
+        
+          // Register the IConfigurationUtility interface and its implementation as a singleton.
+          IocFactory.Register(
+            Component.For&lt;IConfigurationUtility&gt;()
+              ImplementedBy&lt;ConfigurationUtility&gt;().AsSingleton()
+          );
+          
+          // Register the IMerchantRepository interface and its implementation.
+          IocFactory.Register(
+            Component.For&lt;IMerchantRepository&gt;()
+              ImplementedBy&lt;MerchantRepository&gt;()
+          );
+          
+          // Here we resolve the IMerchantRepository so we can use its methods.
+          // Note that we do not need to inform the parameters for the MerchantRepository constructor, because the parameter is a registered interface (IConfigurationUtility).
+          // The container automatically checks and search for an appropriated constructor.
+          IMerchantRepository merchantRepository = IocFactory.Resolve&lt;IMerchantConfiguration&gt;();
+          
+          // Gets the name for the merchantId 1.
+          string merchantName = merchantRepository.GetMerchantName(1);
+        }
+      </code>
+      <remarks>
+        Keep in mind that for this pattern to work, your class shall not contains the default constructor. If you class contains a default constructor, it is going to have preference when resolving the interface.
+        If that is the case, you have to explicitly pass the instanced type as a constructor parameter for the IocFactory.Resolve method.
+      </remarks>
+    </example>
+  </Members>
+</Docs>

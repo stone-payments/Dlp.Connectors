@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--DXMETADATA start type="MetaCharset" --><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"><!--DXMETADATA end-->
+    <meta http-equiv="X-UA-Compatible" value="IE=9" />
+
+    <!--DXMETADATA start type="IsTemplateFileFeatureEnabled" name="Responsive" format="<meta name=""viewport"" content=""width=device-width, initial-scale=1.0"" />" --><!--DXMETADATA end-->
+
+    <!--DXMETADATA start type="Literal" condition="helpversion:value=3" value="<meta name=""Microsoft.Help.SelfBranded"" content=""true"" />" --><!--DXMETADATA end-->
+
+    <!--DXMETADATA start type="ItemTitle" format="<title>%%ItemTitle%%</title>" --><title>Configuring Visual Studio</title><!--DXMETADATA end-->
+    <!--DXMETADATA start type="ItemTitle" format="<meta name=""Title"" content=""%%ItemTitleNoQuotes%%""/>" --><meta name="Title" content="Configuring Visual Studio"/><!--DXMETADATA end-->    
+    
+    <script src="script/jquery-1.7.2.min.js" type="text/javascript" id="mshs_support_script"></script>
+    <script src="script/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <link rel="styleSheet" type="text/css" href="stylesheets/jquery-ui-1.8.18.custom.css" />
+    <link rel="styleSheet" type="text/css" href="stylesheets/jquery.qtip.css" />
+	
+    <!--DXMETADATA start type="Literal" condition="communityenabled" value="<link rel=""stylesheet"" type=""text/css"" href=""stylesheets/community.css"" />" --><!--DXMETADATA end-->
+	<!--DXMETADATA start type="Literal" condition="communityenabled" value="<script src=""script/community.js""></script>" --><!--DXMETADATA end -->
+
+    <!--DXMETADATA start type="Synopsis" StripHtmlTags="True" MaxLength="250" format="<meta name=""Description"" content=""%%Synopsis%%"" />"--><meta name="Description" content="Adding the DLP NuGet Repository
+In this section, Visual Studio 2013 is used to illustrate the configuration of DLP NuGet Repository, but the example also works with Visual Studio 2012 version." /><!--DXMETADATA end-->
+    
+    <link rel="styleSheet" type="text/css" href="stylesheets/topics.2012.css" data-mshv2-stylesheet="/stylesheets/topics.2012.mshv2.css" data-mshv1-stylesheet="/stylesheets/topics.2012.mshv1.css" />
+    <script src="script/topics.jqueryplugins.2012.min.js" type="text/javascript"></script>
+    <script src="script/topics.2012.js" type="text/javascript"></script>
+    
+    <!--DXMETADATA start type="TopicId" format="<meta name=""Microsoft.Help.Id"" content=""%%TopicId%%""/>" --><meta name="Microsoft.Help.Id" content="75b53e54-18d4-4ae7-900a-2465601cd4b6"/><!--DXMETADATA end-->
+    <!--DXMETADATA start type="TocParentId" format="<meta name=""Microsoft.Help.TocParent"" content=""%%TocParentId%%""/>" --><meta name="Microsoft.Help.TocParent" content="627f1e85-7e85-4a79-b924-cf31ee6e42c6"/><!--DXMETADATA end-->
+    <!--DXMETADATA start type="TocOrdinal" format="<meta name=""Microsoft.Help.TocOrder"" content=""%%TocOrdinal%%""/>" --><meta name="Microsoft.Help.TocOrder" content="1"/><!--DXMETADATA end-->
+    <meta name="Microsoft.Help.F1" content=""/>
+    <meta name="Microsoft.Help.ContentType" content="Concepts" />
+    <!--DXMETADATA start type="MshvKeywords" condition="helpversion:value=3" --><!--DXMETADATA end-->
+    <!--DXMETADATA start type="MshvMetaTags" condition="helpversion:value=3" --><!--DXMETADATA end-->
+    <!--DXMETADATA start type="Help3CatalogLocale" condition="helpversion:value=3" format="<meta name=""Microsoft.Help.Locale"" content=""%%Help3CatalogLocale%%"" />"--><!--DXMETADATA end-->
+    <!--DXMETADATA start type="Help3CatalogLocale" condition="helpversion:value=3" format="<meta name=""Microsoft.Help.TopicLocale"" content=""%%Help3CatalogLocale%%"" />"--><!--DXMETADATA end-->
+    
+    <!--DXMETADATA start type="Stylesheets" --><link rel="styleSheet" type="text/css" href="stylesheets/slimbox2.css"></link>
+    <link rel="styleSheet" type="text/css" href="stylesheets/hs-jquery-common.css"></link>
+    <link rel="styleSheet" type="text/css" href="stylesheets/hs-jquery-slimbox.css"></link>
+    <link rel="styleSheet" type="text/css" href="stylesheets/hs-jquery-expand.css"></link>
+    <link rel="styleSheet" type="text/css" href="stylesheets/hs-expandcollapse.css"></link>
+    <link rel="styleSheet" type="text/css" href="stylesheets/hs-boxes.css"></link>
+    <link rel="styleSheet" type="text/css" href="stylesheets/customstyles.css"></link><!--DXMETADATA end-->
+    <!--DXMETADATA start type="Scripts" --><script src="script/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="script/slimbox2.js" type="text/javascript"></script>
+    <script src="script/hs-jquery-common.js" type="text/javascript"></script>
+    <script src="script/jquery-expand.js" type="text/javascript"></script>
+    <script src="script/hs-expandcollapse.js" type="text/javascript"></script>
+    <script src="script/jquery.fitvids.js" type="text/javascript"></script>
+    <script src="script/swfobject.js" type="text/javascript"></script><!--DXMETADATA end-->
+
+    <!--DXMETADATA start type="DesignTime"--><!--DXMETADATA end-->
+    <!--DXMETADATA start type="IsNew" format="<script type=""text/javascript"">isNew = true;</script>" --><!--DXMETADATA end-->
+
+    <!--DXMETADATA start type="Scrap" condition="communityenabled" name="_COMMUNITY_PROPERTIES" --><!--DXMETADATA end -->
+
+    <!--DXMETADATA start type="CustomHeadContent" --><!--DXMETADATA end-->
+</head>
+
+<body>
+    <div id="BeforeHeaderContent">
+        
+    </div>
+    <div id="HeaderContent">
+        <!--DXMETADATA start type="Literal" condition="communityenabled" value="%%scrap:name=_COMMUNITY_RATING%%" --><!--DXMETADATA end -->
+            <!--DXMETADATA start type="LogoImage" --><!--DXMETADATA end-->
+            <div id="ProjectTitle"><!--DXMETADATA start type="ProjectTitle" -->DLP Framework<!--DXMETADATA end--></div>
+        <div id="PageTitle"><div id="PageTitleText"><!--DXMETADATA start type="ItemTitle" -->Configuring Visual Studio<!--DXMETADATA end--></div></div>
+    </div>
+    <div id="AfterHeaderContent">
+        <!-- Spacing --> <span id="ToggleAllSectionsLink" class="FunctionLink">
+                <label id="CollapseAllLabel"><!--DXMETADATA start type="Phrase" name="COLLAPSE_ALL" -->Collapse All<!--DXMETADATA end--></label>
+                <label id="ExpandAllLabel" style="display: none;"><!--DXMETADATA start type="Phrase" name="EXPAND_ALL" -->Expand All<!--DXMETADATA end--></label>
+            </span><!--DXMETADATA start type="Literal" condition="communityenabled" value="%%scrap:name=_COMMUNITY_DROPDOWN%%" --><!--DXMETADATA end -->
+    </div>
+    <!--DXMETADATA start type="Breadcrumbs" scrap="_BREADCRUMBS" --><div class="BreadcrumbsContainer"><table><tr><td>
+<a href="Installation.html">DLP Framework Installation</a>
+ > Configuring Visual Studio</td></tr></table></div><!--DXMETADATA end -->
+    
+    
+    <div id="BodyContent">
+        <!--DXMETADATA start type="TopicSection" name="BodyText"--><H1>Adding the DLP NuGet Repository</H1>
+<P>In this section, Visual Studio 2013 is used to illustrate the configuration of DLP NuGet Repository, but the example also works with Visual Studio 2012 version.</P>
+<OL>
+<LI>Open the <STRONG>Package Manager Settings</STRONG>, through menu <EM>TOOLS</EM> &gt; <EM>NuGet Package Manager</EM> &gt; <EM>Package Manager Settings</EM>; 
+<LI>Select <STRONG>Package Sources</STRONG> in the left pane; 
+<LI>Click the <STRONG>Add button</STRONG>, on the right side, to create a new source; 
+<LI>Give the name <STRONG>DLP Repository</STRONG>&nbsp;to the package source; 
+<LI>Set the source address to <STRONG>http://dlpnugetrepository.azurewebsites.net/nuget</STRONG> 
+<LI>Click the <STRONG>Update button</STRONG>, to set the new NuGet Repository; 
+<LI>Click <STRONG>OK</STRONG> to finish. </LI></OL>
+<H1>Verifying the DLP NuGet Repository</H1>
+<P>To verify if the DLP Nuget Server Repository was configured&nbsp;correctly, open an existing solution or create a new one.</P>
+<OL>
+<LI>In <STRONG>Solution Explorer</STRONG>, right click the solution name and choose <STRONG>Manage NuGet Packages for Solution...</STRONG> 
+<LI>In the <STRONG>Manage NuGet Packages</STRONG> dialog,&nbsp;check if the <STRONG>DLP</STRONG> entry was added under the <STRONG>Online</STRONG> node. </LI></OL>
+<P>If the DLP entry is present, than the configuration was done correctly. Otherwise, review the&nbsp;<A href="Installation.html">Adding the DLP NuGet Repository</A> section for any missing or mistake step.</P>
+<P></P><!--DXMETADATA end-->
+            <a name="seealsobookmark"></a>
+            <!--DXMETADATA start type="FilteredItemList" scrap="CATEGORISED_LINKS" namespace="linkcategory" source="Item" filter="" NoHeader="True" NoFooter="True" format="%%replaceinquotes:value=false%%%%scrap:name=_COLLAPSIBLE_HEADER,idprefix=seealso,caption=""%%phrase:name=SeeAlso%%%%designlist:tagidentifier=seealso,itemtype=See Also%%""%%%%filtereditemlist%%</div>"--><div class="SectionHeading" id="seealsoSectionHeading"><span class="SectionHeadingIcon"><!-- --></span><span class="SectionHeadingText">See Also</span></div><div id="seealsoSectionContent" class="SectionContent"><div class="SeeAlsoLink">
+<a href="DLP NuGet Package Install.html">Using the DLP Framework</a></div>
+
+</div><!--DXMETADATA end-->
+        
+    </div>
+    <div id="FooterContent">
+        <!--DXMETADATA start type="Scrap" condition="communityenabled" name="_COMMUNITY_FOOTER" --><!--DXMETADATA end -->
+<!--DXMETADATA start type="Variable" name="CopyrightNotice" format="<p>&nbsp;</p><p>&nbsp;</p><hr style=""height: 1px"" /><p>%%variable%%</p>" --><!--DXMETADATA end -->
+<!--DXMETADATA start type="Variable" name="FeedbackLink" format="" --><!--DXMETADATA end-->
+    </div>
+    
+</body>
+</html>

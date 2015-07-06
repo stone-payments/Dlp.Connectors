@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Dlp.Framework.dll</id>
+    <version>0.7.2</version>
+    <authors>Eduardo Jonssen</authors>
+    <owners>DLP</owners>
+    <projectUrl>http://dlpnugetrepository.azurewebsites.net/docs/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Framework de métodos e serviços utilitários de uso comum.</description>
+    <releaseNotes>Adicionada classe Mocker para operações de mock.</releaseNotes>
+    <copyright>DLP Copyright 2015</copyright>
+    <tags>Validação Serialização Email CPF CNPJ XML WebRequest IoC</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Runtime.Serialization" targetFramework="net40, net45" />
+    </frameworkAssemblies>
+  </metadata>
+  <files />
+</package>

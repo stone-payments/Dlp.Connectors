@@ -1,0 +1,22 @@
+﻿html, body, div#indexcontainer, div#indexbody
+{
+	height: auto;
+	overflow: visible;
+}
+
+#header, #indexbody
+{
+    position: inherit;
+    left: auto;
+    right: auto;
+}
+
+#indexbody
+{
+    top: auto;
+}
+
+#header
+{
+    height: auto;
+}

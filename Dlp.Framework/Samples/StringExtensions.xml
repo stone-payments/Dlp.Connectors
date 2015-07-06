@@ -1,0 +1,140 @@
+﻿<Docs>
+  <Members name="GetBytes">
+    <example>
+      <para>The following example shows how to convert a string to a byte array using the extension method.</para>
+      <code lang="C#">
+        // String to be converted to a byte array.
+        string source = "source string";
+
+        // Create a byte array from a string, using the StringExtensions.GetByte() extension method.
+        byte[] data = source.GetBytes();
+
+        // Convert the byte array back to string, using whe ByteExtensions.GetString() extension method.
+        string result = data.GetString();
+
+        Console.WriteLine(result);
+
+        // Output: source string
+      </code>
+    </example>
+  </Members>
+  <Members name="GetDigits">
+    <example>
+      <para>The following example shows how to extract only the digits of a zip code.</para>
+      <code lang="C#">
+        // Zip code inputed by user.
+        string zipCode = "20091-005";
+
+        // Create a new string containing only the digits.
+        string rawData = zipCode.GetDigits();
+
+        Console.WriteLine(rawData);
+
+        // Output: 20091005
+      </code>
+    </example>
+  </Members>
+  <Members name="GetLettersOrDigits">
+    <example>
+      <para>The following example shows how to extract only the letters and digits of a string.</para>
+      <code lang="C#">
+        // Current file name without extension.
+        string currentFileName = "file.101 review";
+
+        // Create a new string containing only the digits.
+        string safeFileName = currentFileName.GetLettersOrDigits();
+
+        Console.WriteLine(rawData);
+
+        // Output: file101review
+      </code>
+    </example>
+  </Members>
+  <Members name="Mask">
+    <example>
+      <para>The following example shows how to mask a credit card data using all the masks options.</para>
+      <code lang="C#">
+        // Current credit card number.
+        string creditCardNumber = "4111111111111111";
+
+        // Current security code.
+        string cvv2 = "123";
+
+        // Mask the current creditcard number for public display in an interface.
+        string publicCreditCardNumber = creditCardNumber.Mask(StringMaskFormat.CreditCard);
+
+        // Mask the current creditcard number to be saved in a database.
+        string privateCreditCardNumber = creditCardNumber.Mask(StringMaskFormat.CreditCardExtended);
+
+        // Mask the current security code for feedback display.
+        string cvv2Masked = cvv2.Mask(StringMaskFormat.Password);
+
+        Console.WriteLine("Masked Number:          " + publicCreditCardNumber);
+        Console.WriteLine("Masked Number Extended: " + privateCreditCardNumber);
+        Console.WriteLine("CVV2:                   " + cvv2Masked);
+        
+        /**
+         * Output:
+         * Masked Number:          ************1111
+         * Masked Number Extended: 4111********1111
+         * CVV2:                   ***
+        **/
+      </code>
+    </example>
+  </Members>
+  <Members name="RemoveAccentuation">
+    <remarks>
+      Only Latin characters are supported by this method. Use of unsuported characters will result in the interrogation mark to be used to replace the characters.
+    </remarks>
+    <example>
+      <para>The following example shows how to remove the accentuated characters of a string.</para>
+      <code lang="C#">
+        // Accentuated string.
+        string source = "Acentuação";
+
+        // New string without accents.
+        string result = source.RemoveAccentuation();
+
+        Console.WriteLine(result);
+
+        // Output: Acentuacao
+      </code>
+    </example>
+  </Members>
+  <Members name="IsValidCpf">
+    <example>
+      <para>The following example shows how to validate a CPF document number. The string can contain non digit characters.</para>
+      <code lang="C#">
+        // CPF formated string, inputed by user. Also works with unformatted data like 12312312312.
+        string source = "123.123.123-12";
+
+        // Checks if the document number is valid.
+        bool result = source.IsValidCpf();
+      </code>
+    </example>
+  </Members>
+  <Members name="IsValidCnpj">
+    <example>
+      <para>The following example shows how to validate a CNPJ document number. The string can contain non digit characters.</para>
+      <code lang="C#">
+        // CNPJ formated string, inputed by user. Also works with unformatted data like 12123123000112.
+        string source = "12.123.123/0001-12";
+
+        // Checks if the document number is valid.
+        bool result = source.IsValidCnpj();
+      </code>
+    </example>
+  </Members>
+  <Members name="IsValidEmailAddress">
+    <example>
+      <para>The following example shows how to validate an email address format.</para>
+      <code lang="C#">
+        // Email string to be validated.
+        string email = "email@domain.com";
+
+        // Checks if the email address is is a valid format.
+        bool result = email.IsValidEmailAddress();
+      </code>
+    </example>
+  </Members>
+</Docs>

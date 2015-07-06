@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Topics>
+  <Topic id="f8ec05c7-0c7d-4e55-bdf3-2a8eeace09c3" visible="True" isDefault="true" title="Welcome to the DLP SDK">
+    <HelpKeywords>
+      <HelpKeyword index="K" term="Welcome" />
+    </HelpKeywords>
+  </Topic>
+  <Topic id="6fc94333-389e-4df3-a3a1-f2e5900b898f" visible="True" isExpanded="true" isSelected="true" title="Version History">
+    <HelpKeywords>
+      <HelpKeyword index="K" term="version, history" />
+    </HelpKeywords>
+    <Topic id="bdfa0339-fb68-4569-855c-5a6daa21dd12" visible="True" title="Version 1.0.0.0">
+      <HelpKeywords>
+        <HelpKeyword index="K" term="version, 1.0.0.0" />
+      </HelpKeywords>
+    </Topic>
+  </Topic>
+  <Topic id="1fe681ca-6748-400e-b4ab-d484e0a1d7a7" visible="True" title="Setting up the DLP Repository">
+    <HelpKeywords>
+      <HelpKeyword index="K" term="setup, nuget, install" />
+    </HelpKeywords>
+  </Topic>
+  <Topic id="dc425e10-c40b-4f8b-9242-e39b4805ad8d" visible="True" title="Install DLP SDK Packages">
+    <HelpKeywords>
+      <HelpKeyword index="K" term="install, packages" />
+    </HelpKeywords>
+  </Topic>
+</Topics>

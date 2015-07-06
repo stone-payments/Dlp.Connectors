@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Dlp.Connectors.dll</id>
+    <version>0.4.8</version>
+    <authors>Eduardo Jonssen</authors>
+    <owners>DLP</owners>
+    <projectUrl>http://dlpnugetrepository.azurewebsites.net/docs/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Conectores de banco de dados e cache.</description>
+    <releaseNotes>Beta</releaseNotes>
+    <copyright>DLP Copyright 2015</copyright>
+    <tags>Database</tags>
+    <dependencies>
+      <dependency id="Dlp.Framework.dll" version="0.5.0" />
+    </dependencies>
+  </metadata>
+  <files />
+</package>

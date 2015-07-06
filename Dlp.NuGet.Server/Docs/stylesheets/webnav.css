@@ -1,0 +1,74 @@
+.header
+{
+	height: 28px;
+	cursor: pointer;
+	font-size: 12pt;
+	font-weight: normal;
+	padding-left: 6px;
+	background-color: #426bad;
+	color: #ffffff;
+}
+.header.ui-state-active
+{
+    background-color: #6d86c7;
+}
+.header:focus
+{
+    outline: none;  
+}
+.headertext
+{
+	line-height: 28px;
+}
+.header img
+{
+	float: left;
+	height: 16px;
+	width: 16px;
+	margin: 10px 6px;
+}
+body
+{
+	margin: 0px;    
+	padding: 0px;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	font-family: Segoe UI, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14pt;
+}
+html
+{
+	height: 100%;
+}
+iframe
+{
+	padding: 0;
+	margin: 0;
+	border: none;
+	width: 100%;
+	height: 100%;
+}
+#accordion
+{
+	height: 100%;
+}
+div#closepane
+{
+    display: none;
+}
+div#closepane a.btn
+{
+	background-color: gainsboro;
+	background-image: none;
+}
+#closepane .btn {
+	padding: 0px;
+}
+.iframecontainer
+{
+	overflow-y: hidden;
+	padding: 0px;
+	height: 100%;
+	width: 100%;
+}

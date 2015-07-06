@@ -1,0 +1,73 @@
+﻿ blockquote
+{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 16px;
+}
+
+body
+{
+    font-family: Segoe UI, Verdana, Arial, Helvetica, sans-serif;
+    font-size: 90%;
+    margin-left: 5px;
+    margin-top: 5px;
+    background: white;
+}
+
+input
+{
+    margin: 0;
+}
+
+div#searchwhatcontainer, div#highlightcontainer, div#operators
+{
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+input#highlight
+{
+    margin-right: 8px;
+}
+
+.searchtitle
+{
+    font-size: 10pt;
+    font-weight: bold;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
+.searchresults
+{
+    margin-top: 0px;
+}
+
+.searchresults td
+{
+    padding: 2 0 2 0;
+}
+
+    .searchresults td.innerrow
+    {
+        border-top: 1px dotted darkgrey;
+    }
+
+.searchresults a
+{
+    text-decoration: none;
+}
+input#search
+{
+	float: right;
+	width: 100px;
+}
+#inputcontainer
+{
+	padding: 0 10px 0 0;
+	overflow: hidden;
+}
+#inputcontainer  input#txtSearch
+{
+	width: 100%;
+}

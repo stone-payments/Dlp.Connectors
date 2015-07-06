@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/websearch.css" />
+
+    <script src="script/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="script/jquery.cookie.min.js"></script>
+    <script src="ftsindex.js" type="text/javascript" charset="utf-8"></script>
+    <script src="script/fts.js" type="text/javascript" charset="utf-8"></script>
+    <script src="script/webhighlight.js" type="text/javascript" charset="utf-8"></script>
+    <script src="script/webutility.js" type="text/javascript" charset="utf-8"></script>
+    <script src="script/websearch.js" type="text/javascript"></script>
+
+    
+
+    <base target="webcontent">
+</head>
+
+<body>
+    <div style="display: none">
+        <span id="phrase_Search_SearchResults">
+            Search Results
+        </span>
+        <span id="phrase_Search_ResultCount">
+            results found.
+        </span>
+    </div>
+
+    <div id="divSearch">
+        <span>Look for:</span>
+
+        <div id="searchwhatcontainer">
+            <input id="search" type="button" value="Search" />
+            <div id="inputcontainer"><input id="txtSearch" type="text" name="txtSearch" /></div>
+        </div>
+
+        <div id="operators">(Words can be combined using OR and AND)</div>
+
+        <div id="highlightcontainer">
+            <label>
+                <input type="checkbox" id="highlight" />Highlight search terms</label>
+        </div>
+    </div>
+
+    <div id="divSearching" style="display: none">
+        <table id="tblProgress" border="0">
+            <tr>
+                <td>Searching...</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div id="divResults" style="display: none"></div>   
+</body>
+</html>
