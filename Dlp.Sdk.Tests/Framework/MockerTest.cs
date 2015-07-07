@@ -20,47 +20,47 @@ namespace Dlp.Sdk.Tests.Framework {
 
 			#region Temporário
 
-			IocFactory.Register(
-				Component.For<IMockerSimulation>().ImplementedBy<MockerSimulation>()
-				.Interceptor<MockerSimulationInterceptor>()
-				);
+			//IocFactory.Register(
+			//	Component.For<IMockerSimulation>().ImplementedBy<MockerSimulation>()
+			//	.Interceptor<MockerSimulationInterceptor>()
+			//	);
 
-			IMockerSimulation mockerSimulation = IocFactory.Resolve<IMockerSimulation>();
+			//IMockerSimulation mockerSimulation = IocFactory.Resolve<IMockerSimulation>();
 
-			long mockerAge = mockerSimulation.GetAge<long>(25, "Banana");
+			//long mockerAge = mockerSimulation.GetAge<long>(25, "Banana");
 			//int mockerAnotherAge = mockerSimulation.GetAnotherAge<int>(12);
 
 			#endregion
 
-			//Guid applicationKey = Guid.NewGuid();
+			Guid applicationKey = Guid.NewGuid();
 
-			//IMockerSimulation mock = Mocker.CreateMock<IMockerSimulation>();
+			IMockerSimulation mock = Mocker.CreateMock<IMockerSimulation>();
 
-			//mock.Stub(p => p.GetGender()).Return(77);
-			////mock.Stub(p => p.GetAge<short>(12, "Banana")).Return(15);
-			//mock.Stub(p => p.ValidateName("Banana")).Return(true);
-			//mock.Stub(p => p.GetApplicationId(applicationKey)).Return(2);
-			//mock.Stub(p => p.GetNameById(Convert.ToInt32("2"))).Return("Banana");
-			//mock.Stub(p => p.GetNameById(10)).Return("Cebola");
-			//mock.Stub(x => x.GetValue()).Return(true);
-			//mock.Stub(p => p.Name).Return("Teste de mock");
-			//mock.Stub(p => p.GetStatusName("enabled".Equals("enabled"))).Return("Enabled");
+			mock.Stub(p => p.GetGender()).Return(77);
+			//mock.Stub(p => p.GetAge<short>(12, "Banana")).Return(15);
+			mock.Stub(p => p.ValidateName("Banana")).Return(true);
+			mock.Stub(p => p.GetApplicationId(applicationKey)).Return(2);
+			mock.Stub(p => p.GetNameById(Convert.ToInt32("2"))).Return("Banana");
+			mock.Stub(p => p.GetNameById(10)).Return("Cebola");
+			mock.Stub(x => x.GetValue()).Return(true);
+			mock.Stub(p => p.Name).Return("Teste de mock");
+			mock.Stub(p => p.GetStatusName("enabled".Equals("enabled"))).Return("Enabled");
 
-			//MethodInfo[] miList = mock.GetType().GetMethods();
+			MethodInfo[] miList = mock.GetType().GetMethods();
 
-			//byte gender = mock.GetGender();
-			////short age = mock.GetAge<short>(12, "Banana");
-			//bool validatedName = mock.ValidateName("Banana");
-			//string name = mock.GetNameById(2);
-			//bool val = mock.GetValue();
-			//string nameProperty = mock.Name;
-			//string statusName = mock.GetStatusName(false);
+			byte gender = mock.GetGender();
+			//short age = mock.GetAge<short>(12, "Banana");
+			bool validatedName = mock.ValidateName("Banana");
+			string name = mock.GetNameById(2);
+			bool val = mock.GetValue();
+			string nameProperty = mock.Name;
+			string statusName = mock.GetStatusName(false);
 
-			//Assert.IsTrue(validatedName);
-			//Assert.AreEqual("Banana", name);
-			//Assert.IsTrue(val);
-			//Assert.AreEqual("Teste de mock", nameProperty);
-			//Assert.IsNull(mock.GetNameById(1));
+			Assert.IsTrue(validatedName);
+			Assert.AreEqual("Banana", name);
+			Assert.IsTrue(val);
+			Assert.AreEqual("Teste de mock", nameProperty);
+			Assert.IsNull(mock.GetNameById(1));
 		}
 
 		[TestMethod]
@@ -345,57 +345,57 @@ namespace Dlp.Sdk.Tests.Framework {
 
 	public interface IMockerSimulation {
 
-		//string Name { get; set; }
+		string Name { get; set; }
 
-		//bool GetValue();
+		bool GetValue();
 
-		//byte GetGender();
+		byte GetGender();
 
-		//string GetNameById(int Id);
+		string GetNameById(int Id);
 
-		//string GetStatusName(bool status);
+		string GetStatusName(bool status);
 
-		//Nullable<int> GetApplicationId(Guid applicationKey);
+		Nullable<int> GetApplicationId(Guid applicationKey);
 
-		//bool ValidateName(string name);
+		bool ValidateName(string name);
 
-		long GetAge<T>(int count, string name);
+		//long GetAge<T>(int count, string name);
 
 		//T GetAnotherAge<T>(short count);
 	}
 
 	public class MockerSimulation : IMockerSimulation {
 
-		//public string Name { get; set; }
+		public string Name { get; set; }
 
-		//public byte GetGender() {
+		public byte GetGender() {
 
-		//	return 77;
-		//}
-
-		//public bool GetValue() {
-		//	return true;
-		//}
-
-		//public string GetNameById(int Id) {
-		//	return "Banana";
-		//}
-
-		//public string GetStatusName(bool status) {
-		//	return "Banana";
-		//}
-
-		//public Nullable<int> GetApplicationId(Guid applicationKey) {
-		//	return 2;
-		//}
-
-		//public bool ValidateName(string name) {
-		//	return true;
-		//}
-
-		public long GetAge<T>(int count, string name) {
-			return count;
+			return 77;
 		}
+
+		public bool GetValue() {
+			return true;
+		}
+
+		public string GetNameById(int Id) {
+			return "Banana";
+		}
+
+		public string GetStatusName(bool status) {
+			return "Banana";
+		}
+
+		public Nullable<int> GetApplicationId(Guid applicationKey) {
+			return 2;
+		}
+
+		public bool ValidateName(string name) {
+			return true;
+		}
+
+		//public long GetAge<T>(int count, string name) {
+		//	return count;
+		//}
 
 		//public T GetAnotherAge<T>(short count) {
 		//	return default(T);

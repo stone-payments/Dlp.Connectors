@@ -103,14 +103,6 @@ namespace Dlp.Framework.Container.Proxies {
             return Activator.CreateInstance(type, new object[] { handler });
         }
 
-        //public object Create(IDynamicProxy handler, Type objType) {
-        //    return Create(handler, objType);
-        //}
-
-        //public object Create(IDynamicProxy handler, Type objType, Type[] aditionalInterfaces) {
-        //    return Create(handler, objType, aditionalInterfaces);
-        //}
-
         private Type CreateType(IDynamicProxy handler, Type[] interfaces, string dynamicTypeName) {
 
             Type retVal = null;
@@ -180,7 +172,7 @@ namespace Dlp.Framework.Container.Proxies {
         private void GenerateMethod(Type interfaceType, FieldBuilder handlerField, TypeBuilder typeBuilder) {
 
             MetaDataFactory.Add(interfaceType);
-            MethodInfo[] interfaceMethods = interfaceType.GetMethods();
+			MethodInfo[] interfaceMethods = interfaceType.GetMethods().OrderBy(p => p.Name).ToArray();
 
             if (interfaceMethods != null) {
 

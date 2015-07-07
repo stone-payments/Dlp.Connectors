@@ -52,7 +52,7 @@ namespace Dlp.Framework.Container.Proxies {
                 type = (Type)typeMap[name];
             }
 
-            MethodInfo[] methods = type.GetMethods();
+			MethodInfo[] methods = type.GetMethods().OrderBy(p => p.Name).ToArray();
 
             if (i < methods.Length) { return methods[i]; }
 
