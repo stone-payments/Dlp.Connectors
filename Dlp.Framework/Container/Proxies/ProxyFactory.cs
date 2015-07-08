@@ -119,10 +119,10 @@ namespace Dlp.Framework.Container.Proxies {
 
                 // create a new assembly for this proxy, one that isn't presisted on the file system
                 AssemblyBuilder assemblyBuilder = domain.DefineDynamicAssembly(
-                    assemblyName, AssemblyBuilderAccess.Run);
+                    assemblyName, AssemblyBuilderAccess.RunAndSave);
 
                 // create a new module for this proxy
-                ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(MODULE_NAME);
+                ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(MODULE_NAME, "module.dll");
 
                 // Set the class to be public and sealed
                 TypeAttributes typeAttributes = TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed;
@@ -164,6 +164,8 @@ namespace Dlp.Framework.Container.Proxies {
                 }
 
                 retVal = typeBuilder.CreateType();
+
+				assemblyBuilder.Save("module.dll");
             }
 
             return retVal;
@@ -240,10 +242,13 @@ namespace Dlp.Framework.Container.Proxies {
 
                             methodBuilder.SetReturnType(methodInfo.ReturnType);
                         }
-                        else {
-                            GenericTypeParameterBuilder[] returnParameter = methodBuilder.DefineGenericParameters(methodInfo.ReturnType.Name);
-                            methodBuilder.SetReturnType(returnParameter[0]);
-                        }
+						else if (methodInfo.ReturnType.IsGenericParameter == true) {
+							GenericTypeParameterBuilder[] returnParameter = methodBuilder.DefineGenericParameters(methodInfo.ReturnType.Name);
+							methodBuilder.SetReturnType(returnParameter[0]);
+						}
+						else {
+							methodBuilder.DefineGenericParameters(genericArguments.Select(p => p.Name).ToArray());
+						}
 
                         IEnumerable<Type> orderedParameters = parameters.OrderBy(p => p.Key).Select(p => p.Value);
 
@@ -264,9 +269,9 @@ namespace Dlp.Framework.Container.Proxies {
 
                         methodIL.DeclareLocal(methodInfo.ReturnType);
 
-                        if (methodInfo.ReturnType.IsValueType && (methodInfo.ReturnType.IsPrimitive == false)) {
-                            methodIL.DeclareLocal(methodInfo.ReturnType);
-                        }
+						//if (methodInfo.ReturnType.IsValueType && (methodInfo.ReturnType.IsPrimitive == false)) {
+						//	methodIL.DeclareLocal(methodInfo.ReturnType);
+						//}
                     }
 
                     // declare a label for invoking the handler
@@ -282,12 +287,13 @@ namespace Dlp.Framework.Container.Proxies {
                     methodIL.Emit(OpCodes.Ldfld, handlerField);
 
                     // jump to the handlerLabel if the handler instance variable is not null
-                    methodIL.Emit(OpCodes.Brtrue_S, handlerLabel);
+					methodIL.Emit(OpCodes.Brtrue_S, handlerLabel);
 
                     // the handler is null, so return null if the return type of the method is not void, otherwise return nothing
                     if (hasReturnValue == true) {
 
-                        if (methodInfo.ReturnType.IsValueType && methodInfo.ReturnType.IsPrimitive == false && methodInfo.ReturnType.IsEnum == false) {
+                        if (methodInfo.ReturnType.IsValueType && methodInfo.ReturnType.IsPrimitive == false && methodInfo.ReturnType.IsEnum == false
+							&& (methodInfo.ReturnType.IsGenericType && methodInfo.ReturnType.GetGenericTypeDefinition() == typeof(Nullable<>)) == false) {
                             //methodIL.Emit(OpCodes.Ldloc_1);
                             methodIL.Emit(OpCodes.Ldloc_0);
                         }
@@ -403,7 +409,7 @@ namespace Dlp.Framework.Container.Proxies {
                     if (hasReturnValue == true) {
 
                         // if the return type if a value type, then unbox the return value so that we don't get junk.
-                        if (methodInfo.ReturnType.IsValueType) {
+                        if (methodInfo.ReturnType.IsValueType == true || methodInfo.ReturnType.IsGenericParameter == true) {
 
                             methodIL.Emit(OpCodes.Unbox, methodInfo.ReturnType);
                             if (methodInfo.ReturnType.IsEnum) {
@@ -426,7 +432,8 @@ namespace Dlp.Framework.Container.Proxies {
                         methodIL.Emit(OpCodes.Stloc_1);
 
                         // jump to the return statement
-                        methodIL.Emit(OpCodes.Br_S, returnLabel);
+						//methodIL.Emit(OpCodes.Br_S, returnLabel);
+                        methodIL.Emit(OpCodes.Br, returnLabel);
 
                         // mark the return statement
                         methodIL.MarkLabel(returnLabel);

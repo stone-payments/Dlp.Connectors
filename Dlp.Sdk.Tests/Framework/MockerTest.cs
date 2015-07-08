@@ -36,8 +36,13 @@ namespace Dlp.Sdk.Tests.Framework {
 
 			IMockerSimulation mock = Mocker.CreateMock<IMockerSimulation>();
 
+			BasicRequest request = new BasicRequest();
+			request.Id = 77;
+
 			mock.Stub(p => p.GetGender()).Return(77);
-			//mock.Stub(p => p.GetAge<short>(12, "Banana")).Return(15);
+			mock.Stub(p => p.GetAge<short>(12, "Banana")).Return(15);
+			mock.Stub(p => p.GetAnotherAge<short>(10)).Return(13);
+			mock.Stub(p => p.ActualName<BasicRequest>(request)).Return(true);
 			mock.Stub(p => p.ValidateName("Banana")).Return(true);
 			mock.Stub(p => p.GetApplicationId(applicationKey)).Return(2);
 			mock.Stub(p => p.GetNameById(Convert.ToInt32("2"))).Return("Banana");
@@ -48,8 +53,13 @@ namespace Dlp.Sdk.Tests.Framework {
 
 			MethodInfo[] miList = mock.GetType().GetMethods();
 
+			BasicRequest testRequest = new BasicRequest();
+			testRequest.Id = 76;
+
 			byte gender = mock.GetGender();
-			//short age = mock.GetAge<short>(12, "Banana");
+			long age = mock.GetAge<short>(12, "Banana");
+			short anotherAge = mock.GetAnotherAge<short>(10);
+			bool actualName = mock.ActualName<BasicRequest>(testRequest);
 			bool validatedName = mock.ValidateName("Banana");
 			string name = mock.GetNameById(2);
 			bool val = mock.GetValue();
@@ -359,9 +369,11 @@ namespace Dlp.Sdk.Tests.Framework {
 
 		bool ValidateName(string name);
 
-		//long GetAge<T>(int count, string name);
+		long GetAge<T>(int count, string name);
 
-		//T GetAnotherAge<T>(short count);
+		T GetAnotherAge<T>(int count);
+
+		bool ActualName<T>(T data);
 	}
 
 	public class MockerSimulation : IMockerSimulation {
@@ -393,13 +405,17 @@ namespace Dlp.Sdk.Tests.Framework {
 			return true;
 		}
 
-		//public long GetAge<T>(int count, string name) {
-		//	return count;
-		//}
+		public long GetAge<T>(int count, string name) {
+			return count;
+		}
 
-		//public T GetAnotherAge<T>(short count) {
-		//	return default(T);
-		//}
+		public T GetAnotherAge<T>(int count) {
+			return default(T);
+		}
+
+		public bool ActualName<T>(T data) {
+			return false;
+		}
 	}
 
 	public class MockerSimulationInterceptor : IInterceptor {
