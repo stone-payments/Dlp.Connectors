@@ -299,11 +299,14 @@ namespace Dlp.Framework.Container.Proxies {
                         // store the null return value
                         methodIL.Emit(OpCodes.Stloc_0);
 
-                        // jump to return
-                        methodIL.Emit(OpCodes.Br_S, returnLabel);
+                        // Passa para o fim do método.
+                        //methodIL.Emit(OpCodes.Br_S, returnLabel);
+						methodIL.Emit(OpCodes.Br, returnLabel);
                     }
                     else {
-                        methodIL.Emit(OpCodes.Br_S, returnLabel);
+						// Passa para o fim do método.
+                        //methodIL.Emit(OpCodes.Br_S, returnLabel);
+						methodIL.Emit(OpCodes.Br, returnLabel);
                     }
 
                     // the handler is not null, so continue with execution
