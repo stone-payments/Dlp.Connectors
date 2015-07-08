@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Dlp.Framework.dll</id>
-    <version>0.7.4</version>
+    <version>0.7.5</version>
     <authors>Eduardo Jonssen</authors>
     <owners>DLP</owners>
     <projectUrl>http://dlpnugetrepository.azurewebsites.net/docs/</projectUrl>
