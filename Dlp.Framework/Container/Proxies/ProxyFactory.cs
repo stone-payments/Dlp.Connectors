@@ -119,10 +119,10 @@ namespace Dlp.Framework.Container.Proxies {
 
                 // create a new assembly for this proxy, one that isn't presisted on the file system
                 AssemblyBuilder assemblyBuilder = domain.DefineDynamicAssembly(
-                    assemblyName, AssemblyBuilderAccess.RunAndSave);
+                    assemblyName, AssemblyBuilderAccess.Run);
 
                 // create a new module for this proxy
-                ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(MODULE_NAME, "module.dll");
+                ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(MODULE_NAME);
 
                 // Set the class to be public and sealed
                 TypeAttributes typeAttributes = TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed;
@@ -164,8 +164,6 @@ namespace Dlp.Framework.Container.Proxies {
                 }
 
                 retVal = typeBuilder.CreateType();
-
-				assemblyBuilder.Save("module.dll");
             }
 
             return retVal;
