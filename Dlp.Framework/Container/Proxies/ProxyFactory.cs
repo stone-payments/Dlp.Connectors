@@ -59,7 +59,7 @@ namespace Dlp.Framework.Container.Proxies {
         public object Create(IDynamicProxy handler, Type objType, Type[] aditionalInterfaces = null) {
 
             string typeName = objType.FullName + PROXY_SUFFIX;
-            Type type = (Type)typeMap[typeName];
+            Type type = typeMap[typeName] as Type;
 
             // check to see if the type was in the cache. If the type was not cached, then create a new instance of the dynamic type and add it to the cache.
             if (type == null) {
@@ -96,7 +96,8 @@ namespace Dlp.Framework.Container.Proxies {
 
                 type = CreateType(handler, interfacesToImplement.ToArray(), typeName);
 
-                typeMap.Add(typeName, type);
+				Type existingType = typeMap[typeName] as Type;
+				if (existingType == null) { typeMap.Add(typeName, type); }
             }
 
             // return a new instance of the type.
