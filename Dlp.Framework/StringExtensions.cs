@@ -348,6 +348,28 @@ namespace Dlp.Framework {
             return UTF8Encoding.UTF8.GetString(resultArray);
         }
 
+		/// <summary>
+		/// Calculates the MD5 for a string.
+		/// </summary>
+		/// <param name="source">Source string to generate the MD5 from.</param>
+		/// <returns>Returns the hexadecimal MD5 hash of the string.</returns>
+		public static string CalculateMd5(this string source) {
+
+			// Verifica se a string foi especificada.
+			if (string.IsNullOrWhiteSpace(source) == true) { return source; }
+
+			// Converte a mensagem para uma array de bytes.
+			byte[] messageBytes = System.Text.Encoding.UTF8.GetBytes(source);
+
+			MD5 md5 = MD5.Create();			
+
+			// Calcula o hash da mensagem recebida.
+			byte[] hashedMessageBytes = md5.ComputeHash(messageBytes);
+
+			//Convertendo para Base64String
+			return ByteArrayToHexString(hashedMessageBytes);
+		}
+
         /// <summary>
         /// Calculates the MD5 for a string.
         /// </summary>

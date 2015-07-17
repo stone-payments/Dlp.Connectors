@@ -340,8 +340,17 @@ namespace Dlp.Sdk.Tests.Framework {
             Assert.IsFalse(actual);
         }
 
+		[TestMethod]
+		public void CalculateMd5() {
+
+			string source = "banana_1234";
+			string actual = source.CalculateMd5();
+
+			Assert.AreEqual("28D691496C6FF1C0C2B68C45AD171130", actual);
+		}
+
         [TestMethod]
-        public void CalculateMd5() {
+        public void CalculateMd5WithSecretKey() {
 
             string secretKey = "CalculateMd5";
 
