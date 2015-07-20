@@ -6,12 +6,20 @@
   <HelpKINode Title="AsPhoneNumber method" Url="html/56c388ba-4811-8b21-f73b-6be9f6e8555b.htm" />
   <HelpKINode Title="AsString method" Url="html/e2c8602b-28ba-2736-6f13-1b2b7df6c470.htm" />
   <HelpKINode Title="AsZipCode method" Url="html/37d74da9-70ba-e344-59fa-51f505df5f7d.htm" />
+  <HelpKINode Title="AttachmentList property">
+    <HelpKINode Title="IMailContent.AttachmentList Property " Url="html/33688ade-16cf-e1b1-e728-2fab21909fca.htm" />
+    <HelpKINode Title="MailContent.AttachmentList Property " Url="html/78a205ed-6e53-5beb-1cc4-72048d304756.htm" />
+  </HelpKINode>
   <HelpKINode Title="AuthenticateUser method" Url="html/b777bddd-6ace-82c8-fcb4-051e05dd20cd.htm" />
   <HelpKINode Title="BeginGlobalTransaction method" Url="html/a9212768-8936-95b2-dd78-9eb35fd29f75.htm" />
   <HelpKINode Title="BeginTransaction method" Url="html/4e7613d2-d709-f434-2692-8ad2c130af7b.htm" />
   <HelpKINode Title="BinaryDeserialize(Of T) method" Url="html/a3f4edd9-3ab0-8715-f6b1-7638a61d5465.htm" />
   <HelpKINode Title="BinaryDeserialize&lt;T&gt; method" Url="html/a3f4edd9-3ab0-8715-f6b1-7638a61d5465.htm" />
   <HelpKINode Title="BinarySerialize method" Url="html/ce7d8e5c-8a13-6add-d1b5-00f276bb5ffb.htm" />
+  <HelpKINode Title="Body property">
+    <HelpKINode Title="IMailContent.Body Property " Url="html/24c109dc-0023-b283-5aec-05ae2e28acdd.htm" />
+    <HelpKINode Title="MailContent.Body Property " Url="html/bd3980c1-1af5-f341-1a1f-f2e6ba8d0bb1.htm" />
+  </HelpKINode>
   <HelpKINode Title="BulkInsert method" Url="html/8229473f-6491-3575-8d36-cbd857856042.htm" />
   <HelpKINode Title="ByteExtensions class">
     <HelpKINode Title="ByteExtensions Class" Url="html/5ca1b2ed-c6be-bd67-eec5-340a1881260c.htm" />
@@ -31,9 +39,10 @@
   <HelpKINode Title="CacheConnector.Dispose method" Url="html/ec7f0cd9-ab0c-0b57-5082-06828a1be3ad.htm" />
   <HelpKINode Title="CacheConnector.GetByKey(Of T) method" Url="html/dc3cccb3-3b3f-0b89-1495-da7ac9e2b3e0.htm" />
   <HelpKINode Title="CacheConnector.GetByKey&lt;T&gt; method" Url="html/dc3cccb3-3b3f-0b89-1495-da7ac9e2b3e0.htm" />
+  <HelpKINode Title="CacheConnector.IsConnected method" Url="html/b631da42-643f-9d7b-bdc2-ce31724914d5.htm" />
   <HelpKINode Title="CacheConnector.Set(Of T) method" Url="html/62eb44f8-f342-97c8-37cd-c4ec3c318fad.htm" />
   <HelpKINode Title="CacheConnector.Set&lt;T&gt; method" Url="html/62eb44f8-f342-97c8-37cd-c4ec3c318fad.htm" />
-  <HelpKINode Title="CalculateMd5 method" Url="html/5150360e-9e1b-48a3-fb7d-601488a93ddd.htm" />
+  <HelpKINode Title="CalculateMd5 method" Url="html/c8cc25e9-87a2-edc7-9c88-0521399af0a2.htm" />
   <HelpKINode Title="CalculateSha1 method" Url="html/c40f3c32-4a3d-afe0-b0db-a4abef88463b.htm" />
   <HelpKINode Title="CalculateSha256 method" Url="html/7d568388-6438-9b33-8562-695038c77fcf.htm" />
   <HelpKINode Title="CalculateSha384 method" Url="html/45db4788-47d5-aca9-aea8-7c5454806379.htm" />
@@ -50,7 +59,12 @@
   <HelpKINode Title="CommandTimeoutInSeconds property" Url="html/378261e2-f59a-97d7-6b5b-292edf18d7f3.htm" />
   <HelpKINode Title="Commit method" Url="html/35d78c79-8d49-ca37-349b-8d542b13fd7e.htm" />
   <HelpKINode Title="CommitGlobalTransaction method" Url="html/a789f38b-081d-29f1-b1f7-654eb4fb2bfe.htm" />
-  <HelpKINode Title="Connect method" Url="html/7df565ff-6a7e-8671-9af1-b7ce1e162721.htm" />
+  <HelpKINode Title="Connect method">
+    <HelpKINode Title="CacheConnector.Connect Method " Url="html/7df565ff-6a7e-8671-9af1-b7ce1e162721.htm" />
+    <HelpKINode Title="ICacheConnector.Connect Method " Url="html/7dc4c7c5-73ca-ab44-9294-67005c04186a.htm" />
+  </HelpKINode>
+  <HelpKINode Title="CreateMock(Of TInterface) method" Url="html/24df1fe3-2fda-b26e-878f-812a2d50d9d4.htm" />
+  <HelpKINode Title="CreateMock&lt;TInterface&gt; method" Url="html/24df1fe3-2fda-b26e-878f-812a2d50d9d4.htm" />
   <HelpKINode Title="CreditCard enumeration member" Url="html/699730a5-ec2c-3e1e-12f7-daf4f2bdaaae.htm" />
   <HelpKINode Title="CreditCardExtended enumeration member" Url="html/699730a5-ec2c-3e1e-12f7-daf4f2bdaaae.htm" />
   <HelpKINode Title="DatabaseConnector class">
@@ -99,7 +113,14 @@
   <HelpKINode Title="DiffProperty.FirstValue property" Url="html/16f9dccf-888f-aa7c-36f6-51356e3f62c5.htm" />
   <HelpKINode Title="DiffProperty.PropertyName property" Url="html/80c7bfa6-9d65-1e66-8be8-1b48f3b7f0cc.htm" />
   <HelpKINode Title="DiffProperty.SecondValue property" Url="html/1a417f97-cb5a-4962-79e7-e07b1f764d0b.htm" />
-  <HelpKINode Title="Disconnect method" Url="html/d0739759-098b-9b03-1542-3599d0c1109e.htm" />
+  <HelpKINode Title="Disconnect method">
+    <HelpKINode Title="CacheConnector.Disconnect Method " Url="html/d0739759-098b-9b03-1542-3599d0c1109e.htm" />
+    <HelpKINode Title="ICacheConnector.Disconnect Method " Url="html/83f42fb1-98cd-ade8-a4fc-b0b37820ef39.htm" />
+  </HelpKINode>
+  <HelpKINode Title="DisplayName property">
+    <HelpKINode Title="IMailContent.DisplayName Property " Url="html/2e902602-2dc2-eacf-ebbd-7ccb7a4ae067.htm" />
+    <HelpKINode Title="MailContent.DisplayName Property " Url="html/f02f6e20-a120-f5c9-de36-81d0d67b926b.htm" />
+  </HelpKINode>
   <HelpKINode Title="Dispose method">
     <HelpKINode Title="CacheConnector.Dispose Method " Url="html/ec7f0cd9-ab0c-0b57-5082-06828a1be3ad.htm" />
     <HelpKINode Title="DatabaseConnector.Dispose Method " Url="html/2017e01d-f219-61e6-35f5-de363c6371a7.htm" />
@@ -109,6 +130,7 @@
   <HelpKINode Title="Dlp.Connectors namespace" Url="html/a71bcc89-5d7f-18f6-5b54-a3939fbc7cfd.htm" />
   <HelpKINode Title="Dlp.Connectors.CacheConnector class" Url="html/3a4394c8-82f4-4ef8-2c32-03aa8251de11.htm" />
   <HelpKINode Title="Dlp.Connectors.DatabaseConnector class" Url="html/ffcde9f8-93d9-4f69-5f07-84521a2f2a52.htm" />
+  <HelpKINode Title="Dlp.Connectors.ICacheConnector interface" Url="html/88601468-d4aa-6162-4d47-87f4486aa45f.htm" />
   <HelpKINode Title="Dlp.Connectors.SortDirection enumeration" Url="html/631a4f42-649c-95fc-0ee9-cf4728b721a2.htm" />
   <HelpKINode Title="Dlp.Framework namespace" Url="html/09232959-603d-0901-50a9-da622194d76f.htm" />
   <HelpKINode Title="Dlp.Framework.ByteExtensions class" Url="html/5ca1b2ed-c6be-bd67-eec5-340a1881260c.htm" />
@@ -119,23 +141,49 @@
   <HelpKINode Title="Dlp.Framework.DiffProperty class" Url="html/897d5066-b2a6-3871-1cde-d76dc8a3e64c.htm" />
   <HelpKINode Title="Dlp.Framework.HttpContentType enumeration" Url="html/ecdb4d6b-4733-07c5-21b8-7071178e3778.htm" />
   <HelpKINode Title="Dlp.Framework.HttpVerb enumeration" Url="html/86eb2a99-7297-43b2-d510-c894cbf6e53b.htm" />
-  <HelpKINode Title="Dlp.Framework.IocFactory class" Url="html/809ec129-5a26-6263-9f41-4b9da2347048.htm" />
+  <HelpKINode Title="Dlp.Framework.IMailContent interface" Url="html/0b112398-8223-efd2-6c43-da4e18badcff.htm" />
+  <HelpKINode Title="Dlp.Framework.IMailServerConfiguration interface" Url="html/b0eb02e2-b856-5d0c-740a-5eb5e3208926.htm" />
+  <HelpKINode Title="Dlp.Framework.IMailService interface" Url="html/69b9950e-b06d-f78e-230d-59427cef77a7.htm" />
+  <HelpKINode Title="Dlp.Framework.MailContent class" Url="html/c6ddd25a-a650-3e93-373f-80e9fc8f0159.htm" />
+  <HelpKINode Title="Dlp.Framework.MailServerConfiguration class" Url="html/8c2b7482-9f92-72a7-67ef-a6218acaa568.htm" />
+  <HelpKINode Title="Dlp.Framework.MailService class" Url="html/d5cbfd97-534c-6d37-14e7-9f4360427182.htm" />
+  <HelpKINode Title="Dlp.Framework.Mock namespace" Url="html/eef26923-fa54-00f7-218b-3dca773b54a4.htm" />
+  <HelpKINode Title="Dlp.Framework.Mock.Function(Of T, R) delegate" Url="html/8a2cee7c-2720-98d0-bb1d-5d0a18ad8587.htm" />
+  <HelpKINode Title="Dlp.Framework.Mock.Function&lt;T, R&gt; delegate" Url="html/8a2cee7c-2720-98d0-bb1d-5d0a18ad8587.htm" />
+  <HelpKINode Title="Dlp.Framework.Mock.IMethodOptions interface" Url="html/e53ab632-a803-d43b-ecf4-a2e611b32cd8.htm" />
+  <HelpKINode Title="Dlp.Framework.Mock.IMethodOptions(Of R) interface" Url="html/d886e746-b696-7285-00d5-577bc83c1028.htm" />
+  <HelpKINode Title="Dlp.Framework.Mock.IMethodOptions&lt;R&gt; interface" Url="html/d886e746-b696-7285-00d5-577bc83c1028.htm" />
+  <HelpKINode Title="Dlp.Framework.Mock.IMockObject interface" Url="html/c4a3a3f3-351f-13e0-40cc-b16dfaa6d4b8.htm" />
+  <HelpKINode Title="Dlp.Framework.Mock.Mocker class" Url="html/2ae5cdc6-f7c6-70e9-4e50-d657e7b72e3c.htm" />
+  <HelpKINode Title="Dlp.Framework.Mock.MockerExtensions class" Url="html/acec7b2c-3522-44ba-49e3-daaa94eb5c49.htm" />
+  <HelpKINode Title="Dlp.Framework.Mock.MockerInterceptor class" Url="html/e9665bda-2c37-88ce-1df2-afd518202a90.htm" />
   <HelpKINode Title="Dlp.Framework.ObjectExtensions class" Url="html/5d2eddcc-ad0c-0652-4551-73bec8f964a5.htm" />
   <HelpKINode Title="Dlp.Framework.RestClient class" Url="html/e37d8ced-ec47-1858-2a0b-3a0baa1d0722.htm" />
+  <HelpKINode Title="Dlp.Framework.SendMailErrorEventArgs class" Url="html/f8bffc43-65cc-4ff6-40f9-50c5a803c2cd.htm" />
+  <HelpKINode Title="Dlp.Framework.SendMailErrorEventHandler delegate" Url="html/8a9c2627-5fca-0058-9bb7-876638a1c0a8.htm" />
   <HelpKINode Title="Dlp.Framework.Serializer class" Url="html/7d534b52-c779-0e1c-9c39-7ea8b436fd3b.htm" />
   <HelpKINode Title="Dlp.Framework.StringExtensions class" Url="html/d36ad271-4ac6-6a2f-947c-cccab52a8505.htm" />
   <HelpKINode Title="Dlp.Framework.StringMaskFormat enumeration" Url="html/699730a5-ec2c-3e1e-12f7-daf4f2bdaaae.htm" />
   <HelpKINode Title="Dlp.Framework.WebResponse(Of T) class" Url="html/73d4817a-c5bc-2c74-ed72-d8fc72806016.htm" />
   <HelpKINode Title="Dlp.Framework.WebResponse&lt;T&gt; class" Url="html/73d4817a-c5bc-2c74-ed72-d8fc72806016.htm" />
   <HelpKINode Title="Encrypt method" Url="html/99a44feb-6a7c-8471-f12e-67f84538af7a.htm" />
+  <HelpKINode Title="Exception property" Url="html/9099036e-d404-3936-7de0-069178f9dc6e.htm" />
   <HelpKINode Title="ExecuteNonQuery method" Url="html/c8d76196-33a9-7c09-d5d5-500044f926f7.htm" />
   <HelpKINode Title="ExecuteReader method" Url="html/1680efb4-8457-8cf6-904b-bf0eae3397c4.htm" />
   <HelpKINode Title="ExecuteScalar(Of T) method" Url="html/691ad774-c725-5e32-8378-dbbb3021ec8d.htm" />
   <HelpKINode Title="ExecuteScalar&lt;T&gt; method" Url="html/691ad774-c725-5e32-8378-dbbb3021ec8d.htm" />
   <HelpKINode Title="FirstValue property" Url="html/16f9dccf-888f-aa7c-36f6-51356e3f62c5.htm" />
+  <HelpKINode Title="Function(Of T, R) delegate" Url="html/8a2cee7c-2720-98d0-bb1d-5d0a18ad8587.htm" />
+  <HelpKINode Title="Function&lt;T, R&gt; delegate" Url="html/8a2cee7c-2720-98d0-bb1d-5d0a18ad8587.htm" />
   <HelpKINode Title="Get enumeration member" Url="html/86eb2a99-7297-43b2-d510-c894cbf6e53b.htm" />
-  <HelpKINode Title="GetByKey(Of T) method" Url="html/dc3cccb3-3b3f-0b89-1495-da7ac9e2b3e0.htm" />
-  <HelpKINode Title="GetByKey&lt;T&gt; method" Url="html/dc3cccb3-3b3f-0b89-1495-da7ac9e2b3e0.htm" />
+  <HelpKINode Title="GetByKey(Of T) method">
+    <HelpKINode Title="CacheConnector.GetByKey(T) Method " Url="html/dc3cccb3-3b3f-0b89-1495-da7ac9e2b3e0.htm" />
+    <HelpKINode Title="ICacheConnector.GetByKey(T) Method " Url="html/90f5ac5f-22d5-77d9-f9ce-92413cc86fb3.htm" />
+  </HelpKINode>
+  <HelpKINode Title="GetByKey&lt;T&gt; method">
+    <HelpKINode Title="CacheConnector.GetByKey(T) Method " Url="html/dc3cccb3-3b3f-0b89-1495-da7ac9e2b3e0.htm" />
+    <HelpKINode Title="ICacheConnector.GetByKey(T) Method " Url="html/90f5ac5f-22d5-77d9-f9ce-92413cc86fb3.htm" />
+  </HelpKINode>
   <HelpKINode Title="GetBytes method" Url="html/c9cec49a-c71b-8326-ee4e-13ca22a3e73a.htm" />
   <HelpKINode Title="GetDigits method" Url="html/a8152fa2-bf88-f109-5bd1-667449de4b0e.htm" />
   <HelpKINode Title="GetLetters method" Url="html/4a969978-2337-754e-8222-af23f74d2cd7.htm" />
@@ -154,43 +202,177 @@
   <HelpKINode Title="GlobalIdentity.ValidateToken method" Url="html/229dcc1e-cd25-6293-802b-1a412df80b89.htm" />
   <HelpKINode Title="HttpContentType enumeration" Url="html/ecdb4d6b-4733-07c5-21b8-7071178e3778.htm" />
   <HelpKINode Title="HttpVerb enumeration" Url="html/86eb2a99-7297-43b2-d510-c894cbf6e53b.htm" />
+  <HelpKINode Title="ICacheConnector interface">
+    <HelpKINode Title="ICacheConnector Interface" Url="html/88601468-d4aa-6162-4d47-87f4486aa45f.htm" />
+    <HelpKINode Title="about ICacheConnector interface" Url="html/88601468-d4aa-6162-4d47-87f4486aa45f.htm" />
+    <HelpKINode Title="methods" Url="html/fecc6a9c-9336-abce-f4a7-8e291ed4852b.htm" />
+  </HelpKINode>
+  <HelpKINode Title="ICacheConnector.Connect method" Url="html/7dc4c7c5-73ca-ab44-9294-67005c04186a.htm" />
+  <HelpKINode Title="ICacheConnector.Disconnect method" Url="html/83f42fb1-98cd-ade8-a4fc-b0b37820ef39.htm" />
+  <HelpKINode Title="ICacheConnector.GetByKey(Of T) method" Url="html/90f5ac5f-22d5-77d9-f9ce-92413cc86fb3.htm" />
+  <HelpKINode Title="ICacheConnector.GetByKey&lt;T&gt; method" Url="html/90f5ac5f-22d5-77d9-f9ce-92413cc86fb3.htm" />
+  <HelpKINode Title="ICacheConnector.IsConnected method" Url="html/2bcfc641-0117-c07a-ae3a-85d302cb3d53.htm" />
+  <HelpKINode Title="ICacheConnector.Set(Of T) method" Url="html/55573e0c-a173-cade-9823-c578e7ebe1da.htm" />
+  <HelpKINode Title="ICacheConnector.Set&lt;T&gt; method" Url="html/55573e0c-a173-cade-9823-c578e7ebe1da.htm" />
+  <HelpKINode Title="IMailContent interface">
+    <HelpKINode Title="IMailContent Interface" Url="html/0b112398-8223-efd2-6c43-da4e18badcff.htm" />
+    <HelpKINode Title="about IMailContent interface" Url="html/0b112398-8223-efd2-6c43-da4e18badcff.htm" />
+    <HelpKINode Title="properties" Url="html/c95b5607-f15a-e536-d70d-b5f06dee846c.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IMailContent.AttachmentList property" Url="html/33688ade-16cf-e1b1-e728-2fab21909fca.htm" />
+  <HelpKINode Title="IMailContent.Body property" Url="html/24c109dc-0023-b283-5aec-05ae2e28acdd.htm" />
+  <HelpKINode Title="IMailContent.DisplayName property" Url="html/2e902602-2dc2-eacf-ebbd-7ccb7a4ae067.htm" />
+  <HelpKINode Title="IMailContent.IsBodyHtml property" Url="html/5114788f-d70d-10c8-1f26-9a53eca539fb.htm" />
+  <HelpKINode Title="IMailContent.Priority property" Url="html/e86f50e1-d41a-13a6-04a3-4ddd558bd5ec.htm" />
+  <HelpKINode Title="IMailContent.ReceiverMailList property" Url="html/412b50db-5d27-0b30-dfd3-12b40179c627.htm" />
+  <HelpKINode Title="IMailContent.Subject property" Url="html/dea9a5e0-681b-de6c-bc48-3b8f38283564.htm" />
+  <HelpKINode Title="IMailServerConfiguration interface">
+    <HelpKINode Title="IMailServerConfiguration Interface" Url="html/b0eb02e2-b856-5d0c-740a-5eb5e3208926.htm" />
+    <HelpKINode Title="about IMailServerConfiguration interface" Url="html/b0eb02e2-b856-5d0c-740a-5eb5e3208926.htm" />
+    <HelpKINode Title="properties" Url="html/63cc8263-8e5c-9157-519b-1a79d2f5146e.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IMailServerConfiguration.MailAccount property" Url="html/58114a5e-d14b-5d91-add1-064394e42637.htm" />
+  <HelpKINode Title="IMailServerConfiguration.MailAccountPassword property" Url="html/b07791b7-3172-96ff-55de-84eb2c1ab4eb.htm" />
+  <HelpKINode Title="IMailServerConfiguration.SmtpPort property" Url="html/8b094b2b-197b-5a59-f609-a26a251693d0.htm" />
+  <HelpKINode Title="IMailServerConfiguration.SmtpServerAddress property" Url="html/c5ecfea7-82ef-07ea-7d7b-6c73c2fc83ae.htm" />
+  <HelpKINode Title="IMailServerConfiguration.UseSsl property" Url="html/f48cfee9-4325-4f8d-c33a-7f97931d8bf3.htm" />
+  <HelpKINode Title="IMailService interface">
+    <HelpKINode Title="IMailService Interface" Url="html/69b9950e-b06d-f78e-230d-59427cef77a7.htm" />
+    <HelpKINode Title="about IMailService interface" Url="html/69b9950e-b06d-f78e-230d-59427cef77a7.htm" />
+    <HelpKINode Title="events" Url="html/92449ce4-3673-b946-b608-ded22663140f.htm" />
+    <HelpKINode Title="methods" Url="html/c00bf3fc-7e6f-a07e-1e5d-2f394e59a828.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IMailService.OnSendMailError event" Url="html/64ccca51-df7e-3b71-5b54-da859c7f8409.htm" />
+  <HelpKINode Title="IMailService.SendEmail method" Url="html/0679eaa2-566c-f028-df09-f0ddf22e4e99.htm" />
+  <HelpKINode Title="IMailService.SendEmailAsync method" Url="html/3b0d617b-4e4a-4145-13c0-11340ebf6e09.htm" />
+  <HelpKINode Title="IMethodOptions interface">
+    <HelpKINode Title="IMethodOptions Interface" Url="html/e53ab632-a803-d43b-ecf4-a2e611b32cd8.htm" />
+    <HelpKINode Title="about IMethodOptions interface" Url="html/e53ab632-a803-d43b-ecf4-a2e611b32cd8.htm" />
+    <HelpKINode Title="properties" Url="html/eb07bd3a-06a3-8a49-0770-cebf33df676c.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IMethodOptions(Of R) interface">
+    <HelpKINode Title="IMethodOptions(R) Interface" Url="html/d886e746-b696-7285-00d5-577bc83c1028.htm" />
+    <HelpKINode Title="about IMethodOptions(Of R) interface" Url="html/d886e746-b696-7285-00d5-577bc83c1028.htm" />
+    <HelpKINode Title="methods" Url="html/70ca5431-3896-be2a-5204-66c10488de7e.htm" />
+    <HelpKINode Title="properties" Url="html/445efc71-c729-01c5-2182-b81fe0a7501e.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IMethodOptions(Of R).Return method" Url="html/2f9c8061-ef14-1496-43d5-d3f21110d8bd.htm" />
+  <HelpKINode Title="IMethodOptions.MemberFullName property" Url="html/f7844eb4-0b18-5547-da13-319d81fdbb85.htm" />
+  <HelpKINode Title="IMethodOptions.MethodName property" Url="html/ee64f908-8df9-dfb9-87ae-3c4aeff69bb6.htm" />
+  <HelpKINode Title="IMethodOptions.ReturnValue property" Url="html/90587b4f-2494-186a-b90e-82c82004728f.htm" />
+  <HelpKINode Title="IMethodOptions&lt;R&gt; interface">
+    <HelpKINode Title="IMethodOptions(R) Interface" Url="html/d886e746-b696-7285-00d5-577bc83c1028.htm" />
+    <HelpKINode Title="about IMethodOptions&lt;R&gt; interface" Url="html/d886e746-b696-7285-00d5-577bc83c1028.htm" />
+    <HelpKINode Title="methods" Url="html/70ca5431-3896-be2a-5204-66c10488de7e.htm" />
+    <HelpKINode Title="properties" Url="html/445efc71-c729-01c5-2182-b81fe0a7501e.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IMethodOptions&lt;R&gt;.Return method" Url="html/2f9c8061-ef14-1496-43d5-d3f21110d8bd.htm" />
+  <HelpKINode Title="IMockObject interface">
+    <HelpKINode Title="IMockObject Interface" Url="html/c4a3a3f3-351f-13e0-40cc-b16dfaa6d4b8.htm" />
+    <HelpKINode Title="about IMockObject interface" Url="html/c4a3a3f3-351f-13e0-40cc-b16dfaa6d4b8.htm" />
+  </HelpKINode>
   <HelpKINode Title="install">
     <HelpKINode Title="packages" Url="html/dc425e10-c40b-4f8b-9242-e39b4805ad8d.htm" />
   </HelpKINode>
+  <HelpKINode Title="Intercept method" Url="html/951e4e65-be13-74d1-d7c2-de0405987dc0.htm" />
   <HelpKINode Title="IocFactory class">
-    <HelpKINode Title="IocFactory Class" Url="html/809ec129-5a26-6263-9f41-4b9da2347048.htm" />
     <HelpKINode Title="IocFactory Class" Url="html/ca7446fd-bd44-0f4a-ee89-1f8a1fb2a9ce.htm" />
     <HelpKINode Title="about IocFactory class" Url="html/ca7446fd-bd44-0f4a-ee89-1f8a1fb2a9ce.htm" />
-    <HelpKINode Title="about IocFactory class" Url="html/809ec129-5a26-6263-9f41-4b9da2347048.htm" />
     <HelpKINode Title="methods" Url="html/9842f787-1575-66af-2c8f-10cc56de6a55.htm" />
-    <HelpKINode Title="methods" Url="html/48a94fd5-7cde-0960-800e-bbff5cc2b4fd.htm" />
   </HelpKINode>
-  <HelpKINode Title="IocFactory.IsRegistered method" Url="html/0dd44862-4f02-2e0d-5bc4-033917dba8cd.htm" />
-  <HelpKINode Title="IocFactory.Register method">
-    <HelpKINode Title="IocFactory.Register Method " Url="html/97365d04-76a4-ac5a-7ba9-d6c121228ebc.htm" />
-    <HelpKINode Title="IocFactory.Register Method " Url="html/5912c8bd-9b59-c303-a1d3-66f177bc27ce.htm" />
-  </HelpKINode>
-  <HelpKINode Title="IocFactory.RegisteredTypesForInterface method" Url="html/2563e76c-94cf-b169-7caf-94332a34ec06.htm" />
-  <HelpKINode Title="IocFactory.RegisterNamespace method" Url="html/4c6ecadd-6b0a-0686-43cd-c1ff530fca35.htm" />
+  <HelpKINode Title="IocFactory.Register method" Url="html/f3a7936b-b571-f04b-f397-9070183e1fbb.htm" />
   <HelpKINode Title="IocFactory.Reset method" Url="html/cc30fea4-8247-9a96-1fdb-50fd5e6c525e.htm" />
-  <HelpKINode Title="IocFactory.Resolve(Of T) method" Url="html/c8ee660e-c312-2396-e7e3-fa1d7132d2f1.htm" />
   <HelpKINode Title="IocFactory.Resolve(Of TInterface) method" Url="html/629dcbad-f186-ebc3-ed6c-79ec29d003d7.htm" />
-  <HelpKINode Title="IocFactory.Resolve&lt;T&gt; method" Url="html/c8ee660e-c312-2396-e7e3-fa1d7132d2f1.htm" />
   <HelpKINode Title="IocFactory.Resolve&lt;TInterface&gt; method" Url="html/629dcbad-f186-ebc3-ed6c-79ec29d003d7.htm" />
   <HelpKINode Title="IocFactory.ResolveByName(Of TInterface) method" Url="html/3ab2b200-68c0-af10-4d8a-b720af24370d.htm" />
   <HelpKINode Title="IocFactory.ResolveByName&lt;TInterface&gt; method" Url="html/3ab2b200-68c0-af10-4d8a-b720af24370d.htm" />
-  <HelpKINode Title="IocFactory.ResolveSpecific(Of T) method" Url="html/ab5ff2d1-7d38-b3dc-ccf4-d62d897066ab.htm" />
-  <HelpKINode Title="IocFactory.ResolveSpecific&lt;T&gt; method" Url="html/ab5ff2d1-7d38-b3dc-ccf4-d62d897066ab.htm" />
-  <HelpKINode Title="IsRegistered method" Url="html/0dd44862-4f02-2e0d-5bc4-033917dba8cd.htm" />
+  <HelpKINode Title="IsBodyHtml property">
+    <HelpKINode Title="IMailContent.IsBodyHtml Property " Url="html/5114788f-d70d-10c8-1f26-9a53eca539fb.htm" />
+    <HelpKINode Title="MailContent.IsBodyHtml Property " Url="html/d8abe463-f69a-eb13-115f-50f8dc60cade.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IsConnected method">
+    <HelpKINode Title="CacheConnector.IsConnected Method " Url="html/b631da42-643f-9d7b-bdc2-ce31724914d5.htm" />
+    <HelpKINode Title="ICacheConnector.IsConnected Method " Url="html/2bcfc641-0117-c07a-ae3a-85d302cb3d53.htm" />
+  </HelpKINode>
   <HelpKINode Title="IsUserInRole method" Url="html/ac6fadf4-8686-6eb0-d098-dfd21b58d9e5.htm" />
   <HelpKINode Title="IsValidCnpj method" Url="html/fecffbf2-8b81-6f96-a5ed-bcd9a02cf2a5.htm" />
   <HelpKINode Title="IsValidCpf method" Url="html/e33a4646-3efc-663f-1d24-3135b853cb8e.htm" />
   <HelpKINode Title="IsValidEmailAddress method" Url="html/e707fe45-c3f6-0546-78db-591f689dcdb1.htm" />
   <HelpKINode Title="Json enumeration member" Url="html/ecdb4d6b-4733-07c5-21b8-7071178e3778.htm" />
-  <HelpKINode Title="JsonDeserialize(Of T) method" Url="html/12302dce-0e31-9c11-e5c4-3d12e397c6f3.htm" />
-  <HelpKINode Title="JsonDeserialize&lt;T&gt; method" Url="html/12302dce-0e31-9c11-e5c4-3d12e397c6f3.htm" />
+  <HelpKINode Title="JsonDeserialize method" Url="html/de2358ab-9230-abbe-970d-7d6eb9ef6d1e.htm" />
   <HelpKINode Title="JsonSerialize method" Url="html/6da41e12-12f8-38e7-7c07-33e8b7628126.htm" />
+  <HelpKINode Title="MailAccount property">
+    <HelpKINode Title="IMailServerConfiguration.MailAccount Property " Url="html/58114a5e-d14b-5d91-add1-064394e42637.htm" />
+    <HelpKINode Title="MailServerConfiguration.MailAccount Property " Url="html/7c22e58c-5c3f-3fa4-1e8d-e50a358f9ac5.htm" />
+  </HelpKINode>
+  <HelpKINode Title="MailAccountPassword property">
+    <HelpKINode Title="IMailServerConfiguration.MailAccountPassword Property " Url="html/b07791b7-3172-96ff-55de-84eb2c1ab4eb.htm" />
+    <HelpKINode Title="MailServerConfiguration.MailAccountPassword Property " Url="html/cb5e383a-920f-d6ad-f14f-af37812aceb9.htm" />
+  </HelpKINode>
+  <HelpKINode Title="MailContent class">
+    <HelpKINode Title="MailContent Class" Url="html/c6ddd25a-a650-3e93-373f-80e9fc8f0159.htm" />
+    <HelpKINode Title="about MailContent class" Url="html/c6ddd25a-a650-3e93-373f-80e9fc8f0159.htm" />
+    <HelpKINode Title="constructor" Url="html/bdb8a498-e1ff-b0a7-033b-9869cde4fca8.htm" />
+    <HelpKINode Title="methods" Url="html/cbc7abc2-be71-e4ff-2dbc-26947a723b21.htm" />
+    <HelpKINode Title="properties" Url="html/f7729dd0-77db-b1cb-9a6e-352fc1dbafc0.htm" />
+  </HelpKINode>
+  <HelpKINode Title="MailContent.AttachmentList property" Url="html/78a205ed-6e53-5beb-1cc4-72048d304756.htm" />
+  <HelpKINode Title="MailContent.Body property" Url="html/bd3980c1-1af5-f341-1a1f-f2e6ba8d0bb1.htm" />
+  <HelpKINode Title="MailContent.DisplayName property" Url="html/f02f6e20-a120-f5c9-de36-81d0d67b926b.htm" />
+  <HelpKINode Title="MailContent.IsBodyHtml property" Url="html/d8abe463-f69a-eb13-115f-50f8dc60cade.htm" />
+  <HelpKINode Title="MailContent.MailContent constructor" Url="html/bdb8a498-e1ff-b0a7-033b-9869cde4fca8.htm" />
+  <HelpKINode Title="MailContent.Priority property" Url="html/0c76047d-111f-3f0e-051c-5a7a80c2a652.htm" />
+  <HelpKINode Title="MailContent.ReceiverMailList property" Url="html/ec7b5fd0-9df0-fe0f-40f1-bf13f4cc3490.htm" />
+  <HelpKINode Title="MailContent.Subject property" Url="html/3171c2c8-ae14-7a63-abb7-7970db523fe5.htm" />
+  <HelpKINode Title="MailServerConfiguration class">
+    <HelpKINode Title="MailServerConfiguration Class" Url="html/8c2b7482-9f92-72a7-67ef-a6218acaa568.htm" />
+    <HelpKINode Title="about MailServerConfiguration class" Url="html/8c2b7482-9f92-72a7-67ef-a6218acaa568.htm" />
+    <HelpKINode Title="constructor" Url="html/32af9a6b-3c03-0607-f0a8-e8761e1835e9.htm" />
+    <HelpKINode Title="methods" Url="html/317672cd-b127-62be-7b34-33e972677c88.htm" />
+    <HelpKINode Title="properties" Url="html/fe5131bc-e9ff-7e3a-b827-1c22f5aff2f4.htm" />
+  </HelpKINode>
+  <HelpKINode Title="MailServerConfiguration.MailAccount property" Url="html/7c22e58c-5c3f-3fa4-1e8d-e50a358f9ac5.htm" />
+  <HelpKINode Title="MailServerConfiguration.MailAccountPassword property" Url="html/cb5e383a-920f-d6ad-f14f-af37812aceb9.htm" />
+  <HelpKINode Title="MailServerConfiguration.MailServerConfiguration constructor" Url="html/32af9a6b-3c03-0607-f0a8-e8761e1835e9.htm" />
+  <HelpKINode Title="MailServerConfiguration.SmtpPort property" Url="html/a1ac68b6-6cdc-3429-cd10-fa99b3f5bb8e.htm" />
+  <HelpKINode Title="MailServerConfiguration.SmtpServerAddress property" Url="html/42bf96b6-30f4-f331-6d8f-e2f0ec739d1f.htm" />
+  <HelpKINode Title="MailServerConfiguration.UseSsl property" Url="html/1b7ee00d-ba2e-0b27-3c78-23125ad3f7f6.htm" />
+  <HelpKINode Title="MailService class">
+    <HelpKINode Title="MailService Class" Url="html/d5cbfd97-534c-6d37-14e7-9f4360427182.htm" />
+    <HelpKINode Title="about MailService class" Url="html/d5cbfd97-534c-6d37-14e7-9f4360427182.htm" />
+    <HelpKINode Title="constructor" Url="html/ca9a7405-a7c8-eae5-b255-41f62b8f404e.htm" />
+    <HelpKINode Title="events" Url="html/edcd0805-8dcd-25ce-6f71-e8958a7ea58f.htm" />
+    <HelpKINode Title="methods" Url="html/0560c8ea-1402-e867-a555-2de03f320d63.htm" />
+  </HelpKINode>
+  <HelpKINode Title="MailService.MailService constructor" Url="html/ca9a7405-a7c8-eae5-b255-41f62b8f404e.htm" />
+  <HelpKINode Title="MailService.OnSendMailError event" Url="html/144905b2-26f6-dbe1-f31e-988749763ef6.htm" />
+  <HelpKINode Title="MailService.SendEmail method" Url="html/b1d70302-bd9f-2ee8-d7d7-0d9316fbdd9e.htm" />
+  <HelpKINode Title="MailService.SendEmailAsync method" Url="html/08c80e87-03e0-e3b2-bc2e-7c8e3abc5554.htm" />
   <HelpKINode Title="Mask method" Url="html/e354c4fc-0b4b-9fa1-d2f9-edee175375ea.htm" />
+  <HelpKINode Title="MemberFullName property" Url="html/f7844eb4-0b18-5547-da13-319d81fdbb85.htm" />
+  <HelpKINode Title="MethodName property" Url="html/ee64f908-8df9-dfb9-87ae-3c4aeff69bb6.htm" />
+  <HelpKINode Title="Mocker class">
+    <HelpKINode Title="Mocker Class" Url="html/2ae5cdc6-f7c6-70e9-4e50-d657e7b72e3c.htm" />
+    <HelpKINode Title="about Mocker class" Url="html/2ae5cdc6-f7c6-70e9-4e50-d657e7b72e3c.htm" />
+    <HelpKINode Title="methods" Url="html/5596eca5-3ba1-1494-e206-3c897fcb8b18.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Mocker.CreateMock(Of TInterface) method" Url="html/24df1fe3-2fda-b26e-878f-812a2d50d9d4.htm" />
+  <HelpKINode Title="Mocker.CreateMock&lt;TInterface&gt; method" Url="html/24df1fe3-2fda-b26e-878f-812a2d50d9d4.htm" />
+  <HelpKINode Title="MockerExtensions class">
+    <HelpKINode Title="MockerExtensions Class" Url="html/acec7b2c-3522-44ba-49e3-daaa94eb5c49.htm" />
+    <HelpKINode Title="about MockerExtensions class" Url="html/acec7b2c-3522-44ba-49e3-daaa94eb5c49.htm" />
+    <HelpKINode Title="methods" Url="html/19361941-48c0-7c48-2ce1-3c13408529cf.htm" />
+  </HelpKINode>
+  <HelpKINode Title="MockerExtensions.Stub(Of T, R) method" Url="html/b5c0a192-d62a-96b3-9a5d-4522ef0efed4.htm" />
+  <HelpKINode Title="MockerExtensions.Stub&lt;T, R&gt; method" Url="html/b5c0a192-d62a-96b3-9a5d-4522ef0efed4.htm" />
+  <HelpKINode Title="MockerInterceptor class">
+    <HelpKINode Title="MockerInterceptor Class" Url="html/e9665bda-2c37-88ce-1df2-afd518202a90.htm" />
+    <HelpKINode Title="about MockerInterceptor class" Url="html/e9665bda-2c37-88ce-1df2-afd518202a90.htm" />
+    <HelpKINode Title="constructor" Url="html/23e7465b-4614-299c-9c19-ffe4af37c564.htm" />
+    <HelpKINode Title="methods" Url="html/5d8ddfa7-f710-9aee-561b-cde97173245e.htm" />
+  </HelpKINode>
+  <HelpKINode Title="MockerInterceptor.Intercept method" Url="html/951e4e65-be13-74d1-d7c2-de0405987dc0.htm" />
+  <HelpKINode Title="MockerInterceptor.MockerInterceptor constructor" Url="html/23e7465b-4614-299c-9c19-ffe4af37c564.htm" />
   <HelpKINode Title="ObjectExtensions class">
     <HelpKINode Title="ObjectExtensions Class" Url="html/5d2eddcc-ad0c-0652-4551-73bec8f964a5.htm" />
     <HelpKINode Title="about ObjectExtensions class" Url="html/5d2eddcc-ad0c-0652-4551-73bec8f964a5.htm" />
@@ -199,27 +381,30 @@
   <HelpKINode Title="ObjectExtensions.Clone method" Url="html/495303ff-eb91-b5f9-f30d-3f2f277b3c29.htm" />
   <HelpKINode Title="ObjectExtensions.DiffProperties(Of T) method" Url="html/13f8afd9-9ac2-2343-42bc-c01e11489cb3.htm" />
   <HelpKINode Title="ObjectExtensions.DiffProperties&lt;T&gt; method" Url="html/13f8afd9-9ac2-2343-42bc-c01e11489cb3.htm" />
+  <HelpKINode Title="OnSendMailError event">
+    <HelpKINode Title="IMailService.OnSendMailError Event" Url="html/64ccca51-df7e-3b71-5b54-da859c7f8409.htm" />
+    <HelpKINode Title="MailService.OnSendMailError Event" Url="html/144905b2-26f6-dbe1-f31e-988749763ef6.htm" />
+  </HelpKINode>
   <HelpKINode Title="Password enumeration member" Url="html/699730a5-ec2c-3e1e-12f7-daf4f2bdaaae.htm" />
   <HelpKINode Title="Patch enumeration member" Url="html/86eb2a99-7297-43b2-d510-c894cbf6e53b.htm" />
   <HelpKINode Title="Post enumeration member" Url="html/86eb2a99-7297-43b2-d510-c894cbf6e53b.htm" />
+  <HelpKINode Title="Priority property">
+    <HelpKINode Title="IMailContent.Priority Property " Url="html/e86f50e1-d41a-13a6-04a3-4ddd558bd5ec.htm" />
+    <HelpKINode Title="MailContent.Priority Property " Url="html/0c76047d-111f-3f0e-051c-5a7a80c2a652.htm" />
+  </HelpKINode>
   <HelpKINode Title="PropertyName property" Url="html/80c7bfa6-9d65-1e66-8be8-1b48f3b7f0cc.htm" />
   <HelpKINode Title="Put enumeration member" Url="html/86eb2a99-7297-43b2-d510-c894cbf6e53b.htm" />
-  <HelpKINode Title="Register method">
-    <HelpKINode Title="IocFactory.Register Method " Url="html/5912c8bd-9b59-c303-a1d3-66f177bc27ce.htm" />
-    <HelpKINode Title="IocFactory.Register Method " Url="html/97365d04-76a4-ac5a-7ba9-d6c121228ebc.htm" />
+  <HelpKINode Title="ReceiverMailList property">
+    <HelpKINode Title="IMailContent.ReceiverMailList Property " Url="html/412b50db-5d27-0b30-dfd3-12b40179c627.htm" />
+    <HelpKINode Title="MailContent.ReceiverMailList Property " Url="html/ec7b5fd0-9df0-fe0f-40f1-bf13f4cc3490.htm" />
   </HelpKINode>
-  <HelpKINode Title="RegisteredTypesForInterface method" Url="html/2563e76c-94cf-b169-7caf-94332a34ec06.htm" />
-  <HelpKINode Title="RegisterNamespace method" Url="html/4c6ecadd-6b0a-0686-43cd-c1ff530fca35.htm" />
+  <HelpKINode Title="Register method" Url="html/f3a7936b-b571-f04b-f397-9070183e1fbb.htm" />
   <HelpKINode Title="RemoveAccentuation method" Url="html/9c13b95b-496d-8178-b730-e623daae650a.htm" />
   <HelpKINode Title="Reset method" Url="html/cc30fea4-8247-9a96-1fdb-50fd5e6c525e.htm" />
-  <HelpKINode Title="Resolve(Of T) method" Url="html/c8ee660e-c312-2396-e7e3-fa1d7132d2f1.htm" />
   <HelpKINode Title="Resolve(Of TInterface) method" Url="html/629dcbad-f186-ebc3-ed6c-79ec29d003d7.htm" />
-  <HelpKINode Title="Resolve&lt;T&gt; method" Url="html/c8ee660e-c312-2396-e7e3-fa1d7132d2f1.htm" />
   <HelpKINode Title="Resolve&lt;TInterface&gt; method" Url="html/629dcbad-f186-ebc3-ed6c-79ec29d003d7.htm" />
   <HelpKINode Title="ResolveByName(Of TInterface) method" Url="html/3ab2b200-68c0-af10-4d8a-b720af24370d.htm" />
   <HelpKINode Title="ResolveByName&lt;TInterface&gt; method" Url="html/3ab2b200-68c0-af10-4d8a-b720af24370d.htm" />
-  <HelpKINode Title="ResolveSpecific(Of T) method" Url="html/ab5ff2d1-7d38-b3dc-ccf4-d62d897066ab.htm" />
-  <HelpKINode Title="ResolveSpecific&lt;T&gt; method" Url="html/ab5ff2d1-7d38-b3dc-ccf4-d62d897066ab.htm" />
   <HelpKINode Title="ResponseData property" Url="html/1ed827da-549e-949a-4da4-5709c97df2ca.htm" />
   <HelpKINode Title="RestClient class">
     <HelpKINode Title="RestClient Class" Url="html/e37d8ced-ec47-1858-2a0b-3a0baa1d0722.htm" />
@@ -228,11 +413,35 @@
   </HelpKINode>
   <HelpKINode Title="RestClient.SendHttpWebRequest(Of T) method" Url="html/915922fe-311c-99b4-795d-ed2e4dc64e02.htm" />
   <HelpKINode Title="RestClient.SendHttpWebRequest&lt;T&gt; method" Url="html/915922fe-311c-99b4-795d-ed2e4dc64e02.htm" />
+  <HelpKINode Title="RestClient.SendHttpWebRequestAsync(Of T) method" Url="html/ea01739a-b493-f9e0-44b7-0a0cc16eb56a.htm" />
+  <HelpKINode Title="RestClient.SendHttpWebRequestAsync&lt;T&gt; method" Url="html/ea01739a-b493-f9e0-44b7-0a0cc16eb56a.htm" />
+  <HelpKINode Title="Return method" Url="html/2f9c8061-ef14-1496-43d5-d3f21110d8bd.htm" />
+  <HelpKINode Title="ReturnValue property" Url="html/90587b4f-2494-186a-b90e-82c82004728f.htm" />
   <HelpKINode Title="Rollback method" Url="html/d72ead7a-e891-c0dc-1fa8-c5cdc6aac27e.htm" />
   <HelpKINode Title="RollbackGlobalTransaction method" Url="html/9a34c2ca-afed-27c6-9ddf-e68516241269.htm" />
   <HelpKINode Title="SecondValue property" Url="html/1a417f97-cb5a-4962-79e7-e07b1f764d0b.htm" />
+  <HelpKINode Title="SendEmail method">
+    <HelpKINode Title="IMailService.SendEmail Method " Url="html/0679eaa2-566c-f028-df09-f0ddf22e4e99.htm" />
+    <HelpKINode Title="MailService.SendEmail Method " Url="html/b1d70302-bd9f-2ee8-d7d7-0d9316fbdd9e.htm" />
+  </HelpKINode>
+  <HelpKINode Title="SendEmailAsync method">
+    <HelpKINode Title="IMailService.SendEmailAsync Method " Url="html/3b0d617b-4e4a-4145-13c0-11340ebf6e09.htm" />
+    <HelpKINode Title="MailService.SendEmailAsync Method " Url="html/08c80e87-03e0-e3b2-bc2e-7c8e3abc5554.htm" />
+  </HelpKINode>
   <HelpKINode Title="SendHttpWebRequest(Of T) method" Url="html/915922fe-311c-99b4-795d-ed2e4dc64e02.htm" />
   <HelpKINode Title="SendHttpWebRequest&lt;T&gt; method" Url="html/915922fe-311c-99b4-795d-ed2e4dc64e02.htm" />
+  <HelpKINode Title="SendHttpWebRequestAsync(Of T) method" Url="html/ea01739a-b493-f9e0-44b7-0a0cc16eb56a.htm" />
+  <HelpKINode Title="SendHttpWebRequestAsync&lt;T&gt; method" Url="html/ea01739a-b493-f9e0-44b7-0a0cc16eb56a.htm" />
+  <HelpKINode Title="SendMailErrorEventArgs class">
+    <HelpKINode Title="SendMailErrorEventArgs Class" Url="html/f8bffc43-65cc-4ff6-40f9-50c5a803c2cd.htm" />
+    <HelpKINode Title="about SendMailErrorEventArgs class" Url="html/f8bffc43-65cc-4ff6-40f9-50c5a803c2cd.htm" />
+    <HelpKINode Title="constructor" Url="html/42095abb-b5f1-9401-d751-00ce9415452f.htm" />
+    <HelpKINode Title="methods" Url="html/27b280fc-dbc3-e521-a79a-03175c580c6f.htm" />
+    <HelpKINode Title="properties" Url="html/4e92d4c7-7041-b6eb-6465-76dab45f472c.htm" />
+  </HelpKINode>
+  <HelpKINode Title="SendMailErrorEventArgs.Exception property" Url="html/9099036e-d404-3936-7de0-069178f9dc6e.htm" />
+  <HelpKINode Title="SendMailErrorEventArgs.SendMailErrorEventArgs constructor" Url="html/42095abb-b5f1-9401-d751-00ce9415452f.htm" />
+  <HelpKINode Title="SendMailErrorEventHandler delegate" Url="html/8a9c2627-5fca-0058-9bb7-876638a1c0a8.htm" />
   <HelpKINode Title="Serializer class">
     <HelpKINode Title="Serializer Class" Url="html/7d534b52-c779-0e1c-9c39-7ea8b436fd3b.htm" />
     <HelpKINode Title="about Serializer class" Url="html/7d534b52-c779-0e1c-9c39-7ea8b436fd3b.htm" />
@@ -241,16 +450,28 @@
   <HelpKINode Title="Serializer.BinaryDeserialize(Of T) method" Url="html/a3f4edd9-3ab0-8715-f6b1-7638a61d5465.htm" />
   <HelpKINode Title="Serializer.BinaryDeserialize&lt;T&gt; method" Url="html/a3f4edd9-3ab0-8715-f6b1-7638a61d5465.htm" />
   <HelpKINode Title="Serializer.BinarySerialize method" Url="html/ce7d8e5c-8a13-6add-d1b5-00f276bb5ffb.htm" />
-  <HelpKINode Title="Serializer.JsonDeserialize(Of T) method" Url="html/12302dce-0e31-9c11-e5c4-3d12e397c6f3.htm" />
-  <HelpKINode Title="Serializer.JsonDeserialize&lt;T&gt; method" Url="html/12302dce-0e31-9c11-e5c4-3d12e397c6f3.htm" />
+  <HelpKINode Title="Serializer.JsonDeserialize method" Url="html/de2358ab-9230-abbe-970d-7d6eb9ef6d1e.htm" />
   <HelpKINode Title="Serializer.JsonSerialize method" Url="html/6da41e12-12f8-38e7-7c07-33e8b7628126.htm" />
-  <HelpKINode Title="Serializer.XmlDeserialize(Of T) method" Url="html/70e03374-9409-eaed-c6bb-88d8f4b78ebc.htm" />
-  <HelpKINode Title="Serializer.XmlDeserialize&lt;T&gt; method" Url="html/70e03374-9409-eaed-c6bb-88d8f4b78ebc.htm" />
+  <HelpKINode Title="Serializer.XmlDeserialize method" Url="html/7cb2653c-26aa-e2f6-5df3-4e12b7888d60.htm" />
   <HelpKINode Title="Serializer.XmlSerialize method" Url="html/43f77071-856b-89cf-a829-200af04fc6df.htm" />
-  <HelpKINode Title="Set(Of T) method" Url="html/62eb44f8-f342-97c8-37cd-c4ec3c318fad.htm" />
-  <HelpKINode Title="Set&lt;T&gt; method" Url="html/62eb44f8-f342-97c8-37cd-c4ec3c318fad.htm" />
+  <HelpKINode Title="Set(Of T) method">
+    <HelpKINode Title="CacheConnector.Set(T) Method " Url="html/62eb44f8-f342-97c8-37cd-c4ec3c318fad.htm" />
+    <HelpKINode Title="ICacheConnector.Set(T) Method " Url="html/55573e0c-a173-cade-9823-c578e7ebe1da.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Set&lt;T&gt; method">
+    <HelpKINode Title="CacheConnector.Set(T) Method " Url="html/62eb44f8-f342-97c8-37cd-c4ec3c318fad.htm" />
+    <HelpKINode Title="ICacheConnector.Set(T) Method " Url="html/55573e0c-a173-cade-9823-c578e7ebe1da.htm" />
+  </HelpKINode>
   <HelpKINode Title="setup">
     <HelpKINode Title="nuget, install" Url="html/1fe681ca-6748-400e-b4ab-d484e0a1d7a7.htm" />
+  </HelpKINode>
+  <HelpKINode Title="SmtpPort property">
+    <HelpKINode Title="IMailServerConfiguration.SmtpPort Property " Url="html/8b094b2b-197b-5a59-f609-a26a251693d0.htm" />
+    <HelpKINode Title="MailServerConfiguration.SmtpPort Property " Url="html/a1ac68b6-6cdc-3429-cd10-fa99b3f5bb8e.htm" />
+  </HelpKINode>
+  <HelpKINode Title="SmtpServerAddress property">
+    <HelpKINode Title="IMailServerConfiguration.SmtpServerAddress Property " Url="html/c5ecfea7-82ef-07ea-7d7b-6c73c2fc83ae.htm" />
+    <HelpKINode Title="MailServerConfiguration.SmtpServerAddress Property " Url="html/42bf96b6-30f4-f331-6d8f-e2f0ec739d1f.htm" />
   </HelpKINode>
   <HelpKINode Title="SortDirection enumeration" Url="html/631a4f42-649c-95fc-0ee9-cf4728b721a2.htm" />
   <HelpKINode Title="StatusCode property" Url="html/ed257513-eefc-bc13-8d46-0b6901ef3935.htm" />
@@ -263,7 +484,7 @@
   <HelpKINode Title="StringExtensions.AsCpf method" Url="html/61eb0ca4-26d5-dfae-9565-eb4741c3aff2.htm" />
   <HelpKINode Title="StringExtensions.AsPhoneNumber method" Url="html/56c388ba-4811-8b21-f73b-6be9f6e8555b.htm" />
   <HelpKINode Title="StringExtensions.AsZipCode method" Url="html/37d74da9-70ba-e344-59fa-51f505df5f7d.htm" />
-  <HelpKINode Title="StringExtensions.CalculateMd5 method" Url="html/5150360e-9e1b-48a3-fb7d-601488a93ddd.htm" />
+  <HelpKINode Title="StringExtensions.CalculateMd5 method" Url="html/c8cc25e9-87a2-edc7-9c88-0521399af0a2.htm" />
   <HelpKINode Title="StringExtensions.CalculateSha1 method" Url="html/c40f3c32-4a3d-afe0-b0db-a4abef88463b.htm" />
   <HelpKINode Title="StringExtensions.CalculateSha256 method" Url="html/7d568388-6438-9b33-8562-695038c77fcf.htm" />
   <HelpKINode Title="StringExtensions.CalculateSha384 method" Url="html/45db4788-47d5-aca9-aea8-7c5454806379.htm" />
@@ -280,8 +501,18 @@
   <HelpKINode Title="StringExtensions.Mask method" Url="html/e354c4fc-0b4b-9fa1-d2f9-edee175375ea.htm" />
   <HelpKINode Title="StringExtensions.RemoveAccentuation method" Url="html/9c13b95b-496d-8178-b730-e623daae650a.htm" />
   <HelpKINode Title="StringMaskFormat enumeration" Url="html/699730a5-ec2c-3e1e-12f7-daf4f2bdaaae.htm" />
+  <HelpKINode Title="Stub(Of T, R) method" Url="html/b5c0a192-d62a-96b3-9a5d-4522ef0efed4.htm" />
+  <HelpKINode Title="Stub&lt;T, R&gt; method" Url="html/b5c0a192-d62a-96b3-9a5d-4522ef0efed4.htm" />
+  <HelpKINode Title="Subject property">
+    <HelpKINode Title="IMailContent.Subject Property " Url="html/dea9a5e0-681b-de6c-bc48-3b8f38283564.htm" />
+    <HelpKINode Title="MailContent.Subject Property " Url="html/3171c2c8-ae14-7a63-abb7-7970db523fe5.htm" />
+  </HelpKINode>
   <HelpKINode Title="SystemTimeZones method" Url="html/170b1b63-5334-1df6-0a97-a5acf5258b31.htm" />
   <HelpKINode Title="ToIso8601String method" Url="html/857c152d-0194-63e7-63fc-03bb72df27b8.htm" />
+  <HelpKINode Title="UseSsl property">
+    <HelpKINode Title="IMailServerConfiguration.UseSsl Property " Url="html/f48cfee9-4325-4f8d-c33a-7f97931d8bf3.htm" />
+    <HelpKINode Title="MailServerConfiguration.UseSsl Property " Url="html/1b7ee00d-ba2e-0b27-3c78-23125ad3f7f6.htm" />
+  </HelpKINode>
   <HelpKINode Title="ValidateApplication method" Url="html/6115765f-44ba-85bd-b72e-f0115ec72eb6.htm" />
   <HelpKINode Title="ValidateToken method" Url="html/229dcc1e-cd25-6293-802b-1a412df80b89.htm" />
   <HelpKINode Title="version">
@@ -310,7 +541,6 @@
   <HelpKINode Title="WebResponse&lt;T&gt;.WebResponse constructor" Url="html/627fe0b4-f97d-b3d2-fa34-b8d7a8029c50.htm" />
   <HelpKINode Title="Welcome" Url="html/f8ec05c7-0c7d-4e55-bdf3-2a8eeace09c3.htm" />
   <HelpKINode Title="Xml enumeration member" Url="html/ecdb4d6b-4733-07c5-21b8-7071178e3778.htm" />
-  <HelpKINode Title="XmlDeserialize(Of T) method" Url="html/70e03374-9409-eaed-c6bb-88d8f4b78ebc.htm" />
-  <HelpKINode Title="XmlDeserialize&lt;T&gt; method" Url="html/70e03374-9409-eaed-c6bb-88d8f4b78ebc.htm" />
+  <HelpKINode Title="XmlDeserialize method" Url="html/7cb2653c-26aa-e2f6-5df3-4e12b7888d60.htm" />
   <HelpKINode Title="XmlSerialize method" Url="html/43f77071-856b-89cf-a829-200af04fc6df.htm" />
 </HelpKI>

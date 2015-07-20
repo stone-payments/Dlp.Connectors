@@ -1,0 +1,127 @@
+﻿<html><head><meta http-equiv="X-UA-Compatible" content="IE=edge" /><link rel="shortcut icon" href="../icons/favicon.ico" /><link rel="stylesheet" type="text/css" href="../styles/branding.css" /><link rel="stylesheet" type="text/css" href="../styles/branding-en-US.css" /><script type="text/javascript" src="../scripts/branding.js"> </script><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>IocFactory.Register Method </title><meta name="Language" content="en-us" /><meta name="System.Keywords" content="Register method" /><meta name="System.Keywords" content="IocFactory.Register method" /><meta name="Microsoft.Help.F1" content="Dlp.Framework.Container.IocFactory.Register" /><meta name="Microsoft.Help.Id" content="M:Dlp.Framework.Container.IocFactory.Register(Dlp.Framework.Container.IRegistration[])" /><meta name="Description" content="Register a component within the IocFactory." /><meta name="Microsoft.Help.ContentType" content="Reference" /><meta name="BrandingAware" content="true" /><meta name="container" content="Dlp.Framework.Container" /><meta name="file" content="f3a7936b-b571-f04b-f397-9070183e1fbb" /><meta name="guid" content="f3a7936b-b571-f04b-f397-9070183e1fbb" /><link type="text/css" rel="stylesheet" href="../styles/highlight.css" /><script type="text/javascript" src="../scripts/highlight.js"> </script><link rel="stylesheet" type="text/css" href="../styles/branding-Website.css" /><script type="text/javascript" src="../scripts/jquery-1.11.0.min.js"></script><script type="text/javascript" src="../scripts/branding-Website.js"></script></head><body onload="OnLoad('cs')"><input type="hidden" id="userDataCache" class="userDataStyle" /><div class="pageHeader" id="PageHeader">DLP SDK<form id="SearchForm" method="get" action="#" onsubmit="javascript:TransferToSearchPage(); return false;"><input id="SearchTextBox" type="text" maxlength="200" /><button id="SearchButton" type="submit"></button></form></div><div class="pageBody"><div class="leftNav" id="leftNav"><div id="tocNav"><div class="toclevel0" data-toclevel="0"><a class="tocCollapsed" onclick="javascript: Toggle(this);" href="#!"></a><a data-tochassubtree="true" href="f8ec05c7-0c7d-4e55-bdf3-2a8eeace09c3.htm" title="DLP SDK" tocid="roottoc">DLP SDK</a></div><div class="toclevel0" data-toclevel="0"><a class="tocCollapsed" onclick="javascript: Toggle(this);" href="#!"></a><a data-tochassubtree="true" href="a01bff2f-78de-5e49-7e92-8ef58c74b5d4.htm" title="Dlp.Framework.Container" tocid="a01bff2f-78de-5e49-7e92-8ef58c74b5d4">Dlp.Framework.Container</a></div><div class="toclevel0" data-toclevel="0"><a class="tocCollapsed" onclick="javascript: Toggle(this);" href="#!"></a><a data-tochassubtree="true" href="ca7446fd-bd44-0f4a-ee89-1f8a1fb2a9ce.htm" title="IocFactory Class" tocid="ca7446fd-bd44-0f4a-ee89-1f8a1fb2a9ce">IocFactory Class</a></div><div class="toclevel1" data-toclevel="1" data-childrenloaded="true"><a class="tocExpanded" onclick="javascript: Toggle(this);" href="#!"></a><a data-tochassubtree="true" href="9842f787-1575-66af-2c8f-10cc56de6a55.htm" title="IocFactory Methods" tocid="9842f787-1575-66af-2c8f-10cc56de6a55">IocFactory Methods</a></div><div class="toclevel2 current" data-toclevel="2"><a data-tochassubtree="false" href="f3a7936b-b571-f04b-f397-9070183e1fbb.htm" title="Register Method " tocid="f3a7936b-b571-f04b-f397-9070183e1fbb">Register Method </a></div><div class="toclevel2" data-toclevel="2"><a data-tochassubtree="false" href="cc30fea4-8247-9a96-1fdb-50fd5e6c525e.htm" title="Reset Method " tocid="cc30fea4-8247-9a96-1fdb-50fd5e6c525e">Reset Method </a></div><div class="toclevel2" data-toclevel="2"><a data-tochassubtree="false" href="629dcbad-f186-ebc3-ed6c-79ec29d003d7.htm" title="Resolve(TInterface) Method " tocid="629dcbad-f186-ebc3-ed6c-79ec29d003d7">Resolve(TInterface) Method </a></div><div class="toclevel2" data-toclevel="2"><a data-tochassubtree="false" href="3ab2b200-68c0-af10-4d8a-b720af24370d.htm" title="ResolveByName(TInterface) Method " tocid="3ab2b200-68c0-af10-4d8a-b720af24370d">ResolveByName(TInterface) Method </a></div></div><div id="tocResizableEW" onmousedown="OnMouseDown(event);"></div><div id="TocResize" class="tocResize"><img id="ResizeImageIncrease" src="../icons/TocOpen.gif" onclick="OnIncreaseToc()" alt="Click or drag to resize" title="Click or drag to resize"><img id="ResizeImageReset" src="../icons/TocClose.gif" style="display:none" onclick="OnResetToc()" alt="Click or drag to resize" title="Click or drag to resize"></div></div><div class="topicContent" id="TopicContent"><table class="titleTable"><tr><td class="logoColumn"><img src="../icons/Help.png" /></td><td class="titleColumn">IocFactory<span id="LST7DD3B3B1_0"></span><script type="text/javascript">AddLanguageSpecificTextSet("LST7DD3B3B1_0?cpp=::|nu=.");</script>Register Method </td></tr></table><span class="introStyle"></span><div class="summary">
+            Register a component within the IocFactory.
+            </div><p> </p><strong>Namespace:</strong> <a href="a01bff2f-78de-5e49-7e92-8ef58c74b5d4.htm">Dlp.Framework.Container</a><br /><strong>Assembly:</strong> Dlp.Framework (in Dlp.Framework.dll) Version: 0.1.5679.22758 (1.0.0.0)<div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID1RB')" onkeypress="SectionExpandCollapse_CheckKey('ID1RB', event)" tabindex="0"><img id="ID1RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />Syntax</span></div><div id="ID1RBSection" class="collapsibleSection"><div class="codeSnippetContainer"><div class="codeSnippetContainerTabs"><div id="ID0ECCA_tab1" class="codeSnippetContainerTab"><a href="#" onclick="javascript:ChangeTab('ID0ECCA','cs','1','3');return false;">C#</a></div><div id="ID0ECCA_tab2" class="codeSnippetContainerTab"><a href="#" onclick="javascript:ChangeTab('ID0ECCA','vb','2','3');return false;">VB</a></div><div id="ID0ECCA_tab3" class="codeSnippetContainerTab"><a href="#" onclick="javascript:ChangeTab('ID0ECCA','cpp','3','3');return false;">C++</a></div></div><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0ECCA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0ECCA');return false;" title="Copy">Copy</a></div></div><div id="ID0ECCA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">Register</span>(
+	<span class="keyword">params</span> <span class="nolink">IRegistration</span>[] <span class="parameter">componentRegistrationCollection</span>
+)</pre></div><div id="ID0ECCA_code_Div2" class="codeSnippetContainerCode" style="display: none"><pre xml:space="preserve"><span class="keyword">Public</span> <span class="keyword">Shared</span> <span class="keyword">Sub</span> <span class="identifier">Register</span> ( 
+	<span class="keyword">ParamArray</span> <span class="parameter">componentRegistrationCollection</span> <span class="keyword">As</span> <span class="nolink">IRegistration</span>()
+)</pre></div><div id="ID0ECCA_code_Div3" class="codeSnippetContainerCode" style="display: none"><pre xml:space="preserve"><span class="keyword">public</span>:
+<span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">Register</span>(
+	... <span class="keyword">array</span>&lt;<span class="nolink">IRegistration</span>^&gt;^ <span class="parameter">componentRegistrationCollection</span>
+)</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0ECCA");</script><h4 class="subHeading">Parameters</h4><dl><dt><span class="parameter">componentRegistrationCollection</span></dt><dd>Type: <span id="LST7DD3B3B1_1"></span><script type="text/javascript">AddLanguageSpecificTextSet("LST7DD3B3B1_1?cpp=array&lt;");</script><span class="nolink">IRegistration</span><span id="LST7DD3B3B1_2"></span><script type="text/javascript">AddLanguageSpecificTextSet("LST7DD3B3B1_2?cpp=&gt;|vb=()|nu=[]");</script><br />The component to be registered. Create with the Component.For method.</dd></dl></div><div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID2RB')" onkeypress="SectionExpandCollapse_CheckKey('ID2RB', event)" tabindex="0"><img id="ID2RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />Examples</span></div><div id="ID2RBSection" class="collapsibleSection"><p>The following example shows how to register an interface and get the registered component.</p><div class="codeSnippetContainer"><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EAAEBA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EAAEBA');return false;" title="Copy">Copy</a></div></div><div id="ID0EAAEBA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-comment">// Register a component within the IocFactory container.</span>
+IocFactory.Register(
+
+  <span class="highlight-comment">// Register the interface IConfigurationUtility, specifying the ConfigurationUtility class as its concrete type.</span>
+  Component.For&lt;IConfigurationutility&gt;()
+    .ImplementedBy&lt;ConfigurationUtility&gt;()
+);
+
+<span class="highlight-comment">// After the component has been registered, just use the Resolve method whenever you need to get an instance of the registered type.</span>
+<span class="highlight-comment">// The following line creates a new instance of the ConfigurationUtility type.</span>
+IConfigurationUtility configurationUtility = IocFactory.Resolve&lt;IConfigurationutility&gt;();</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EAAEBA");</script></div><div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID4RB')" onkeypress="SectionExpandCollapse_CheckKey('ID4RB', event)" tabindex="0"><img id="ID4RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />Examples</span></div><div id="ID4RBSection" class="collapsibleSection"><p>In this example, we register three types with the same interface. For cases like this, is a good practice to give a unique name for each type that implements the interface.</p><div class="codeSnippetContainer"><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EADDBA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EADDBA');return false;" title="Copy">Copy</a></div></div><div id="ID0EADDBA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-comment">// Register a component within the IocFactory container.</span>
+IocFactory.Register(
+
+  <span class="highlight-comment">// Register the interface IAcquirer, specifying every type that implements the interface.</span>
+  Component.For&lt;IAcquirer&gt;()
+    .ImplementedBy&lt;Stone&gt;(<span class="highlight-literal">"Stone"</span>)
+    .ImplementedBy&lt;Rede&gt;(<span class="highlight-literal">"Rede"</span>)
+    .ImplementedBy&lt;Cielo&gt;(<span class="highlight-literal">"Cielo"</span>)
+);
+
+<span class="highlight-comment">// To retrieve the desired type, you can use a Factory method.</span>
+IAcquirer acquirer = AcquirerFactory.CreateAcquirer(<span class="highlight-number">1</span>);</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EADDBA");</script><p>
+        The implementation of the AcquirerFactory class could be something like the following:
+      </p><div class="codeSnippetContainer"><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EABDBA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EABDBA');return false;" title="Copy">Copy</a></div></div><div id="ID0EABDBA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-comment">// Acquirer fatory class.</span>
+<span class="highlight-keyword">public</span> <span class="highlight-keyword">static</span> <span class="highlight-keyword">class</span> AcquirerFactory {
+
+  <span class="highlight-comment">// Create the acquirer instance based on the acquirerCode. Pay attention to the use of the IocFactory.ResolveByName method, instead of IocFactory.Resolve.</span>
+  <span class="highlight-keyword">public</span> <span class="highlight-keyword">static</span> IAcquirer CreateAcquirer(<span class="highlight-keyword">int</span> acquirerCode) {
+
+    IAcquirer aquirer = <span class="highlight-keyword">null</span>;
+
+    <span class="highlight-comment">// Validate the code for Stone acquirer.</span>
+    <span class="highlight-keyword">if</span> (acquirerCode = <span class="highlight-number">1</span>) {
+      aquirer = IocFactory.ResolveByName&lt;IAcquirer&gt;(<span class="highlight-literal">"Stone"</span>);
+    }
+
+    <span class="highlight-comment">// Validates the code for Rede acquirer.</span>
+    <span class="highlight-keyword">if</span> (acquirerCode = <span class="highlight-number">2</span>) {
+      acquirer = IocFactory.ResolveByName&lt;IAcquirer&gt;(<span class="highlight-literal">"Rede"</span>);
+    }
+
+    <span class="highlight-comment">// Validates the code for Cielo acquirer.</span>
+    <span class="highlight-keyword">if</span> (acquirerCode = <span class="highlight-number">3</span>) {
+      acquirer = IocFactory.ResolveByName&lt;IAcquirer&gt;(<span class="highlight-literal">"Cielo"</span>);
+    }
+
+    <span class="highlight-keyword">return</span> acquirer;
+  }
+}</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EABDBA");</script><div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID3RB')" onkeypress="SectionExpandCollapse_CheckKey('ID3RB', event)" tabindex="0"><img id="ID3RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />Remarks</span></div><div id="ID3RBSection" class="collapsibleSection"><p>
+          When registering a type within an interface, if you do not specify the Name parameter, the type will be registered with System.Type.Fullname as the unique name. You can then reference any type by its fullname.
+        </p><p>
+          Also, keep in mind that when multiple types are associated with one interface and you do not specify the name of the type to be resolved in the IocFactory.Resolve method, the first registered type will be returned.
+          In the above example, if we call the 'IocFactory.Resolve&lt;IAcquirer&gt;()' method, the container is going to return a new instance of the 'Stone' type.
+        </p></div></div><div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID5RB')" onkeypress="SectionExpandCollapse_CheckKey('ID5RB', event)" tabindex="0"><img id="ID5RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />Examples</span></div><div id="ID5RBSection" class="collapsibleSection"><p>
+        Sometimes your architecture demands the use of the singleton pattern. By default, every call to the IocFactory.Resolve() method initializes a new instance of the requested type. You can define a type to be treated as singleton, with a single line of code, when registering the type.
+        To do that, simply use the .AsSingleton() method after the implemented type that you want as a singleton.
+      </p><p>
+        In the following example, the 
+      </p><div class="codeSnippetContainer"><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EAACBA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EAACBA');return false;" title="Copy">Copy</a></div></div><div id="ID0EAACBA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-comment">// Register a component within the IocFactory container.</span>
+IocFactory.Register(
+
+  <span class="highlight-comment">// Register the interface IAcquirer, specifying the Stone type to be treated as a singleton instance.</span>
+  Component.For&lt;IAcquirer&gt;()
+    .ImplementedBy&lt;Stone&gt;().AsSingleton()
+    .ImplementedBy&lt;Rede&gt;()
+    .ImplementedBy&lt;Cielo&gt;()
+);</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EAACBA");</script></div><div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID7RB')" onkeypress="SectionExpandCollapse_CheckKey('ID7RB', event)" tabindex="0"><img id="ID7RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />Examples</span></div><div id="ID7RBSection" class="collapsibleSection"><p>In many situations you may have to register multiples interfaces with its implementations, as for example, a set of repositories. As the next example illustrates, we have a namespace called Repository, containing several interfaces and its corresponding implementations. To register all the types from this namespace, you can proceed as follows:</p><div class="codeSnippetContainer"><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EABBBA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EABBBA');return false;" title="Copy">Copy</a></div></div><div id="ID0EABBBA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-comment">// Register a namespace within the IocFactory container.</span>
+IocFactory.Register(
+
+  <span class="highlight-comment">// Register all the interfaces from the specified namespace in the current assembly.</span>
+  <span class="highlight-comment">// We know that two of the repositories must be treated as singleton, so we can manually specify that.</span>
+  Component.FromThisAssembly(<span class="highlight-literal">"Dlp.Framework.Container.Repository"</span>)
+    .AsSingleton&lt;IAcquirer&gt;()
+    .AsSingleton&lt;IPaymentMethod&gt;()
+);
+
+<span class="highlight-comment">// If we have a repository named MerchantRepository, that implements the interface IMerchantRepository, then creating a new instance is as simple as calling the Resolve method.</span>
+IMerchantRepository merchantRepository = IocFactory.Resolve&lt;IMerchantRepository&gt;();</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EABBBA");</script><div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID6RB')" onkeypress="SectionExpandCollapse_CheckKey('ID6RB', event)" tabindex="0"><img id="ID6RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />Remarks</span></div><div id="ID6RBSection" class="collapsibleSection">
+        If you need to register types from another assembly, as for example, the repository is in another project, simply use the Component.FromAssembly, specifying the assembly where the types interfaces to be registered are.
+      </div></div><div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID8RB')" onkeypress="SectionExpandCollapse_CheckKey('ID8RB', event)" tabindex="0"><img id="ID8RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />Examples</span></div><div id="ID8RBSection" class="collapsibleSection"><p>
+        One of the advantages of most of the Dependency Injection Containers is the ability to intercept calls to any method of the registered interfaces. The IocFactory provides this funcionality in a easy way.
+        The first thing is to create a class that implements the Dlp.Framework.Container.Interceptors.IInterceptor interface. This interface provides two methods, as shown in the following example.
+      </p><div class="codeSnippetContainer"><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EACABA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EACABA');return false;" title="Copy">Copy</a></div></div><div id="ID0EACABA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-keyword">using</span> System;
+<span class="highlight-keyword">using</span> System.Linq;
+<span class="highlight-keyword">using</span> Dlp.Framework.Connector.Interceptors;
+
+<span class="highlight-keyword">public</span> <span class="highlight-keyword">sealed</span> <span class="highlight-keyword">class</span> MyInterceptor : IInterceptor {
+
+  <span class="highlight-comment">// The BeforeCall method is called before the method of the registered type is executed.</span>
+  <span class="highlight-keyword">public</span> <span class="highlight-keyword">object</span> BeforeCall(IInterceptorInput interceptorInput) {
+
+    <span class="highlight-comment">// You can check and edit the params received in the interceptorInput param, before they are sent to the requested method.</span>
+
+    <span class="highlight-comment">// The value that you specify here will be passed to the parameter correlationState of the AfterCall method.</span>
+    <span class="highlight-keyword">return</span> <span class="highlight-keyword">null</span>;
+  }
+
+  <span class="highlight-comment">// The AfterCall method is called after the method is executed. The correlationState param contains the data that you returned at the BeforeCall method.</span>
+  <span class="highlight-keyword">public</span> <span class="highlight-keyword">void</span> AfterCall(IInterceptorOutput interceptorOutput, <span class="highlight-keyword">object</span> correlationState) {
+
+    <span class="highlight-comment">// You can check and edit the values returned by the original method in the interceptorOutput param, before they are returned to the application.</span>
+  }
+}</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EACABA");</script><p>Having the interceptor class created, you can define the interceptor to be used for every registered interface. The following example will result in every call to any method of the interface IAcquirer to be intercepted by the MyInterceptor class.</p><div class="codeSnippetContainer"><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EAAABA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EAAABA');return false;" title="Copy">Copy</a></div></div><div id="ID0EAAABA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-comment">// Register a namespace within the IocFactory container.</span>
+IocFactory.Register(
+
+  <span class="highlight-comment">// Register the interface IAcquirer, specifying the MyInterceptor to intercept any method call for that interface.</span>
+  Component.For&lt;IAcquirer&gt;()
+    .ImplementedBy&lt;Stone&gt;()
+    .ImplementedBy&lt;Rede&gt;()
+    .ImplementedBy&lt;Cielo&gt;()
+    .Interceptor&lt;MyInterceptor&gt;()
+);</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EAAABA");</script></div><div class="collapsibleAreaRegion" id="seeAlsoSection"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID9RB')" onkeypress="SectionExpandCollapse_CheckKey('ID9RB', event)" tabindex="0"><img id="ID9RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />See Also</span></div><div id="ID9RBSection" class="collapsibleSection"><h4 class="subHeading">Reference</h4><div class="seeAlsoStyle"><a href="ca7446fd-bd44-0f4a-ee89-1f8a1fb2a9ce.htm">IocFactory Class</a></div><div class="seeAlsoStyle"><a href="a01bff2f-78de-5e49-7e92-8ef58c74b5d4.htm">Dlp.Framework.Container Namespace</a></div></div></div></div><div id="pageFooter" class="pageFooter"><p>© DLP 2015</p><div class="feedbackLink">Send comments on this topic to
+        <a id="HT_MailLink" href="mailto:ejonssen%40stone.com.br?Subject=DLP SDK">ejonssen@stone.com.br</a></div><script type="text/javascript">
+        var HT_mailLink = document.getElementById("HT_MailLink");
+        var HT_mailLinkText = HT_mailLink.innerHTML;
+        HT_mailLink.href += ": " + document.title + "\u0026body=" + encodeURIComponent("Your feedback is used to improve the documentation and the product. Your e-mail address will not be used for any other purpose and is disposed of after the issue you report is resolved. While working to resolve the issue that you report, you may be contacted via e-mail to get further details or clarification on the feedback you sent. After the issue you report has been addressed, you may receive an e-mail to let you know that your feedback has been addressed.");
+        HT_mailLink.innerHTML = HT_mailLinkText;
+        </script> </div></body></html>
