@@ -458,7 +458,6 @@
     <Content Include="Docs\fti\FTI_122.json" />
     <Content Include="favicon.ico" />
     <Content Include="packages.config" />
-    <Content Include="Docs\fti\FTI_250.json" />
     <None Include="Properties\PublishProfiles\DlpNugetRepository.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

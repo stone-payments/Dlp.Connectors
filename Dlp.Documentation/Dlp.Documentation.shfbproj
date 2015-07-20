@@ -111,16 +111,24 @@ The Authenticators namespace encapsules all the authentication and validation cl
     </ComponentConfigurations>
     <ApiFilter>
       <Filter entryType="Namespace" fullName="Dlp.Authenticator" isExposed="False">
-        <Filter entryType="Class" fullName="Dlp.Authenticator.GlobalIdentity" filterName="GlobalIdentity" isExposed="True" />
-      </Filter>
-      <Filter entryType="Namespace" fullName="Dlp.Authenticator.DataContracts" isExposed="False" />
-      <Filter entryType="Namespace" fullName="Dlp.Authenticator.Utility" isExposed="False" />
-      <Filter entryType="Namespace" fullName="Dlp.Framework.Container" isExposed="False">
-        <Filter entryType="Class" fullName="Dlp.Framework.Container.IocFactory" filterName="IocFactory" isExposed="True" />
-      </Filter>
-      <Filter entryType="Namespace" fullName="Dlp.Framework.Container.Interceptors" isExposed="False" />
-      <Filter entryType="Namespace" fullName="Dlp.Framework.Container.Proxies" isExposed="False" />
-    </ApiFilter>
+  <Filter entryType="Class" fullName="Dlp.Authenticator.GlobalIdentity" filterName="GlobalIdentity" isExposed="True" />
+</Filter>
+<Filter entryType="Namespace" fullName="Dlp.Authenticator.DataContracts" isExposed="False" />
+<Filter entryType="Namespace" fullName="Dlp.Authenticator.Utility" isExposed="False" />
+<Filter entryType="Namespace" fullName="Dlp.Connectors" isExposed="False">
+  <Filter entryType="Class" fullName="Dlp.Connectors.DatabaseConnector" filterName="DatabaseConnector" isExposed="True" />
+  <Filter entryType="Enumeration" fullName="Dlp.Connectors.SortDirection" filterName="SortDirection" isExposed="True" />
+</Filter>
+<Filter entryType="Namespace" fullName="Dlp.Framework.Container" isExposed="False">
+  <Filter entryType="Class" fullName="Dlp.Framework.Container.IocFactory" filterName="IocFactory" isExposed="True" />
+</Filter>
+<Filter entryType="Namespace" fullName="Dlp.Framework.Container.Interceptors" isExposed="False" />
+<Filter entryType="Namespace" fullName="Dlp.Framework.Container.Proxies" isExposed="False" />
+<Filter entryType="Namespace" fullName="Dlp.Framework.Mock" isExposed="False">
+  <Filter entryType="Interface" fullName="Dlp.Framework.Mock.IMethodOptions`1" filterName="IMethodOptions`1" isExposed="True" />
+  <Filter entryType="Class" fullName="Dlp.Framework.Mock.Mocker" filterName="Mocker" isExposed="True" />
+  <Filter entryType="Class" fullName="Dlp.Framework.Mock.MockerExtensions" filterName="MockerExtensions" isExposed="True" />
+</Filter></ApiFilter>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->

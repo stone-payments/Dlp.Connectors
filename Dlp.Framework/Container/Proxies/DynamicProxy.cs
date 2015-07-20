@@ -26,11 +26,18 @@ namespace Dlp.Framework.Container.Proxies {
 		/// Factory method to create a new proxy instance.
 		///</summary>
 		///<param name="objectInstance">Instance of object to be proxied</param>
+		///<param name="interceptors">List of interceptors to be called before the actual method gets executed.</param>
+		///<param name="aditionalInterfaces">Aditional interfaces to be implemented by the proxy instance.</param>
 		internal static object NewInstance(object objectInstance, IInterceptor[] interceptors = null, Type[] aditionalInterfaces = null) {
 
 			return ProxyFactory.GetInstance().Create(new DynamicProxy(objectInstance, interceptors), objectInstance.GetType(), aditionalInterfaces);
 		}
 
+		///<summary>
+		/// Factory method to create a new proxy instance.
+		///</summary>
+		///<param name="interceptors">List of interceptors to be called before the actual method gets executed.</param>
+		///<param name="aditionalInterfaces">Aditional interfaces to be implemented by the proxy instance.</param>
 		internal static object NewInstance<TInterface>(IInterceptor[] interceptors = null, Type[] aditionalInterfaces = null) {
 
 			return ProxyFactory.GetInstance().Create(new DynamicProxy(null, interceptors), typeof(TInterface), aditionalInterfaces);
@@ -42,6 +49,7 @@ namespace Dlp.Framework.Container.Proxies {
 		///<param name="proxy">Instance of proxy.</param>
 		///<param name="method">Method instance.</param>
 		///<param name="parameters">Parameters for the method.</param>
+		///<param name="genericArguments">List of the generic types of the called method.</param>
 		public object Invoke(object proxy, MethodInfo method, object[] parameters, Type[] genericArguments) {
 
 			Invocation invocation = new Invocation();
