@@ -9,388 +9,409 @@ using System.Runtime.CompilerServices;
 
 namespace Dlp.Sdk.Tests.Framework {
 
-    [TestClass]
-    public class IocFactoryTest {
+	[TestClass]
+	public class IocFactoryTest {
 
-        [TestInitialize]
-        public void Prepare() {
+		[TestInitialize]
+		public void Prepare() {
 
-            IocFactory.Reset();
-        }
+			IocFactory.Reset();
+		}
 
-        [TestMethod]
-        public void RegistrationInfo_RegisterInterface_Test() {
+		[TestMethod]
+		public void RegistrationInfo_RegisterInterface_Test() {
 
-            IRegistrationInfo registrationInfo = Component.For<IConfigurationUtilityMock>();
+			IRegistrationInfo registrationInfo = Component.For<IConfigurationUtilityMock>();
 
-            Assert.IsNotNull(registrationInfo);
-            Assert.IsNotNull(registrationInfo.InterfaceType);
-            Assert.IsTrue(registrationInfo.ComponentDataCollection.Count() == 0);
-        }
+			Assert.IsNotNull(registrationInfo);
+			Assert.IsNotNull(registrationInfo.InterfaceType);
+			Assert.IsTrue(registrationInfo.ComponentDataCollection.Count() == 0);
+		}
 
-        [TestMethod]
-        public void RegistrationInfo_RegisterTypeToInterface_Test() {
+		[TestMethod]
+		public void RegistrationInfo_RegisterTypeToInterface_Test() {
 
-            string expectedName = typeof(ConfigurationUtilityMock).FullName;
+			string expectedName = typeof(ConfigurationUtilityMock).FullName;
 
-            IRegistrationInfo registrationInfo = Component.For<IConfigurationUtilityMock>()
-                .ImplementedBy<ConfigurationUtilityMock>();
+			IRegistrationInfo registrationInfo = Component.For<IConfigurationUtilityMock>()
+				.ImplementedBy<ConfigurationUtilityMock>();
 
-            Assert.IsNotNull(registrationInfo);
-            Assert.IsNotNull(registrationInfo.InterfaceType);
-            Assert.IsTrue(registrationInfo.ComponentDataCollection.Count() == 1);
-            Assert.IsNotNull(registrationInfo.ComponentDataCollection.SingleOrDefault(p => expectedName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)));
-        }
+			Assert.IsNotNull(registrationInfo);
+			Assert.IsNotNull(registrationInfo.InterfaceType);
+			Assert.IsTrue(registrationInfo.ComponentDataCollection.Count() == 1);
+			Assert.IsNotNull(registrationInfo.ComponentDataCollection.SingleOrDefault(p => expectedName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)));
+		}
 
-        [TestMethod]
-        public void RegistrationInfo_RegisterMultipleTypesToInterface_Test() {
+		[TestMethod]
+		public void RegistrationInfo_RegisterMultipleTypesToInterface_Test() {
 
-            IRegistrationInfo registrationInfo = Component.For<IConfigurationUtilityMock>()
-                .ImplementedBy<ConfigurationUtilityMock>()
-                .ImplementedBy<AnotherMock>();
+			IRegistrationInfo registrationInfo = Component.For<IConfigurationUtilityMock>()
+				.ImplementedBy<ConfigurationUtilityMock>()
+				.ImplementedBy<AnotherMock>();
 
-            Assert.IsNotNull(registrationInfo);
-            Assert.IsNotNull(registrationInfo.InterfaceType);
-            Assert.IsTrue(registrationInfo.ComponentDataCollection.Count() == 2);
-        }
+			Assert.IsNotNull(registrationInfo);
+			Assert.IsNotNull(registrationInfo.InterfaceType);
+			Assert.IsTrue(registrationInfo.ComponentDataCollection.Count() == 2);
+		}
 
-        [TestMethod]
-        public void RegistrationInfo_RegisterWithCustomName_Test() {
+		[TestMethod]
+		public void RegistrationInfo_RegisterWithCustomName_Test() {
 
-            string expectedName = "Banana";
+			string expectedName = "Banana";
 
-            IRegistrationInfo registrationInfo = Component.For<IConfigurationUtilityMock>()
-                .ImplementedBy<ConfigurationUtilityMock>(expectedName);
+			IRegistrationInfo registrationInfo = Component.For<IConfigurationUtilityMock>()
+				.ImplementedBy<ConfigurationUtilityMock>(expectedName);
 
-            Assert.IsNotNull(registrationInfo);
-            Assert.IsNotNull(registrationInfo.InterfaceType);
-            Assert.IsTrue(registrationInfo.ComponentDataCollection.Count() == 1);
-            Assert.IsNotNull(registrationInfo.ComponentDataCollection.SingleOrDefault(p => expectedName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)));
-        }
+			Assert.IsNotNull(registrationInfo);
+			Assert.IsNotNull(registrationInfo.InterfaceType);
+			Assert.IsTrue(registrationInfo.ComponentDataCollection.Count() == 1);
+			Assert.IsNotNull(registrationInfo.ComponentDataCollection.SingleOrDefault(p => expectedName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)));
+		}
 
-        [TestMethod]
-        public void RegistrationInfo_RegisterTypeAsSingleton_Test() {
+		[TestMethod]
+		public void RegistrationInfo_RegisterTypeAsSingleton_Test() {
 
-            IRegistrationInfo registrationInfo = Component.For<IConfigurationUtilityMock>()
-                .ImplementedBy<ConfigurationUtilityMock>()
-                .IsSingleton();
+			IRegistrationInfo registrationInfo = Component.For<IConfigurationUtilityMock>()
+				.ImplementedBy<ConfigurationUtilityMock>()
+				.IsSingleton();
 
-            Assert.IsNotNull(registrationInfo);
-            Assert.IsNotNull(registrationInfo.InterfaceType);
-            Assert.IsTrue(registrationInfo.ComponentDataCollection.Count() == 1);
-            Assert.IsTrue(registrationInfo.ComponentDataCollection.First().IsSingleton);
-        }
+			Assert.IsNotNull(registrationInfo);
+			Assert.IsNotNull(registrationInfo.InterfaceType);
+			Assert.IsTrue(registrationInfo.ComponentDataCollection.Count() == 1);
+			Assert.IsTrue(registrationInfo.ComponentDataCollection.First().IsSingleton);
+		}
 
-        [TestMethod]
-        public void RegistrationInfo_RegisterWithInterceptor_Test() {
+		[TestMethod]
+		public void RegistrationInfo_RegisterWithInterceptor_Test() {
 
-            IRegistrationInfo registrationInfo = Component
-                .For<IConfigurationUtilityMock>()
-                .ImplementedBy<ConfigurationUtilityMock>()
-                .Interceptor<LogInterceptor>();
+			IRegistrationInfo registrationInfo = Component
+				.For<IConfigurationUtilityMock>()
+				.ImplementedBy<ConfigurationUtilityMock>()
+				.Interceptor<LogInterceptor>();
 
-            Assert.IsNotNull(registrationInfo);
-            Assert.IsNotNull(registrationInfo.InterfaceType);
-            Assert.IsTrue(registrationInfo.ComponentDataCollection.Count() == 1);
-        }
+			Assert.IsNotNull(registrationInfo);
+			Assert.IsNotNull(registrationInfo.InterfaceType);
+			Assert.IsTrue(registrationInfo.ComponentDataCollection.Count() == 1);
+		}
 
-        [TestMethod]
-        public void RegistrationInfo_RegisterNamespace_Test() {
+		[TestMethod]
+		public void RegistrationInfo_RegisterNamespace_Test() {
 
-            AssemblyInfo registration = Component
-                .FromThisAssembly("Dlp.Sdk.Tests.Framework.Mocks")
-                .Interceptor<LogInterceptor>()
-                .IsSingleton<AnotherMock>();
-        }
+			AssemblyInfo registration = Component
+				.FromThisAssembly("Dlp.Sdk.Tests.Framework.Mocks")
+				.Interceptor<LogInterceptor>()
+				.IsSingleton<AnotherMock>();
+		}
 
-        [TestMethod]
-        public void IocFactory_Register_Test() {
+		[TestMethod]
+		public void IocFactory_Register_Test() {
 
-            IocFactory.Register(
-                Component.For<IConfigurationUtilityMock>()
-                .ImplementedBy<ConfigurationUtilityMock>()
-                .ImplementedBy<AnotherMock>()
-                );
-        }
+			IocFactory.Register(
+				Component.For<IConfigurationUtilityMock>()
+				.ImplementedBy<ConfigurationUtilityMock>()
+				.ImplementedBy<AnotherMock>()
+				);
+		}
 
-        [TestMethod]
-        public void IocFactory_Resolve_Test() {
+		[TestMethod]
+		public void IocFactory_Resolve_Test() {
 
-            IocFactory.Register(
-                    Component.For<IConfigurationUtilityMock>()
-                    .ImplementedBy<ConfigurationUtilityMock>()
-                );
+			IocFactory.Register(
+					Component.For<IConfigurationUtilityMock>()
+					.ImplementedBy<ConfigurationUtilityMock>()
+				);
 
-            IConfigurationUtilityMock mock = IocFactory.Resolve<IConfigurationUtilityMock>();
+			IConfigurationUtilityMock mock = IocFactory.Resolve<IConfigurationUtilityMock>();
 
-            Assert.IsNotNull(mock);
+			Assert.IsNotNull(mock);
 
-            mock.TestValue = "Banana";
+			mock.TestValue = "Banana";
 
-            IConfigurationUtilityMock mock2 = IocFactory.Resolve<IConfigurationUtilityMock>();
+			IConfigurationUtilityMock mock2 = IocFactory.Resolve<IConfigurationUtilityMock>();
 
-            Assert.IsNotNull(mock2);
-            Assert.IsNull(mock2.TestValue);
-        }
+			Assert.IsNotNull(mock2);
+			Assert.IsNull(mock2.TestValue);
+		}
 
-        [TestMethod]
-        public void IocFactory_ResolveSingleton_Test() {
+		[TestMethod]
+		public void IocFactory_ResolveSingleton_Test() {
 
-            IocFactory.Register(
-                    Component.For<IConfigurationUtilityMock>()
-                    .ImplementedBy<ConfigurationUtilityMock>()
-                    .IsSingleton()
-                );
+			IocFactory.Register(
+					Component.For<IConfigurationUtilityMock>()
+					.ImplementedBy<ConfigurationUtilityMock>()
+					.IsSingleton()
+				);
 
-            IConfigurationUtilityMock mock = IocFactory.Resolve<IConfigurationUtilityMock>();
+			IConfigurationUtilityMock mock = IocFactory.Resolve<IConfigurationUtilityMock>();
 
-            Assert.IsNotNull(mock);
+			Assert.IsNotNull(mock);
 
-            mock.TestValue = "Banana";
+			mock.TestValue = "Banana";
 
-            IConfigurationUtilityMock mock2 = IocFactory.Resolve<IConfigurationUtilityMock>();
+			IConfigurationUtilityMock mock2 = IocFactory.Resolve<IConfigurationUtilityMock>();
 
-            Assert.IsNotNull(mock2);
-            Assert.AreEqual("Banana", mock2.TestValue);
-        }
+			Assert.IsNotNull(mock2);
+			Assert.AreEqual("Banana", mock2.TestValue);
+		}
 
-        [TestMethod]
-        public void IocFactory_ResolveContructorParameter_Test() {
+		[TestMethod]
+		public void IocFactory_ResolveContructorParameter_Test() {
 
-            IocFactory.Register(
-                    Component.For<IConfigurationUtilityMock>()
-                    .ImplementedBy<ConfigurationUtilityMock>()
-                );
+			IocFactory.Register(
+					Component.For<IConfigurationUtilityMock>()
+					.ImplementedBy<ConfigurationUtilityMock>()
+				);
 
-            IConfigurationUtilityMock mock = IocFactory.Resolve<IConfigurationUtilityMock>("connectionString");
+			IConfigurationUtilityMock mock = IocFactory.Resolve<IConfigurationUtilityMock>("connectionString");
 
-            Assert.IsNotNull(mock);
-        }
+			Assert.IsNotNull(mock);
+		}
 
-        [TestMethod]
-        public void IocFactory_ResolveConstructorParameter2_Test() {
+		[TestMethod]
+		public void IocFactory_ResolveConstructorParameter2_Test() {
 
-            IocFactory.Register(
-                    Component.For<IConfigurationUtilityMock>()
-                    .ImplementedBy<ConfigurationUtilityMock>()
-                );
+			IocFactory.Register(
+					Component.For<IConfigurationUtilityMock>()
+					.ImplementedBy<ConfigurationUtilityMock>()
+				);
 
-            IConfigurationUtilityMock mock = IocFactory.Resolve<IConfigurationUtilityMock>(DateTime.Now);
+			IConfigurationUtilityMock mock = IocFactory.Resolve<IConfigurationUtilityMock>(DateTime.Now);
 
-            Assert.IsNotNull(mock);
-        }
+			Assert.IsNotNull(mock);
+		}
 
-        [TestMethod]
-        public void IocFactory_ResolveWithParameterRegisteredDependency_Test() {
+		[TestMethod]
+		public void IocFactory_ResolveWithParameterRegisteredDependency_Test() {
 
-            IocFactory.Register(
-                Component.For<IConfigurationUtilityMock>()
-                    .ImplementedBy<ConfigurationUtilityMock>()
-                    .ImplementedBy<AnotherMock>()
-                );
+			IocFactory.Register(
+				Component.For<IConfigurationUtilityMock>()
+					.ImplementedBy<ConfigurationUtilityMock>()
+					.ImplementedBy<AnotherMock>()
+				);
 
-            IConfigurationUtilityMock mock = IocFactory.Resolve<IConfigurationUtilityMock>();
+			IConfigurationUtilityMock mock = IocFactory.Resolve<IConfigurationUtilityMock>();
 
-            Assert.IsNotNull(mock);
-        }
+			Assert.IsNotNull(mock);
+		}
 
-        [TestMethod]
-        public void IocFactory_ResolveByName_Test() {
+		[TestMethod]
+		public void IocFactory_ResolveByName_Test() {
 
-            IocFactory.Register(
-                Component.For<IConfigurationUtilityMock>()
-                .ImplementedBy<ConfigurationUtilityMock>()
-                .ImplementedBy<AnotherMock>()
-                );
+			IocFactory.Register(
+				Component.For<IConfigurationUtilityMock>()
+				.ImplementedBy<ConfigurationUtilityMock>()
+				.ImplementedBy<AnotherMock>()
+				);
 
-            IConfigurationUtilityMock mock = IocFactory.ResolveByName<IConfigurationUtilityMock>("Dlp.Sdk.Tests.Framework.Mocks.AnotherMock");
+			IConfigurationUtilityMock mock = IocFactory.ResolveByName<IConfigurationUtilityMock>("Dlp.Sdk.Tests.Framework.Mocks.AnotherMock");
 
-            Assert.IsNotNull(mock);
-            Assert.IsInstanceOfType(mock, typeof(AnotherMock));
-        }
+			Assert.IsNotNull(mock);
+			Assert.IsInstanceOfType(mock, typeof(AnotherMock));
+		}
 
-        [TestMethod]
-        public void IocFactory_ResolvedNamed_Test() {
+		[TestMethod]
+		public void IocFactory_ResolvedNamed_Test() {
 
-            IocFactory.Register(
-                Component.For<IConfigurationUtilityMock>()
-                .ImplementedBy<ConfigurationUtilityMock>()
-                .ImplementedBy<AnotherMock>("Another")
-                );
+			IocFactory.Register(
+				Component.For<IConfigurationUtilityMock>()
+				.ImplementedBy<ConfigurationUtilityMock>()
+				.ImplementedBy<AnotherMock>("Another")
+				);
 
-            IConfigurationUtilityMock mock = IocFactory.ResolveByName<IConfigurationUtilityMock>("Another");
+			IConfigurationUtilityMock mock = IocFactory.ResolveByName<IConfigurationUtilityMock>("Another");
 
-            Assert.IsNotNull(mock);
-            Assert.IsInstanceOfType(mock, typeof(AnotherMock));
-        }
+			Assert.IsNotNull(mock);
+			Assert.IsInstanceOfType(mock, typeof(AnotherMock));
+		}
 
-        //[TestMethod]
-        //public void Proxy_Test() {
+		//[TestMethod]
+		//public void Proxy_Test() {
 
-        //    Assembly assembly = typeof(Dlp.Framework.Container.Proxies.IDynamicProxy).Assembly;
+		//    Assembly assembly = typeof(Dlp.Framework.Container.Proxies.IDynamicProxy).Assembly;
 
-        //    PrivateType privateObject = new PrivateType(assembly.FullName, "Dlp.Framework.Container.Proxies.DynamicProxy");
+		//    PrivateType privateObject = new PrivateType(assembly.FullName, "Dlp.Framework.Container.Proxies.DynamicProxy");
 
-        //    IConfigurationUtilityMock mock = privateObject.InvokeStatic("NewInstance", new ConfigurationUtilityMock(),
-        //        new IInterceptor[] { new LogInterceptor(), new ValidationInterceptor() }) as IConfigurationUtilityMock;
+		//    IConfigurationUtilityMock mock = privateObject.InvokeStatic("NewInstance", new ConfigurationUtilityMock(),
+		//        new IInterceptor[] { new LogInterceptor(), new ValidationInterceptor() }) as IConfigurationUtilityMock;
 
-        //    string result = mock.GetName("Banana");
+		//    string result = mock.GetName("Banana");
 
-        //    Assert.AreEqual("Fake Cebola Mock 1", result);
-        //}
+		//    Assert.AreEqual("Fake Cebola Mock 1", result);
+		//}
 
-        [TestMethod]
-        public void IocFactory_MultipleComponentsForSameInterface_Test() {
+		[TestMethod]
+		public void IocFactory_MultipleComponentsForSameInterface_Test() {
 
-            IocFactory.Register(Component.For<IPerson>().ImplementedBy<Pedro>("P"));
-            IocFactory.Register(Component.For<IPerson>().ImplementedBy<Odilon>("O"));
-            IocFactory.Register(Component.For<IPerson>().ImplementedBy<Guilherme>("G"));
+			IocFactory.Register(Component.For<IPerson>().ImplementedBy<Pedro>("P"));
+			IocFactory.Register(Component.For<IPerson>().ImplementedBy<Odilon>("O"));
+			IocFactory.Register(Component.For<IPerson>().ImplementedBy<Guilherme>("G"));
 
-            IPerson person = IocFactory.ResolveByName<IPerson>("O");
+			IPerson person = IocFactory.ResolveByName<IPerson>("O");
 
-            Assert.IsNotNull(person);
-            Assert.IsInstanceOfType(person, typeof(Odilon));
-        }
+			Assert.IsNotNull(person);
+			Assert.IsInstanceOfType(person, typeof(Odilon));
+		}
 
-        [TestMethod]
-        public void IocFactory_MultipleImplementationsForSameInterface() {
+		[TestMethod]
+		public void IocFactory_MultipleImplementationsForSameInterface() {
 
-            IocFactory.Register(
-                Component.For<IPerson>()
-                    .ImplementedBy<Pedro>("P")
-                    .ImplementedBy<Odilon>("O")
-                    .ImplementedBy<Guilherme>("G")
-                );
+			IocFactory.Register(
+				Component.For<IPerson>()
+					.ImplementedBy<Pedro>("P")
+					.ImplementedBy<Odilon>("O")
+					.ImplementedBy<Guilherme>("G")
+				);
 
-            IPerson person = IocFactory.ResolveByName<IPerson>("O");
+			IPerson person = IocFactory.ResolveByName<IPerson>("O");
 
-            Assert.IsNotNull(person);
-            Assert.IsInstanceOfType(person, typeof(Odilon));
-        }
+			Assert.IsNotNull(person);
+			Assert.IsInstanceOfType(person, typeof(Odilon));
+		}
 
-        [TestMethod]
-        public void IocFactory_RegisterInstance() {
+		[TestMethod]
+		public void IocFactory_RegisterInstance() {
 
-            IPerson pedro = new Pedro();
+			IPerson pedro = new Pedro();
 
-            pedro.Age = 90;
+			pedro.Age = 90;
 
-            IocFactory.Register(
-                    Component.For<IPerson>()
-                        .ImplementedBy<Odilon>()
-                        .Instance(pedro).IsDefault()
-                        .ImplementedBy<Guilherme>()
-                );
+			IocFactory.Register(
+					Component.For<IPerson>()
+						.ImplementedBy<Odilon>()
+						.Instance(pedro).IsDefault()
+						.ImplementedBy<Guilherme>()
+				);
 
-            IPerson person = IocFactory.Resolve<IPerson>();
+			IPerson person = IocFactory.Resolve<IPerson>();
 
-            Assert.IsNotNull(person);
-            Assert.IsInstanceOfType(person, typeof(Pedro));
-            Assert.AreEqual(90, person.Age);
-        }
+			Assert.IsNotNull(person);
+			Assert.IsInstanceOfType(person, typeof(Pedro));
+			Assert.AreEqual(90, person.Age);
+		}
 
-        [TestMethod]
-        public void IocFactory_RegisterMultipleComponents_Test() {
+		[TestMethod]
+		public void IocFactory_RegisterMultipleComponents_Test() {
 
-            IocFactory.Register(
-                    Component.For<IPerson>().ImplementedBy<Pedro>("P"),
-                    Component.For<IPerson>().ImplementedBy<Odilon>("O"),
-                    Component.For<IPerson>().ImplementedBy<Guilherme>("G")
-                );
+			IocFactory.Register(
+					Component.For<IPerson>().ImplementedBy<Pedro>("P"),
+					Component.For<IPerson>().ImplementedBy<Odilon>("O"),
+					Component.For<IPerson>().ImplementedBy<Guilherme>("G")
+				);
 
-            IPerson person = IocFactory.ResolveByName<IPerson>("O");
+			IPerson person = IocFactory.ResolveByName<IPerson>("O");
 
-            Assert.IsNotNull(person);
-            Assert.IsInstanceOfType(person, typeof(Odilon));
-        }
+			Assert.IsNotNull(person);
+			Assert.IsInstanceOfType(person, typeof(Odilon));
+		}
 
-        [TestMethod]
-        public void IocFactory_GetDefaultType_Test() {
+		[TestMethod]
+		public void IocFactory_GetDefaultType_Test() {
 
-            IocFactory.Register(
-                    Component.For<IPerson>().ImplementedBy<Pedro>("P"),
-                    Component.For<IPerson>().ImplementedBy<Odilon>("O").IsDefault(),
-                    Component.For<IPerson>().ImplementedBy<Guilherme>("G")
-                );
+			IocFactory.Register(
+					Component.For<IPerson>().ImplementedBy<Pedro>("P"),
+					Component.For<IPerson>().ImplementedBy<Odilon>("O").IsDefault(),
+					Component.For<IPerson>().ImplementedBy<Guilherme>("G")
+				);
 
-            IPerson person = IocFactory.Resolve<IPerson>();
+			IPerson person = IocFactory.Resolve<IPerson>();
 
-            Assert.IsNotNull(person);
-            Assert.IsInstanceOfType(person, typeof(Odilon));
-        }
+			Assert.IsNotNull(person);
+			Assert.IsInstanceOfType(person, typeof(Odilon));
+		}
 
-        [TestMethod]
-        public void AbstractContructorParameter_Test() {
+		[TestMethod]
+		public void AbstractContructorParameter_Test() {
 
-            IocFactory.Register(Component.For<IMyComponent>().ImplementedBy<MyComponent>());
+			IocFactory.Register(Component.For<IMyComponent>().ImplementedBy<MyComponent>());
 
-            IMyComponent myComponent = IocFactory.Resolve<IMyComponent>(new Dependency());
-        }
-    }
+			IMyComponent myComponent = IocFactory.Resolve<IMyComponent>(new Dependency());
+		}
 
-    public interface IPerson {
+		[TestMethod]
+		public void MultipleParametersConstrutors_Test() {
 
-        int Age { get; set; }
+			IocFactory.Reset();
 
-        string GetName();
-    }
+			IocFactory.Register(
+				Component.For<IMultipleParametersConstructor>().ImplementedBy<MultipleParametersConstructor>()
+				);
 
-    public sealed class Pedro : IPerson {
+			IMultipleParametersConstructor constructor = IocFactory.Resolve<IMultipleParametersConstructor>(string.Empty, string.Empty, 66, "Banana");
+		}
+	}
 
-        public int Age { get; set; }
+	public interface IPerson {
 
-        public string GetName() {
-            return "Pedro";
-        }
-    }
+		int Age { get; set; }
 
-    public sealed class Guilherme : IPerson {
+		string GetName();
+	}
 
-        public int Age { get; set; }
+	public sealed class Pedro : IPerson {
 
-        public string GetName() {
-            return "Guilherme";
-        }
-    }
+		public int Age { get; set; }
 
-    public sealed class Odilon : IPerson {
+		public string GetName() {
+			return "Pedro";
+		}
+	}
 
-        public int Age { get; set; }
+	public sealed class Guilherme : IPerson {
 
-        public string GetName() {
-            return "Odilon";
-        }
-    }
+		public int Age { get; set; }
 
-	//public sealed class LogInterceptor : IInterceptor {
+		public string GetName() {
+			return "Guilherme";
+		}
+	}
 
-	//	public void Intercept(IInvocation invocation) {
+	public sealed class Odilon : IPerson {
 
-	//		MethodInfo methodInfo = invocation.MethodInvocationTarget;
-	//		object[] pars = invocation.Arguments;
-	//		Type type = invocation.TargetType;
+		public int Age { get; set; }
 
-	//		if (invocation.Arguments.Length > 0) {
-	//			invocation.Arguments[0] = "Cebola";
-	//		}
+		public string GetName() {
+			return "Odilon";
+		}
+	}
 
-	//		invocation.Proceed();
+	public interface IMyComponent {
 
-	//		if (invocation.ReturnValue != null) {
-	//			invocation.ReturnValue = "Fake " + invocation.ReturnValue;
-	//		}
-	//	}
-	//}
+	}
 
-    public interface IMyComponent {
+	public class MyComponent : IMyComponent {
+		public MyComponent(BaseDependency dependency) { }
+	}
 
-    }
+	public abstract class BaseDependency { }
 
-    public class MyComponent : IMyComponent {
-        public MyComponent(BaseDependency dependency) { }
-    }
+	public class Dependency : BaseDependency { }
 
-    public abstract class BaseDependency { }
+	public interface IMultipleParametersConstructor {
 
-    public class Dependency : BaseDependency { }
+		string Name { get; set; }
+
+		string Email { get; set; }
+
+		string Fruta { get; set; }
+
+		int Age { get; set; }
+	}
+
+	public sealed class MultipleParametersConstructor : IMultipleParametersConstructor {
+
+		public MultipleParametersConstructor(string name, string email, int age, string fruta) {
+			this.Name = name;
+			this.Email = email;
+			this.Fruta = fruta;
+			this.Age = age;
+		}
+
+		public string Name { get; set; }
+
+		public string Email { get; set; }
+
+		public string Fruta { get; set; }
+
+		public int Age { get; set; }
+	}
 }

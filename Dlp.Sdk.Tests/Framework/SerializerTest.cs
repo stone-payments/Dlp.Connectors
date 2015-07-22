@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Transactions;
 
 namespace Dlp.Sdk.Tests.Framework {
 
@@ -234,5 +235,13 @@ namespace Dlp.Sdk.Tests.Framework {
 
             Assert.IsNull(actual);
         }
+
+		[TestMethod]
+		public void TransactionScope_Test() {
+
+			TransactionScope transactionScope = new TransactionScope();
+
+			
+		}
     }
 }
