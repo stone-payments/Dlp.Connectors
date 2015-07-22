@@ -272,6 +272,16 @@ namespace Dlp.Sdk.Tests.Framework {
             Assert.IsFalse(actual);
         }
 
+		[TestMethod]
+		public void ValidateSingleValueCpf() {
+
+			string source = "111.111.111-11";
+
+			bool actual = source.IsValidCpf();
+
+			Assert.IsFalse(actual);
+		}
+
         [TestMethod]
         public void ValidateMissingDigitsCpf() {
 
@@ -307,6 +317,16 @@ namespace Dlp.Sdk.Tests.Framework {
 
             Assert.IsFalse(actual);
         }
+
+		[TestMethod]
+		public void ValidateSingleValueCnpj() {
+
+			string source = "22.222.222/2222-22";
+
+			bool actual = source.IsValidCnpj();
+
+			Assert.IsFalse(actual);
+		}
 
         [TestMethod]
         public void ValidateMissingDigitsCnpj() {

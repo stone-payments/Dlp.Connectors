@@ -169,7 +169,7 @@ namespace Dlp.Framework {
             string cpf = source.GetDigits();
 
             // Retorna false, caso o cpf não possua 11 dígitos.
-            if (cpf.Length != 11) { return false; }
+            if (cpf.Length != 11 || cpf.Distinct().Count() == 1) { return false; }
 
             // Armazena os números do CPF sem, os dígitos verificadores.
             string tempCpf = cpf.Substring(0, 9);
@@ -198,7 +198,7 @@ namespace Dlp.Framework {
             string cnpj = source.GetDigits();
 
             // Retorna false, caso o cnpj não possua 11 dígitos.
-            if (cnpj.Length != 14) { return false; }
+			if (cnpj.Length != 14 || cnpj.Distinct().Count() == 1) { return false; }
 
             // Armazena os números do CNPJ sem, os dígitos verificadores.
             string tempCnpj = cnpj.Substring(0, 12);
