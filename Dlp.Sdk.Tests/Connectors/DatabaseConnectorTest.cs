@@ -255,6 +255,29 @@ namespace Dlp.Sdk.Tests.Connectors {
             Assert.AreEqual("2014-07-30 13:06:10", actual.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
         }
 
+		[TestMethod]
+		public void LoadMerchantByEntityId_Test() {
+
+			string query = @"SELECT Merchant.Name, Merchant.MerchantId, Merchant.CreateDate, Merchant.MerchantKey FROM Merchant WHERE MerchantId = @MerchantId;";
+
+			MerchantData request = new MerchantData();
+			request.MerchantId = 1;
+
+			MerchantData actual = null;
+
+			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+				actual = databaseConnector.ExecuteReader<MerchantData>(query, request).FirstOrDefault();
+			}
+
+			Assert.IsNotNull(actual);
+
+			Assert.AreEqual("Merchant Number One", actual.Name);
+			Assert.AreEqual(1, actual.MerchantId);
+			Assert.AreEqual(Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76"), actual.MerchantKey);
+			Assert.AreEqual("2014-07-30 13:06:10", actual.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+		}
+
         [TestMethod]
         public void LoadMultipleRows() {
 

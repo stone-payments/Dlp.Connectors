@@ -498,6 +498,7 @@ namespace Dlp.Connectors {
 
                     if (value is string && (value as string).Length == 0) { parameter.Value = DBNull.Value; }
                     else if (value.GetType().IsEnum == true) { parameter.Value = value.ToString(); }
+					else if (value is DateTime && (DateTime)value == DateTime.MinValue) { parameter.Value = DBNull.Value; }
                 }
 
                 // Define o motivo do parâmetro.
