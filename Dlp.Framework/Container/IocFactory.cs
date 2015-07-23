@@ -263,6 +263,9 @@ namespace Dlp.Framework.Container {
 					// Obtém os parâmetros do construtor.
 					ParameterInfo[] parameterInfoCollection = constructorInfo.GetParameters();
 
+					// Caso o construtor não possua a mesma quantidade de parâmetros que foram informados, passa para o próximo construtor.
+					if (constructorParameterTypeCollection.Count() != parameterInfoCollection.Count()) { continue; }
+
 					// Obtém a lista de tipos dos parâmetros.
 					IEnumerable<Type> parameterTypeCollection = parameterInfoCollection.Select(p => p.ParameterType);
 
@@ -280,8 +283,7 @@ namespace Dlp.Framework.Container {
 
 							parameterCounter++;
 
-							if (constructorParameterType == parameterType || constructorParameterType.BaseType == parameterType) {
-
+							if (constructorParameterType == parameterType || (parameterType.IsInterface && parameterType.IsAssignableFrom(constructorParameterType) == true) || constructorParameterType.BaseType == parameterType) {
 								matchedParameterList.Add(constructorParameterType);
 								break;
 							}

@@ -328,7 +328,7 @@ namespace Dlp.Sdk.Tests.Framework {
 		}
 
 		[TestMethod]
-		public void MultipleParametersConstrutors_Test() {
+		public void MultipleParametersConstructors_Test() {
 
 			IocFactory.Reset();
 
@@ -337,6 +337,29 @@ namespace Dlp.Sdk.Tests.Framework {
 				);
 
 			IMultipleParametersConstructor constructor = IocFactory.Resolve<IMultipleParametersConstructor>(string.Empty, string.Empty, 66, "Banana");
+
+			Assert.IsNotNull(constructor);
+			Assert.AreEqual("Banana", constructor.Fruta);
+		}
+
+		[TestMethod]
+		public void UserTypeAndPrimitiveTypeConstructor_Test() {
+
+			IocFactory.Reset();
+
+			IocFactory.Register(
+				Component.For<IMultipleParametersConstructor>().ImplementedBy<MultipleParametersConstructor>()
+				);
+
+			IUserPrincipal userPrincipal = new UserPrincipal();
+			userPrincipal.Login = "banana";
+
+			string accessToken = Guid.NewGuid().ToString();
+
+			IMultipleParametersConstructor constructor = IocFactory.Resolve<IMultipleParametersConstructor>(userPrincipal, accessToken);
+
+			Assert.IsNotNull(constructor);
+			Assert.AreEqual("banana", userPrincipal.Login);
 		}
 	}
 
@@ -406,6 +429,15 @@ namespace Dlp.Sdk.Tests.Framework {
 			this.Age = age;
 		}
 
+		public MultipleParametersConstructor(IUserPrincipal userPrincipal, string token) {
+			this.User = userPrincipal;
+			this.Token = token;
+		}
+
+		public string Token { get; set; }
+
+		public IUserPrincipal User { get; set; }
+
 		public string Name { get; set; }
 
 		public string Email { get; set; }
@@ -413,5 +445,17 @@ namespace Dlp.Sdk.Tests.Framework {
 		public string Fruta { get; set; }
 
 		public int Age { get; set; }
+	}
+
+	public sealed class UserPrincipal : IUserPrincipal {
+
+		public UserPrincipal() { }
+
+		public string Login { get; set; }
+	}
+
+	public interface IUserPrincipal {
+
+		string Login { get; set; }
 	}
 }
