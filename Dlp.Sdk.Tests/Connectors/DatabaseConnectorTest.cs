@@ -694,7 +694,7 @@ namespace Dlp.Sdk.Tests.Connectors {
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(AggregateException))]
         public void LoadSingleRowWithInvalidEnumProperty() {
 
             string query = @"SELECT Merchant.Name, Merchant.Status FROM Merchant WHERE Merchant.MerchantId = 3;";

@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Dlp.Connectors {
 
@@ -335,26 +336,26 @@ namespace Dlp.Connectors {
 					// Adiciona os parâmetros.
 					AddParameters(query, command, parameters as object);
 
-					System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+					//System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
 
-					stopwatch.Start();
+					//stopwatch.Start();
 
 					// Instancia o reader responsável pela leitura dos dados.
 					using (SqlDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo)) {
 
-						stopwatch.Stop();
+						//stopwatch.Stop();
 
-						Console.WriteLine("Query (ms): " + stopwatch.ElapsedMilliseconds.ToString());
+						//Console.WriteLine("Query (ms): " + stopwatch.ElapsedMilliseconds.ToString());
 
-						stopwatch.Reset();
+						//stopwatch.Reset();
 
-						stopwatch.Start();
+						//stopwatch.Start();
 						// Mapeia e armazena todos os registros encontrados.
 						IEnumerable<T> result = InternalReader<T>(reader);
 
-						stopwatch.Stop();
+						//stopwatch.Stop();
 
-						Console.WriteLine("Mapeamento (ms): " + stopwatch.ElapsedMilliseconds.ToString());
+						//Console.WriteLine("Mapeamento (ms): " + stopwatch.ElapsedMilliseconds.ToString());
 						return result;
 					}
 				}
@@ -545,6 +546,9 @@ namespace Dlp.Connectors {
 			// Coleção que será retornada.
 			List<T> returnCollection = new List<T>();
 
+			TaskFactory taskFactory = new TaskFactory();
+			List<Task> taskList = new List<Task>();
+
 			// Lê cada registro encontrado.
 			while (reader.Read() == true) {
 
@@ -558,6 +562,9 @@ namespace Dlp.Connectors {
 
 					// Obtém o valor encontrado na consulta.
 					returnInstance = (T)Convert.ChangeType(reader[0], returnType);
+
+					// Adiciona o registro preenchido na coleção que será retornada.
+					returnCollection.Add(returnInstance);
 				}
 				else {
 
@@ -572,18 +579,28 @@ namespace Dlp.Connectors {
 
 					returnInstance = Activator.CreateInstance<T>();
 
-					for (int i = 0; i < columns.Count; i++) {
+					// Adiciona o registro preenchido na coleção que será retornada.
+					returnCollection.Add(returnInstance);
 
-						if (columns[i].Value == DBNull.Value || columns[i].Value == null) { continue; }
+					Task task = taskFactory.StartNew(() => {
 
-						// Executa o mapeamento da propriedade encontrada.
-						ParseProperty(returnType, returnTypeProperties, schemaTable, returnInstance, columns[i].Key, columns[i].Value, i, mappedProperties);
-					}
+						for (int i = 0; i < columns.Count; i++) {
+
+							if (columns[i].Value == DBNull.Value || columns[i].Value == null) { continue; }
+
+							// Executa o mapeamento da propriedade encontrada.
+							ParseProperty(returnType, returnTypeProperties, schemaTable, returnInstance, columns[i].Key, columns[i].Value, i, mappedProperties);
+						}
+					});
+
+					taskList.Add(task);
 				}
 
 				// Adiciona o registro preenchido na coleção que será retornada.
-				returnCollection.Add(returnInstance);
+				//returnCollection.Add(returnInstance);
 			}
+
+			Task.WaitAll(taskList.ToArray());
 
 			return returnCollection;
 		}
