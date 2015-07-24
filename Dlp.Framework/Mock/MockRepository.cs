@@ -51,12 +51,13 @@ namespace Dlp.Framework.Mock {
 
 				for (int i = 0; i < arguments.Length; i++) {
 
-					if (arguments[i].GetType().FullName.StartsWith("System.") == false) {
-
+					if (arguments[i] == null) {
+						parsedArguments += "null";
+					}
+					else if (arguments[i].GetType().FullName.StartsWith("System.") == false) {
 						parsedArguments += Serializer.JsonSerialize(arguments[i]);
 					}
 					else {
-
 						parsedArguments += arguments[i].ToString();
 					}
 

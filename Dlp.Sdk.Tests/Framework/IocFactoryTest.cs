@@ -361,6 +361,18 @@ namespace Dlp.Sdk.Tests.Framework {
 			Assert.IsNotNull(constructor);
 			Assert.AreEqual("banana", userPrincipal.Login);
 		}
+
+		[TestMethod]
+		public void ResolveWithoutConcrete_Test() {
+
+			IocFactory.Reset();
+
+			IocFactory.Register(
+				Component.For<IMultipleParametersConstructor>().ImplementedBy<MultipleParametersConstructor>()
+				);
+
+			IMultipleParametersConstructor person = IocFactory.Resolve<IMultipleParametersConstructor>();
+		}
 	}
 
 	public interface IPerson {
