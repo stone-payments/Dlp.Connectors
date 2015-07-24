@@ -761,7 +761,7 @@ namespace Dlp.Sdk.Tests.Connectors {
 
             PrivateType privateType = new PrivateType(typeof(DatabaseConnector));
 
-            object result = privateType.InvokeStatic("ParseProperty", null, null, null, null, null, 0, null);
+            object result = privateType.InvokeStatic("ParseProperty", null, null, null, null, null, null, 0, null);
 
             bool parsedResult = Convert.ToBoolean(result);
 
