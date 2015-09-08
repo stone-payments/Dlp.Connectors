@@ -151,6 +151,8 @@ namespace Dlp.Sdk.Tests.Connectors {
 
         private const string _databaseDirectory = @"C:\temp";
 
+		private StringBuilder ConnectorOutput;
+
         [ClassInitialize]
         public static void PrepareDatabaseTests(TestContext context) {
 
@@ -184,6 +186,24 @@ namespace Dlp.Sdk.Tests.Connectors {
 
             ClearTempDatabase();
         }
+
+		[TestInitialize]
+		public void InitializeOutput() {
+
+			this.ConnectorOutput = new StringBuilder();
+		}
+
+		[TestCleanup]
+		public void ClearOutput() {
+
+			this.ConnectorOutput.Clear();
+			this.ConnectorOutput = null;
+		}
+
+		private void databaseConnector_OnOutput(object sender, OutputEventArgs e) {
+
+			lock (this.ConnectorOutput) { this.ConnectorOutput.AppendLine(e.ToString()); }
+		}
 
         private static void ClearTempDatabase() {
 
@@ -267,8 +287,11 @@ namespace Dlp.Sdk.Tests.Connectors {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
+				databaseConnector.OnOutput += databaseConnector_OnOutput;
 				actual = databaseConnector.ExecuteReader<MerchantData>(query, request).FirstOrDefault();
 			}
+
+			string output = this.ConnectorOutput.ToString();
 
 			Assert.IsNotNull(actual);
 
@@ -276,7 +299,7 @@ namespace Dlp.Sdk.Tests.Connectors {
 			Assert.AreEqual(1, actual.MerchantId);
 			Assert.AreEqual(Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76"), actual.MerchantKey);
 			Assert.AreEqual("2014-07-30 13:06:10", actual.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
-		}
+		}	
 
         [TestMethod]
         public void LoadMultipleRows() {
@@ -331,8 +354,12 @@ namespace Dlp.Sdk.Tests.Connectors {
 
             using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
+				databaseConnector.OnOutput += databaseConnector_OnOutput;
+
                 actual = databaseConnector.ExecuteReader<MerchantData>(query, merchantEntity).FirstOrDefault();
             }
+
+			string output = this.ConnectorOutput.ToString();
         }
 
         [TestMethod]
@@ -348,8 +375,11 @@ namespace Dlp.Sdk.Tests.Connectors {
 
             using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
+				databaseConnector.OnOutput += databaseConnector_OnOutput;
                 actual = databaseConnector.ExecuteReader<MerchantData>(query);
             }
+
+			string output = this.ConnectorOutput.ToString();
 
             Assert.IsNotNull(actual);
             Assert.AreEqual(2, actual.Count());
@@ -411,8 +441,11 @@ namespace Dlp.Sdk.Tests.Connectors {
             MerchantEntity actual = null;
 
             using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+				databaseConnector.OnOutput += databaseConnector_OnOutput;
                 actual = databaseConnector.ExecuteReader<MerchantEntity>(query).FirstOrDefault();
             }
+
+			string output = this.ConnectorOutput.ToString();
 
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.MerchantConfiguration);
@@ -432,8 +465,11 @@ namespace Dlp.Sdk.Tests.Connectors {
             object actual;
 
             using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+				databaseConnector.OnOutput += databaseConnector_OnOutput;
                 actual = databaseConnector.ExecuteScalar<DateTime>(query);
             }
+
+			string output = this.ConnectorOutput.ToString();
 
             Assert.IsNotNull(actual);
             Assert.IsInstanceOfType(actual, typeof(DateTime));
@@ -483,8 +519,11 @@ namespace Dlp.Sdk.Tests.Connectors {
             string actual;
 
             using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+				databaseConnector.OnOutput += databaseConnector_OnOutput;
                 actual = databaseConnector.ExecuteScalar<string>(query, new { MerchantId = 1 });
             }
+
+			string output = this.ConnectorOutput.ToString();
 
             Assert.AreEqual("Merchant Number One", actual);
         }
@@ -759,9 +798,12 @@ namespace Dlp.Sdk.Tests.Connectors {
         [TestMethod]
         public void ParseNullParameter() {
 
-            PrivateType privateType = new PrivateType(typeof(DatabaseConnector));
+            //PrivateType privateType = new PrivateType(typeof(DatabaseConnector));
+			//object result = privateType.InvokeStatic("ParseProperty", null, null, null, null, null, null, 0, null);
 
-            object result = privateType.InvokeStatic("ParseProperty", null, null, null, null, null, null, 0, null);
+			PrivateObject privateObject = new PrivateObject(new DatabaseConnector(connectionString));
+
+			object result = privateObject.Invoke("ParseProperty", null, null, null, null, null, null, 0, null);
 
             bool parsedResult = Convert.ToBoolean(result);
 
@@ -885,8 +927,12 @@ namespace Dlp.Sdk.Tests.Connectors {
 
             using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
+				databaseConnector.OnOutput += databaseConnector_OnOutput;
+
                 actual = databaseConnector.ExecuteReader<MerchantData>(query, 1, 2, "MerchantId", SortDirection.DESC, new { Status = StatusType.Disabled });
             }
+
+			string output = this.ConnectorOutput.ToString();
 
             Assert.AreEqual(1, actual.Key);
             Assert.IsNotNull(actual.Value);
@@ -1088,8 +1134,11 @@ namespace Dlp.Sdk.Tests.Connectors {
 
             using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
+				databaseConnector.OnOutput += databaseConnector_OnOutput;
                 actual = databaseConnector.ExecuteReader<MerchantData>(query, new { MerchantKeyCollection = merchantKeyCollection });
             }
+
+			string output = this.ConnectorOutput.ToString();
 
             Assert.IsNotNull(actual);
             Assert.AreEqual(2, actual.Count());
