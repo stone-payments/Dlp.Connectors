@@ -711,6 +711,9 @@ namespace Dlp.Connectors {
 			// Armazena o nome da propriedade esperada.
 			string memberName = explicitClassName ?? propertyName;
 
+			// Sai do método caso a propriedade já tenha sido mapeada.
+			if (mappedProperties.Contains(returnType.Name + "." + propertyName) == true) { return false; }
+
 			// Obtém a propriedade que possui o mesmo nome da propriedade encontrada na consulta ao banco.
 			PropertyInfo propertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
 
@@ -727,7 +730,7 @@ namespace Dlp.Connectors {
 			if (string.IsNullOrWhiteSpace(tableName) == false) {
 
 				//  Se a propriedade não foi encontrada, não é possível fazer o mapeamento do valor da coluna.
-				if (returnType.GetProperty(tableName) != null || propertyInfo == null || mappedProperties.IndexOf(returnType.Name + "." + propertyInfo.Name) >= 0) {
+				if ((returnType.GetProperty(tableName) != null || propertyInfo == null || mappedProperties.IndexOf(returnType.Name + "." + propertyInfo.Name) >= 0) && (propertyInfo == null || (propertyInfo.PropertyType.FullName.IndexOf("System.") < 0 && propertyInfo.PropertyType.IsEnum == false))) {
 
 					this.WriteOutput("ParseProperty", string.Format("Nenhuma propriedade encontrada no objeto '{0}' para a coluna '{1}'.", returnType.Name, propertyName));
 

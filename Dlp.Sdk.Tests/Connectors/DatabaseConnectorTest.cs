@@ -30,6 +30,7 @@ namespace Dlp.Sdk.Tests.Connectors {
         public MerchantData() { }
 
         public string Name { get; set; }
+		public string Merchant { get; set; }
         public int MerchantId { get; set; }
         public DateTime CreateDate { get; set; }
         public Guid MerchantKey { get; set; }
