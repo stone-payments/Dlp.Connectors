@@ -52,6 +52,7 @@
     <HelpKINode Title="DatabaseConnector Class" Url="html/ffcde9f8-93d9-4f69-5f07-84521a2f2a52.htm" />
     <HelpKINode Title="about DatabaseConnector class" Url="html/ffcde9f8-93d9-4f69-5f07-84521a2f2a52.htm" />
     <HelpKINode Title="constructor" Url="html/5e6739f4-7598-0da2-2b76-42c3a8587853.htm" />
+    <HelpKINode Title="events" Url="html/a8a7a0bc-38f8-729a-460d-6d1e0239a76d.htm" />
     <HelpKINode Title="methods" Url="html/a0a77dd8-8e18-52f7-8f18-c1d26f7b77bf.htm" />
     <HelpKINode Title="properties" Url="html/33a9d45c-e237-4914-632a-76ab0f35dcf9.htm" />
   </HelpKINode>
@@ -68,6 +69,7 @@
   <HelpKINode Title="DatabaseConnector.ExecuteReader method" Url="html/1680efb4-8457-8cf6-904b-bf0eae3397c4.htm" />
   <HelpKINode Title="DatabaseConnector.ExecuteScalar(Of T) method" Url="html/691ad774-c725-5e32-8378-dbbb3021ec8d.htm" />
   <HelpKINode Title="DatabaseConnector.ExecuteScalar&lt;T&gt; method" Url="html/691ad774-c725-5e32-8378-dbbb3021ec8d.htm" />
+  <HelpKINode Title="DatabaseConnector.OnOutput event" Url="html/93663a53-48a6-daaa-175a-d444e69165ab.htm" />
   <HelpKINode Title="DatabaseConnector.Rollback method" Url="html/d72ead7a-e891-c0dc-1fa8-c5cdc6aac27e.htm" />
   <HelpKINode Title="DatabaseConnector.RollbackGlobalTransaction method" Url="html/9a34c2ca-afed-27c6-9ddf-e68516241269.htm" />
   <HelpKINode Title="DateTimeExtensions class">
@@ -297,6 +299,7 @@
   <HelpKINode Title="ObjectExtensions.Clone method" Url="html/495303ff-eb91-b5f9-f30d-3f2f277b3c29.htm" />
   <HelpKINode Title="ObjectExtensions.DiffProperties(Of T) method" Url="html/13f8afd9-9ac2-2343-42bc-c01e11489cb3.htm" />
   <HelpKINode Title="ObjectExtensions.DiffProperties&lt;T&gt; method" Url="html/13f8afd9-9ac2-2343-42bc-c01e11489cb3.htm" />
+  <HelpKINode Title="OnOutput event" Url="html/93663a53-48a6-daaa-175a-d444e69165ab.htm" />
   <HelpKINode Title="OnSendMailError event">
     <HelpKINode Title="IMailService.OnSendMailError Event" Url="html/64ccca51-df7e-3b71-5b54-da859c7f8409.htm" />
     <HelpKINode Title="MailService.OnSendMailError Event" Url="html/144905b2-26f6-dbe1-f31e-988749763ef6.htm" />

@@ -82,10 +82,21 @@ namespace Dlp.Framework {
     /// </summary>
     public static class RestClient {
 
+		/// <summary>
+		/// Sends an Http request to the specified endpoint.
+		/// </summary>
+		/// <typeparam name="T">Type of the expected response. Ignored if http verb GET is used.</typeparam>
+		/// <param name="dataToSend">Object containing the data to be sent in the request.</param>
+		/// <param name="httpVerb">HTTP verb to be using when sending the data.</param>
+		/// <param name="httpContentType">Content type of the transferred data.</param>
+		/// <param name="destinationEndPoint">Endpoint where the request will be sent to.</param>
+		/// <param name="headerCollection">Custom data to be added to the request header.</param>
+		/// <param name="allowInvalidCertificate">When set to true, allows the request to be done even if the destination certificate is not valid.</param>
+		/// <returns>Returns an WebResponse as a Task, containing the result of the request.</returns>
         public static WebResponse<T> SendHttpWebRequest<T>(object dataToSend, HttpVerb httpVerb, HttpContentType httpContentType, string destinationEndPoint, NameValueCollection headerCollection, bool allowInvalidCertificate = false) where T : class {
 
             // Verifica se o endpoint para onde a requisição será enviada foi especificada.
-            if (string.IsNullOrWhiteSpace(destinationEndPoint)) { throw new ArgumentException("serviceEndpoint"); }
+            if (string.IsNullOrWhiteSpace(destinationEndPoint)) { throw new ArgumentNullException("serviceEndpoint", "The serviceEndPoint parameter must not be null."); }
 
             // Cria a uri para onde a requisição será enviada.
             Uri destinationUri = new Uri(destinationEndPoint);
@@ -189,10 +200,10 @@ namespace Dlp.Framework {
         }
 
         /// <summary>
-        /// Sends an Http request to the specified endpoint.
+        /// Sends an Http request to the specified endpoint asyncrounously.
         /// </summary>
         /// <typeparam name="T">Type of the expected response.</typeparam>
-        /// <param name="dataToSend">Object containing the data to be sent in the request.</param>
+        /// <param name="dataToSend">Object containing the data to be sent in the request. Ignored if http verb GET is used.</param>
         /// <param name="httpVerb">HTTP verb to be using when sending the data.</param>
         /// <param name="httpContentType">Content type of the transferred data.</param>
         /// <param name="destinationEndPoint">Endpoint where the request will be sent to.</param>
@@ -202,7 +213,7 @@ namespace Dlp.Framework {
         public static async Task<WebResponse<T>> SendHttpWebRequestAsync<T>(object dataToSend, HttpVerb httpVerb, HttpContentType httpContentType, string destinationEndPoint, NameValueCollection headerCollection, bool allowInvalidCertificate = false) where T : class {
 
             // Verifica se o endpoint para onde a requisição será enviada foi especificada.
-            if (string.IsNullOrWhiteSpace(destinationEndPoint)) { throw new ArgumentException("serviceEndpoint"); }
+			if (string.IsNullOrWhiteSpace(destinationEndPoint)) { throw new ArgumentNullException("serviceEndpoint", "The serviceEndPoint parameter must not be null."); }
 
             return await Task.Run<WebResponse<T>>(() => {
 
