@@ -2,17 +2,18 @@
 <package>
   <metadata>
     <id>Dlp.Authenticator.dll</id>
+		<title>DLP Authenticator</title>
     <version>0.3.1</version>
-    <authors>Eduardo Jonssen</authors>
-    <owners>DLP</owners>
-    <projectUrl>http://dlpnugetrepository.azurewebsites.net/docs/</projectUrl>
+    <authors>Stone Pagamentos S/A</authors>
+    <owners>Stone Pagamentos S/A</owners>
+    <projectUrl>https://dlpgi.dlp-payments.com/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Conector do serviço de autenticação Global Identity.</description>
     <releaseNotes>Beta</releaseNotes>
-    <copyright>DLP Copyright 2015</copyright>
-    <tags>Database</tags>
+    <copyright>Stone Pagamentos S/A Copyright 2015</copyright>
+    <tags>Authentication</tags>
     <dependencies>
-      <dependency id="Dlp.Framework.dll" version="0.6.3" />
+      <dependency id="Dlp.Framework.dll" version="0.8.4" />
     </dependencies>
   </metadata>
   <files>

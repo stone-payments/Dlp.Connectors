@@ -2,17 +2,18 @@
 <package>
   <metadata>
     <id>Dlp.Connectors.dll</id>
+		<title>DLP Connectors</title>
     <version>0.5.8</version>
-    <authors>Eduardo Jonssen</authors>
-    <owners>DLP</owners>
-    <projectUrl>http://dlpnugetrepository.azurewebsites.net/docs/</projectUrl>
+    <authors>Stone Pagamentos S/A</authors>
+    <owners>Stone Pagamentos S/A</owners>
+    <projectUrl>http://www.stone.com.br/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Conectores de banco de dados e cache.</description>
+    <description>Conector de banco de dados.</description>
     <releaseNotes>Beta</releaseNotes>
-    <copyright>DLP Copyright 2015</copyright>
-    <tags>Database</tags>
+    <copyright>Stone Pagamentos S/A - Copyright 2015</copyright>
+    <tags>Database ADO</tags>
     <dependencies>
-      <dependency id="Dlp.Framework.dll" version="0.5.0" />
+      <dependency id="Dlp.Framework.dll" version="0.8.4" />
     </dependencies>
   </metadata>
   <files />
