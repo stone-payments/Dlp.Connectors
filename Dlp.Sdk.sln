@@ -3,17 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublishScripts", "PublishScripts", "{A0CF50AE-71D2-494A-91B9-9AF00463D64D}"
-	ProjectSection(SolutionItems) = preProject
-		PublishScripts\AzureWebsitePublishModule.psm1 = PublishScripts\AzureWebsitePublishModule.psm1
-		PublishScripts\Publish-WebApplicationWebsite.ps1 = PublishScripts\Publish-WebApplicationWebsite.ps1
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{6636DC5D-8AE2-49BF-B47A-16042BF58814}"
-	ProjectSection(SolutionItems) = preProject
-		PublishScripts\Configurations\DlpNuGetServer-WAWS-dev.json = PublishScripts\Configurations\DlpNuGetServer-WAWS-dev.json
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{96158E3D-B557-4744-B336-C98C7E6C36A4}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
@@ -21,11 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{96158E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dlp.Framework", "Dlp.Framework\Dlp.Framework.csproj", "{F55ED09D-ADED-4095-8820-1FC327AF3D8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dlp.NuGet.Server", "Dlp.NuGet.Server\Dlp.NuGet.Server.csproj", "{7AE2B8E5-5BD4-43E3-BF8C-9DE8A72BFB0A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dlp.Connectors", "Dlp.Connectors\Dlp.Connectors.csproj", "{57FFFFC0-9D03-48B4-A0F3-2277EEDFB5D6}"
-EndProject
-Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Dlp.Documentation", "Dlp.Documentation\Dlp.Documentation.shfbproj", "{D18B35F7-F15F-48A7-A6AA-E848A7181ECC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dlp.Sdk.Tests", "Dlp.Sdk.Tests\Dlp.Sdk.Tests.csproj", "{BF54947B-E85A-4788-AC96-E4022318D5D2}"
 EndProject
@@ -41,14 +26,10 @@ Global
 		{F55ED09D-ADED-4095-8820-1FC327AF3D8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F55ED09D-ADED-4095-8820-1FC327AF3D8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F55ED09D-ADED-4095-8820-1FC327AF3D8B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7AE2B8E5-5BD4-43E3-BF8C-9DE8A72BFB0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7AE2B8E5-5BD4-43E3-BF8C-9DE8A72BFB0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57FFFFC0-9D03-48B4-A0F3-2277EEDFB5D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{57FFFFC0-9D03-48B4-A0F3-2277EEDFB5D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57FFFFC0-9D03-48B4-A0F3-2277EEDFB5D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57FFFFC0-9D03-48B4-A0F3-2277EEDFB5D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D18B35F7-F15F-48A7-A6AA-E848A7181ECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D18B35F7-F15F-48A7-A6AA-E848A7181ECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF54947B-E85A-4788-AC96-E4022318D5D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BF54947B-E85A-4788-AC96-E4022318D5D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF54947B-E85A-4788-AC96-E4022318D5D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -60,8 +41,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{6636DC5D-8AE2-49BF-B47A-16042BF58814} = {A0CF50AE-71D2-494A-91B9-9AF00463D64D}
 	EndGlobalSection
 EndGlobal
