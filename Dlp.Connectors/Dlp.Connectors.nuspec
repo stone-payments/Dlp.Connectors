@@ -8,7 +8,7 @@
     <owners>Stone Pagamentos S/A</owners>
     <projectUrl>http://www.stone.com.br/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Conector de banco de dados.</description>
+    <description>Database connector for MSSQL with ADO.</description>
     <releaseNotes>Beta</releaseNotes>
     <copyright>Stone Pagamentos S/A - Copyright 2015</copyright>
     <tags>Database ADO</tags>
