@@ -1,0 +1,9 @@
+C:\Bitbucket\Dlp.Framework\Dlp.Connectors\bin\Release\Dlp.Connectors.XML
+C:\Bitbucket\Dlp.Framework\Dlp.Connectors\bin\Release\Dlp.Connectors.dll
+C:\Bitbucket\Dlp.Framework\Dlp.Connectors\bin\Release\Dlp.Connectors.pdb
+C:\Bitbucket\Dlp.Framework\Dlp.Connectors\bin\Release\Dlp.Framework.dll
+C:\Bitbucket\Dlp.Framework\Dlp.Connectors\bin\Release\Dlp.Framework.pdb
+C:\Bitbucket\Dlp.Framework\Dlp.Connectors\bin\Release\Dlp.Framework.xml
+C:\Bitbucket\Dlp.Framework\Dlp.Connectors\obj\Release\Dlp.Connectors.csprojResolveAssemblyReference.cache
+C:\Bitbucket\Dlp.Framework\Dlp.Connectors\obj\Release\Dlp.Connectors.dll
+C:\Bitbucket\Dlp.Framework\Dlp.Connectors\obj\Release\Dlp.Connectors.pdb

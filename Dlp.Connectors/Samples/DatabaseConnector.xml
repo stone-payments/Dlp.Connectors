@@ -1,0 +1,270 @@
+﻿<Docs>
+  <Members name="ExecuteScalar">
+    <example>
+      <para>The following example shows how to get the current database server time with ExecuteScalar, already mapped to a DateTime object.</para>
+      <code lang="C#">
+        // Query to retrieve the database local time.
+        string query = @"SELECT GETDATE();";
+
+        DateTime currentDatabaseTime;
+
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+        
+          // Executes the query and return the result as a DateTime object.
+          currentDatabaseTime = databaseConnector.ExecuteScalar&lt;DateTime&gt;(query);
+        }
+      </code>
+      <para>The following example shows how to get a simple value with query parameters.</para>
+      <code lang="C#">
+        // Query to retrieve a merchant name given its Id.
+        string query = @"SELECT Name FROM Merchant WHERE MerchantId = @MerchantId;";
+
+        string merchantName;
+
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+          // Executes the query and return the result as a string object.
+          merchantName = databaseConnector.ExecuteScalar&lt;string&gt;(query, new { MerchantId = 1});
+        }
+      </code>
+      <para>The following example shows how to insert a row and return the database generated Id.</para>
+      <code lang="C#">
+        // Query to insert a new merchant to database.
+        string query = @"INSERT INTO Merchant (MerchantName) OUTPUT INSERTED.MerchantId VALUES (@MerchantName);";
+
+        int insertedMerchantId;
+
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+          // Executes the query and return the database generated Id.
+          insertedMerchantId = databaseConnector.ExecuteScalar&lt;int&gt;(query, new { MerchantName = "New Merchant"});
+        }
+      </code>
+    </example>
+  </Members>
+  <Members name="ExecuteNonQuery">
+    <example>
+      <para>The following example shows how to update a row using the ExecuteNonQuery method.</para>
+      <code lang="C#">
+        // Query to update the merchant name.
+        string query = @"UPDATE Merchant SET MerchantName = @MerchantName WHERE MerchantId = @MerchantId;";
+
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+          
+          // Updates the merchant data.
+          databaseConnector.ExecuteNonQuery(query, new { MerchantName = "New Merchant Name", MerchantId = 1 });
+        }
+      </code>
+      <para>The following example shows how to use an entity to update its value in database.</para>
+      <code lang="C#">
+        // Query to update the merchant name.
+        string query = @"UPDATE Merchant SET MerchantName = @MerchantName WHERE MerchantId = @MerchantId;";
+
+        // Instantiate a class containing the data to be updated.
+        MerchantData merchantData = new MerchantData();
+
+        // Set the merchant name to be saved to database.
+        merchantData.MerchantName = "New Merchant Name";
+
+        // Set the id of the row to be updated.
+        merchantData.MerchantId = 1;
+
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+          // Updates the merchant data.
+          merchantName = databaseConnector.ExecuteNonQuery(query, merchantData);
+        }
+      </code>
+    </example>
+  </Members>
+  <Members name="ExecuteReaderPaged">
+    <example>
+      <para>The following example shows how to use the ExecuteReader to get a list of transactions for a paged view.</para>
+      <code lang="C#">
+        // Set the page to be returned.
+        int pageNumber = 2;
+
+        // Set the number of rows per page.
+        int pageSize = 5;
+
+        // Set the dates for search the current day.
+        DateTime searchStartDate = DateTime.Now.Date;
+        DateTime searchEndDate = DateTime.Now.Date.AddDays(1);
+
+        // Query to load transactions.
+        string query = @"SELECT TransactionId, AmountInCents FROM Transaction WHERE CreateDate &gt;= @SearchStartDate AND CreateDate &lt; @SearchEndDate;";
+
+        KeyValuePair&lt;int, IEnumerable&lt;Transaction&gt;&gt; result;
+
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+          // Return a list of transactions, sorted by the CreateDate column in descending order.
+          result = databaseConnector.ExecuteReader&lt;Transaction&gt;(
+            query, pageNumber, pageSize, "CreateDate", SortDirection.DESC, new { SearchStartDate = searchStartDate, SearchEndDate = searchEndDate });
+        }
+
+        Console.WriteLine("Number of available transactions: " + result.Key);
+        Console.WriteLine(string.Format("Transactions for page {0}:", pageNumber));
+
+        foreach (Transaction transaction in result.Value) {
+          Console.WriteLine(string.Format("TransactionId: {0}, Amount: {1}", transaction.TransactionId, transaction.AmountInCents));
+        }
+
+        /**
+         * Output:
+         * Number of available transactions: 32
+         * Transactions for page 2:
+         * TransactionId: 6, Amount: 4500
+         * TransactionId: 7, Amount: 2290
+         * TransactionId: 8, Amount: 1850
+         * TransactionId: 9, Amount: 3990
+         * TransactionId: 10, Amount: 6200
+         **/
+      </code>
+    </example>
+  </Members>
+  <Members name="ExecuteReader">
+    <example>
+      <para>The following example shows how to use the ExecuteReader method to get a list of rows.</para>
+      <code lang="C#">
+        // Query to load transactions.
+        string query = @"SELECT TransactionId, AmountInCents FROM Transaction WHERE CreateDate &gt;= @SearchStartDate AND CreateDate &lt; @SearchEndDate;";
+
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+          // Return a list of transactions, sorted by the CreateDate column in descending order.
+          IEnumerable&lt;Transaction&gt; result = databaseConnector.ExecuteReader&lt;Transaction&gt;(query, new { SearchStartDate = searchStartDate, SearchEndDate = searchEndDate });
+        }
+      </code>
+      <para>The following example shows how to load data with inner join to fill an entity.</para>
+      <code lang="C#">
+        // Query to load MerchantData.
+        string query = @"SELECT Merchant.MerchantId, Merchant.MerchantName, MerchantConfiguration.IsEnabled, MerchantConfiguration.MerchantDomain
+                         FROM Merchant
+                         INNER JOIN MerchantConfiguration ON Merchant.MerchantId = MerchantConfiguration.MerchantId";
+
+        IEnumerable&lt;MerchantData&gt; result;
+        
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+          // Get the merchant data.
+          result = databaseConnector.ExecuteReader&lt;MerchantData&gt;(query);
+        }
+        
+        // Parse each row returned.
+        foreach (MerchantData merchantData in result) {
+        
+          int merchantId = merchantData.MerchantId;
+          string merchantName = merchantData.MerchantName;
+          
+          // The property MerchantConfiguration is populated automatically.
+          
+          bool isEnabled = merchantData.MerchantConfiguration.IsEnabled;
+          string domain = merchantData.MerchantConfiguration.MerchantDomain;
+          
+          .
+          .
+          .
+        }
+      </code>
+      <para>The following example shows how to load data with a collection as parameter for an 'IN' clause.</para>
+      <code lang="C#">
+        // Query to load MerchantData.
+        string query = @"SELECT Name FROM Merchant WHERE MerchantKey IN (@MerchantKeyCollection)";
+
+        // A collection to be used as the query MerchantKeyCollection parameter.
+        IEnumerable&lt;Guid&gt; merchantKeyCollection = new Guid[] { Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76"), Guid.Parse("c5d66001-8a39-4a04-a22c-d3a190018c46") };
+
+        IEnumerable&lt;MerchantData&gt; result;
+        
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+          // Get the merchant data.
+          result = databaseConnector.ExecuteReader&lt;MerchantData&gt;(query, new { MerchantKeyCollection = merchantKeyCollection });
+        }
+      </code>
+    </example>
+  </Members>
+  <Members name="BulkInsert">
+    <example>
+      <para>The following example shows how to insert a collection of rows to a table using the BulkInsert method.</para>
+      <code lang="C#">
+        // Collection containing the data to be pushed to the database.
+        IEnumerable&lt;ShoppingCartItem&gt; shoppingCardItemList = SomeMethodToRetrieveTheData();
+
+        // Table name where the data will be saved.
+        string targetTableName = "ShoppingCartItem";
+
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+          
+          // Save all the elements to the specified table, validating the foreing keys constraints.
+          databaseConnector.BulkInsert(targetTableName, shoppingCardItemList, SqlBulkCopyOptions.CheckConstraints);
+        }
+      </code>
+    </example>
+  </Members>
+  <Members name="SqlTransaction">
+    <example>
+      <para>The following example shows how to create database transactions.</para>
+      <code lang="C#">
+        public void CreateMerchant(MerchantData merchantData) {
+        
+          // Starts a new database transaction.
+          DatabaseConnector.BeginGlobalTransaction(this.ConnectionString);
+        
+          try {
+            // Variable to store the id of the inserted data.
+            int merchantId;
+          
+            // Instantiates the database connector.
+            using(DatabaseConnector databaseConnector = new DatabaseConnector()) {
+          
+              // Creates the merchant in database.
+              merchantId = databaseConnector.ExecuteScalar&lt;int&gt;(createMerchantQuery, merchantData);
+            }
+            
+            // Creates the sandbox affiliations for the new merchant.
+            this.CreateSandboxAffiliationsForMerchant(merchantId);
+          
+            // Persists the pending operations to the database.
+            DatabaseConnector.CommitGlobalTransaction();
+          }
+          catch(Exception ex) {
+        
+            // Rolls back any pending operation.
+            DatabaseConnector.RollbackGlobalTransaction();
+          
+            // Do exception treatment.
+          
+            .
+            .
+            .
+          }
+        }
+        
+        private void CreateSandBoxAffiliationsForMerchant(int merchantId) {
+        
+          // Checks if a valid merchantId was received.
+          if(merchantId &lt;= 0) { throw new ArgumentException("The merchantId must be greater than zero."); }
+          
+          // Instantiates the database connector. This instance has no reference to databaseTransactions, but it is managed internally.
+          using (DatabaseConnector databaseConnector = new DatabaseConnector(this.ConnectionString)) {
+          
+            databaseConnector.ExecuteNonQuery(createSandboxAffiliationsQuery, new { MerchantId = merchantId });
+          }
+        }
+        
+      </code>
+    </example>
+  </Members>
+</Docs>
