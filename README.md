@@ -72,3 +72,9 @@ The following funcionality are available in this release:
     The framework contains a mocker class that is intended to make the test process easier without the need to install third party dependencies.
     
     The IocFactory funcionality can be found in the Dlp.Framework.Mock namespace.
+
+## Install from nuget.org
+
+The official version can be obtained from the nuget package manager with the following command line:
+
+**PM> Install-Package Dlp.Framework.dll**
