@@ -5,7 +5,7 @@ The Dlp.Framework package contains a serie of utilities and extension methods th
 
 The following funcionality are available in this release:
 
-- Extension methods:
+## Extension methods:
 
   - ByteExtensions
     - GetString(): Converts a byte array to an string.
@@ -42,8 +42,8 @@ The following funcionality are available in this release:
     - IsValidCpf(): Checks if the current CPF is valid.
     - Mask(): Masks the content of the specified string.
     - RemoveAccentuation(): Replaces all the accented characters with its unaccented version.
-    
-- Utility classes:
+
+## Utility classes:
 
   - MailService
     - SendEmail(): Sends an email.
@@ -60,8 +60,8 @@ The following funcionality are available in this release:
     - JsonSerialize(): Serializes an object to a JSON string.
     - XmlDeserialize(): Deserializes a XML string to a new instance of the specified type.
     - XmlSerialize(): Serializes an object to a XML string.
-    
-- Extended funcionality:
+
+## Extended funcionality:
 
   - IocFactory
     The IocFactory is a simplified Dependency Injection Container. The most common features that are present on most well know containers are present in this version of the framework, without the need to configure or install third party dependencies.
