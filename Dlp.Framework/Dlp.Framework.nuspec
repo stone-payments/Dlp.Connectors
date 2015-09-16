@@ -8,10 +8,10 @@
     <owners>Stone Pagamentos S/A</owners>
     <projectUrl>http://www.stone.com.br/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Framework de métodos e serviços utilitários de uso comum.</description>
-    <releaseNotes>Adicionada classe Mocker para operações de mock.</releaseNotes>
+    <description>Common services and utilities framework for fast development.</description>
+    <releaseNotes>Implemented the Mocker class.</releaseNotes>
     <copyright>Stone Pagamentos S/A - Copyright 2015</copyright>
-    <tags>Validação Serialização Email CPF CNPJ XML WebRequest IoC Mock</tags>
+    <tags>Validation Serialization Email CPF CNPJ XML WebRequest IoC Mock</tags>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Runtime.Serialization" targetFramework="net40, net45" />
     </frameworkAssemblies>
