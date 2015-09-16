@@ -8,7 +8,7 @@
     <owners>Stone Pagamentos S/A</owners>
     <projectUrl>http://www.stone.com.br/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Common services and utilities framework for fast development.</description>
+    <description>Common framework containing utilities and extension methods for fast development.</description>
     <releaseNotes>Implemented the Mocker class.</releaseNotes>
     <copyright>Stone Pagamentos S/A - Copyright 2015</copyright>
     <tags>Validation Serialization Email CPF CNPJ XML WebRequest IoC Mock</tags>

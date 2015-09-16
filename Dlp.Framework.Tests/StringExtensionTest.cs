@@ -257,7 +257,7 @@ namespace Dlp.Sdk.Tests {
         [TestMethod]
         public void ValidateValidCpf() {
 
-            string source = "091.853.447-02";
+			string source = "222.985.266-30";
 
             bool actual = source.IsValidCpf();
 
@@ -285,7 +285,7 @@ namespace Dlp.Sdk.Tests {
         [TestMethod]
         public void ValidateMissingDigitsCpf() {
 
-            bool actual = "091853".IsValidCpf();
+            bool actual = "222985".IsValidCpf();
 
             Assert.IsFalse(actual);
         }
@@ -331,7 +331,7 @@ namespace Dlp.Sdk.Tests {
         [TestMethod]
         public void ValidateMissingDigitsCnpj() {
 
-            bool actual = "091853".IsValidCnpj();
+            bool actual = "222953".IsValidCnpj();
 
             Assert.IsFalse(actual);
         }
