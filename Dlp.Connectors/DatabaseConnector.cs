@@ -789,10 +789,15 @@ namespace Dlp.Connectors {
 				// Caso a propriedade seja um enum, converte a string para enum.
 				if (propertyInfo.PropertyType.IsEnum == true) { value = Enum.Parse(propertyInfo.PropertyType, databaseValue.ToString(), true); }
 
-				// Verifica se a propriedade é do tipo bool, mas o valor é inteiro.
-				else if (propertyInfo.PropertyType == typeof(bool) && value is bool == false) { value = Convert.ToBoolean(value); }
+				else {
+					// Obtém o tipo de destino da propriedade.
+					Type propertyType = (propertyInfo.PropertyType.IsGenericType == true) ? propertyInfo.PropertyType.GetGenericArguments()[0] : propertyInfo.PropertyType;
 
-				this.WriteOutput("ParseProperty", string.Format("Mapeando valor '{0}' para a propriedade '{1}' do objeto '{2}'.", value, propertyInfo.Name, returnType.Name));
+					// Converte o tipo do banco de dados para o tipo correto da propriedade que receberá o valor.
+					if (value.GetType() != propertyType) { value = Convert.ChangeType(value, propertyType); }
+				}
+
+				this.WriteOutput("ParseProperty", string.Format("Mapeando valor '{0}' para a propriedade '{1}' do objeto '{2}'.", value, propertyInfo.Name, returnType.Name));				
 
 				// Define o valor da propriedade.
 				propertyInfo.SetValue(returnInstance, value, null);

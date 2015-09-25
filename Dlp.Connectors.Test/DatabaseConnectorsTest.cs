@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using System.IO;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 
 namespace Dlp.Connectors.Test {
@@ -36,6 +36,7 @@ namespace Dlp.Connectors.Test {
 		public bool IsEnabled { get; set; }
 		public string Url { get; set; }
 		public StatusType Status { get; set; }
+		public Nullable<int> OptionalId { get; set; }
 	}
 
 	[ExcludeFromCodeCoverage]
@@ -55,6 +56,7 @@ namespace Dlp.Connectors.Test {
 
 		public string Url { get; set; }
 		public bool IsEnabled { get; set; }
+		public Nullable<long> OptionalId { get; set; }
 	}
 
 	[ExcludeFromCodeCoverage]
@@ -365,7 +367,7 @@ namespace Dlp.Connectors.Test {
 		[TestMethod]
 		public void LoadSingleRowWithJoin() {
 
-			string query = @"SELECT Merchant.Name, Merchant.MerchantId, MerchantConfiguration.Url, MerchantConfiguration.IsEnabled
+			string query = @"SELECT Merchant.Name, Merchant.MerchantId, MerchantConfiguration.Url, MerchantConfiguration.IsEnabled, MerchantConfiguration.OptionalId
                              FROM Merchant
                              INNER JOIN MerchantConfiguration ON MerchantConfiguration.MerchantId = Merchant.MerchantId
                              WHERE Merchant.MerchantId IN (2, 3)
@@ -393,6 +395,7 @@ namespace Dlp.Connectors.Test {
 			Assert.AreEqual(3, actual.ElementAt(1).MerchantId);
 			Assert.IsNull(actual.ElementAt(1).Url);
 			Assert.IsTrue(actual.ElementAt(1).IsEnabled);
+			Assert.AreEqual(13, actual.ElementAt(1).OptionalId);
 		}
 
 		[TestMethod]
