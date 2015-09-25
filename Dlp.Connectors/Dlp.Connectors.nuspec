@@ -3,13 +3,14 @@
   <metadata>
     <id>Dlp.Connectors.dll</id>
 		<title>DLP Connectors</title>
+		<iconUrl>http://www.stone.com.br/img/stone32x32.png</iconUrl>
     <version>0.5.9</version>
     <authors>Stone Pagamentos S/A</authors>
     <owners>Stone Pagamentos S/A</owners>
-    <projectUrl>http://www.stone.com.br/</projectUrl>
+    <projectUrl>https://github.com/stone-payments/Dlp.Connectors</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Database connector for MSSQL with ADO.</description>
-    <releaseNotes>Beta</releaseNotes>
+    <releaseNotes>Database values are now mapped explicitly to the destination property type, instead of being a generic object.</releaseNotes>
     <copyright>Stone Pagamentos S/A - Copyright 2015</copyright>
     <tags>Database ADO</tags>
     <dependencies>
