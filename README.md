@@ -16,7 +16,7 @@ The following funcionality are available in this release:
   - DateTimeExtensions
     - ChangeTimeZone(): Converts a DateTime object to the specified TimeZone. Daylight Saving Time are calculated automatically.
     - SystemTimeZones(): Get all the available timezones from system.
-    - ToIso8601String(): Converts the DateTime objeto to an ISO8601 string.
+    - ToIso8601String(): Converts the DateTime object to an ISO8601 string.
   
   - ObjectExtensions
     - Clone(): Creates a new instance of the current object without references to the original.
