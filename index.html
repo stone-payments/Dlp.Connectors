@@ -689,7 +689,7 @@ Console.WriteLine(result);
 						<h3>SendHttpWebRequestAsync&lt;T&gt;()</h3>
 						<p>Sends an Http request to the specified endpoint asyncrounously.</p>
 						<b>Method signature and overloads:</b>
-						<pre class="c#"><code class="c#">public Task&lt;WebResponse&lt;T&gt;&gt; SendHttpWebRequestAsync&lt;T&gt;(IMailServerConfiguration mailServerConfiguration, IMailContent mailContent)</code></pre>
+						<pre class="c#"><code class="c#">public Task&lt;WebResponse&lt;T&gt;&gt; SendHttpWebRequestAsync&lt;T&gt;(object dataToSend, HttpVerb httpVerb, HttpContentType httpContentType, string destinationEndPoint, NameValueCollection headerCollection, bool allowInvalidCertificate = false) where T : class</code></pre>
 						<b>Parameters</b>
 						<ul>
 							<li><i>dataToSend</i>: Object containing the data to be sent in the request. This parameter can be null if no data is to be sent. It is also ignored for <b>GET</b> operations.</li>
