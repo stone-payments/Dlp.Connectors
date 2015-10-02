@@ -1,0 +1,18 @@
+.hljs {
+	background-color:transparent;	
+}
+hr {
+	margin-top:5px;
+}
+img {
+	display:block;
+	margin:30px auto;	
+}
+h1,h2,h3,h4,h5,h6 {
+	border-bottom: 1px solid lightgray;
+	margin-top:20px;
+	margin-bottom: 20px;
+}
+.subsection {
+	margin-left: 50px;
+}

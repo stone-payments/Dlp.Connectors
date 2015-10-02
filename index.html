@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link href="scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="scripts/bootstrap/css/bootstrap-theme.css" rel="stylesheet">
+	<link rel="stylesheet" href="scripts/highlight/styles/vs.css">
+	<link rel="stylesheet" href="styles/default.css">
+	<script src="scripts/highlight/highlight.pack.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 id="overview">DLP Framework</h1>
+				<p>
+					The DLP Framework is a set of services and methods elaborated to simplify and standardize simple everyday tasks. The methods provided were tested and approved, being used in real production applications, ensuring quality and safety. In addition to this, all the code are covered by unit tests, giving you the security to focus exclusivelly on your business logic.
+				</p>
+				<p>
+					The framework is mainly consisted of extension methods, creating a transparent flow in the development process, without the need to instantiate several classes just for simple operations.
+				</p>
+				<h1 id="installation">Installation</h1>
+				<p>
+					The official DLP Framework Package can be installed in your projects just like any other NuGet package.
+				</p>
+				<h4>Installing via command line:</h4>
+				<ol>
+					<li>Open the Nuget Package Manager Console: Tools > Nuget Package Manager > Package Manager Console</li>
+					<li>Install the package with the following command:
+				</ol>
+				<pre><code>PM> Install-Package Dlp.Framework.dll</code></pre>
+				<h4>Installing using the graphical interface:</h4>
+				<ol>
+					<li>Right click the Project you want to include the DLP Framework package.</li>
+					<li>Choose <i>Manage Nuget Packages...</i> option.</li>
+					<li>With <i>nuget.org</i> selected as the online source, search for <i>DLP Framework</i>.</li>
+					<li>You can now click the <b>Install</b> button to add the package to your selected project.</li>
+				</ol>
+				<span style="text-align: center;"><img src="images/nugetui.jpg"/></span>
+				<h4>Using the DLP Framework</h4>
+				<p>
+					To have the framework features available, don't forget to include the Dlp.Framework reference to any file you want to use them.
+				</p>
+				<pre><code>using Dlp.Framework;</code></pre>
+				<p>
+					In the next sessions are presented the extension methods and some example of usage.
+				</p>
+				<div class="section">
+					<h1 id="byte">Byte Extensions</h1>
+					<p>The byte extension methods provide funcionality to perform operarions over a single byte and/or byte arrays.</p>
+					<h3>GetString()</h3>
+					<p>This method converts a byte array into a string.</p>				
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string GetString(this byte[] source, Encoding encoding = null)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: The byte array to be converted to string.</li>
+						<li><i>encoding</i>: [Optional] Encoding to be used for conversion. Default value: <code>Encoding.UTF8</code>.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns a new string generated from the byte array or null if an invalid byte array is received.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to convert a byte array to string using the extension method.
+					</p>
+					<pre><code>// String to be converted to a byte array.
+string source = "source string";
+
+// Create a byte array from a string, using the StringExtensions.GetByte() extension method.
+byte[] data = source.GetBytes();
+
+// Convert the byte array back to string, using whe ByteExtensions.GetString() extension method.
+string result = data.GetString();
+
+Console.WriteLine(result);
+
+// Output: source string</pre></code>
+				</div>
+				<div class="section">
+					<h1 id="collection">Collection Extensions</h1>
+					<p>The collection extension methods provide funcionality to perform operarions over any type of list or collection.</p>
+					<h3>AsString()</h3>
+					<p>This method converts a collection into a string. You can choose the separator and any surrounding character for each element</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string AsString(this IEnumerable source, char separator = ',', string surroundWith = null)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: Collection to be converted to string.</li>
+						<li><i>separator</i>: [Optional] Char separator. The default separator is comma.</li>
+						<li><i>surroundWith</i>: [Optional] Specify the surrounding chars for the elements. For example.: single quotation mark "'": 'element1','element2',...</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns a new string containing all the elements received, or null, if the source collection is null.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to convert a <code>IEnumerable&lt;int&gt;</code> into a string separated by commas.
+					</p>
+					<pre><code>// Create a collection with 4 elements.
+IEnumerable<int> idCollection = new[] int { 1, 2, 3, 4 };
+
+// Convert the collection to a string.
+string result = idCollection.AsString();
+
+Console.WriteLine(result);
+
+// Output: 1,2,3,4</pre></code>
+					<p>
+						The next example shows how to convert a List<string> into a string where each element is separated by a semi-colon and surrounded with sigle quotation marks.
+					</p>
+					<pre><code>// List to hold names.
+List<string> nameCollection = new List<string>();
+
+nameCollection.Add("First Name");
+nameCollection.Add("Middle Name");
+nameCollection.Add("Last Name");
+
+// Convert the collection to a string.
+string result = nameCollection.AsString(';', "'");
+
+Console.WriteLine(result);
+
+// Output: 'First Name';'Middle Name';'Last Name'</pre></code>
+				</div>
+				<div class="section">
+					<h1 id="datetime">DateTime Extensions</h1>
+					<p>
+						The DateTime extension methods provide funcionality to perform operarions over a DateTime object.
+					</p>
+					<h3>ChangeTimeZone()</h3>
+					<p>Converts a <code>DateTime</code> object to the specified <code>TimeZoneId</code>. The converted date considers the <b>Daylight Saving Time</b> automatically.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static DateTime ChangeTimeZone(this DateTime source, string sourceTimeZoneId, string targetTimeZoneId)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: DateTime object to be converted.</li>
+						<li><i>sourceTimeZoneId</i>: TimeZoneId for the current DateTime object.</li>
+						<li><i>targetTimeZoneId</i>: Target TimeZoneId to witch the DateTime will be converted.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns a new DateTime object with the specified target TimeZoneId.</p>
+					<b>Remarks</b>
+					<p>To get a list of all the available TimeZones, check the <code>SystemTimeZones()</code> method.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to convert a <code>DateTime</code> object between different time zones.
+					</p>
+					<pre><code>// Current local DateTime for time, assuming we are working in a region within Bras&iacute;lia/Brazil time zone.
+DateTime brasiliaDateTime = DateTime.Now;
+
+// Convert the DateTime from Bras&iacute;lia time zone to a new DateTime for Hawaii time zone.
+DateTime hawaiiDateTime = brasiliaDateTime.ChangeTimeZone("E. South America Standard Time", "Hawaiian Standard Time");</pre></code>
+					<p>
+						The next example shows how to convert UTC DateTime to a specific time zone.
+					</p>
+					<pre><code>// Convert the UTC current DateTime to Brasília time zone.
+DateTime brasiliaDateTime = DateTime.UtcNow.ChangeTimeZone(TimeZoneInfo.Utc.Id, "E. South America Standard Time");</pre></code>
+					<h3>SystemTimeZones()</h3>
+					<p>Gets all the availables TimeZones, with its Id and Display Name. Useful for display in ComboBoxes or ListBoxes.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static IDictionary&lt;string, string&gt; SystemTimeZones()</code></pre>
+					<b>Return value</b>
+					<p>Returns a dictionaty with the Id as the Key and the Display Name as the value.</p>
+					<h3>ToIso8601String()</h3>
+					<p>Converts a DateTime object to a ISO8601 string. Very useful for REST operation contracts.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string ToIso8601String(this DateTime source)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: DateTime object to be converted.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns the date and time in ISO8601 format.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to convert a <code>DateTime</code> object to an ISO 8601 standard string.
+					</p>
+					<pre><code>// Current local DateTime.
+DateTime dateTime = new DateTime(2015, 08, 29, 12, 35, 40);
+
+// Convert the DateTime to a ISO 8601 string.
+string result = dateTime.ToIso8601String();
+
+Console.WriteLine(result);
+
+// Output: 2015-08-29T12:35:40</pre></code>
+				</div>
+				<div class="section">
+					<h1 id="object">Object Extensions</h1>
+					<p>
+						The Object extension methods provide funcionality to perform operarions over any type of object.
+					</p>
+					<h3>Clone()</h3>
+					<p>Creates a new instance of the current object without references to the original.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static object Clone(this object source)
+public static T Clone<T>(this T source) where T : class, new()</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: Object to be cloned.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns a new independent instance of the original object.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to clone an object.
+					</p>
+					<pre><code>// Instantiate a reference type.
+MerchantData merchantData = new MerchantData();
+
+// Set the name property.
+merchantData.Name = "Original Name";
+
+// Clone the merchantData object, removing all the references to original object.
+MerchantData clonedMerchantData = merchantData.Clone();
+
+Console.WriteLine("Original Merchant Name: " + merchantData.Name);
+Console.WriteLine("Cloned Merchant Name: " + clonedMerchantData.Name);
+
+// Change the name of the cloned merchant. The original merchant won't be changed.
+clonedMerchantData.Name = "New Name";
+
+Console.WriteLine("Original Merchant Name: " + merchantData.Name);
+Console.WriteLine("Cloned Merchant Name: " + clonedMerchantData.Name);
+
+/**
+ * Output:
+ * Original Merchant Name: Original Name
+ * Cloned Merchant Name: Original Name
+ * Original Merchant Name: Original Name
+ * Cloned Merchant Name: New Name
+ **/</pre></code>
+ 					<h3>DiffProperties()</h3>
+					<p>Compares all the properties between two objects.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static IEnumerable&lt;DiffProperty&gt; DiffProperties<T>(this T firstObject, T secondObject) where T : new()</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>firstObject</i>: First object to be checked.</li>
+						<li><i>secondObject</i>: Second object to be checked.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns a collection of <code>DiffProperty</code> containing all the properties that does not match.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to extract the properties that are different between two objects of the same type.
+					</p>
+					<pre><code>Student studentA = new Student();
+studentA.Name = "Bob";
+studentA.Age = 17;
+studentA.Gender = "M";
+
+Student studentB = new Student();
+studentB.Name = "Anna";
+studentB.Age = 17;
+studentB.Gender = "F";
+
+// Compare the properties of the two students.
+IEnumerable&lt;DiffProperty&gt; diffProperties = studentA.DiffProperties<Student>(studentB);
+	
+// Displays every property that have different values.
+foreach(DiffProperty diffProperty in diffProperties) {
+	Console.WriteLine("PropertyName: " + diffProperty.PropertyName);
+	Console.WriteLine("    studentA value: " + diffProperty.FirstValue);
+	Console.WriteLine("    studentB value: " + diffProperty.SecondValue);
+}
+
+/**
+* Output:
+* PropertyName: Name
+*     studentA value: Bob
+*     studentB value: Anna
+* PropertyName: Gender
+*     studentA value: M
+*     studentB value: F
+**/</pre></code>
+				</div>
+				<div class="section">
+					<h1 id="string">String Extensions</h1>
+					<p>
+						The String extension methods provide funcionality to perform operarions over strings.
+					</p>
+					<h3>AsCnpj()</h3>
+					<p>Formats a string as CNPJ (00.000.000/0001-00). If the value is not a valid CNPJ, returns the original string.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string AsCnpj(this string value)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>value</i>: String to be formatted as CNPJ.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns the string formatted as a CNPJ.</p>
+					
+					<h3>AsCpf()</h3>
+					<p>Formats a string as CPF (999.999.999-99). If the value is not a valid CPF, returns the original string.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string AsCpf(this string value)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>value</i>: String to be formatted as CPF.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns the string formatted as a CPF.</p>
+					
+					<h3>AsPhoneNumber()</h3>
+					<p>Formats a string as phone number.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string AsPhoneNumber(this string value)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>value</i>: String to be formatted as a phone number.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns the string formatted as a phone number.</p>
+					
+					<h3>AsZipCode()</h3>
+					<p>Formats a string as ZipCode. If the value is not a valid ZipCode, returns the original string.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string AsZipCode(this string value)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>value</i>: String to be formatted as a ZipCode.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns the string formatted as a zip code.</p>
+					
+					<h3>CalculateMd5()</h3>
+					<p>Calculates the MD5 for a string.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string CalculateMd5(this string source)
+public static string CalculateMd5(this string source, string secretKey)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: Source string to generate the MD5 from.</li>
+						<li><i>secretKey</i>: The secret key to be used for MD5 calculation.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns the hexadecimal MD5 hash of the string.</p>
+					
+					<h3>CalculateSha1()</h3>
+					<p>Calculates the hash from a string, using the SHA1 algoritm.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string CalculateSha1(this string source, string secretKey)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: Source string to be hashed.</li>
+						<li><i>secretKey</i>: The secret key to generate the hash.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns the generated hashed string, or null, if the string is not valid.</p>
+					
+					<h3>CalculateSha256()</h3>
+					<p>Calculates the hash from a string, using the SHA256 algoritm.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string CalculateSha256(this string source, string secretKey)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: Source string to be hashed.</li>
+						<li><i>secretKey</i>: The secret key to generate the hash.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns the generated hashed string, or null, if the string is not valid.</p>
+					
+					<h3>CalculateSha384()</h3>
+					<p>Calculates the hash from a string, using the SHA384 algoritm.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string CalculateSha384(this string source, string secretKey)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: Source string to be hashed.</li>
+						<li><i>secretKey</i>: The secret key to generate the hash.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns the generated hashed string, or null, if the string is not valid.</p>
+					
+					<h3>CalculateSha512()</h3>
+					<p>Calculates the hash from a string, using the SHA512 algoritm.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string CalculateSha512(this string source, string secretKey)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: Source string to be hashed.</li>
+						<li><i>secretKey</i>: The secret key to generate the hash.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns the generated hashed string, or null, if the string is not valid.</p>
+					
+					<h3>Decrypt()</h3>
+					<p>Decrypts a string using the provided secretKey.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string Decrypt(this string source, string secretKey)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: String to be decrypted.</li>
+						<li><i>secretKey</i>: The secret key used in the encrypt process.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns a UTF8 decrypted string.</p>
+					
+					<h3>Encrypt()</h3>
+					<p>Encrypts a string using the provided secretKey.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string Encrypt(this string source, string secretKey)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: String to be encrypted.</li>
+						<li><i>secretKey</i>: The secret key to be used to calculate the encryption.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns the encrypted hexadecimal string.</p>
+					
+					<h3>GetBytes()</h3>
+					<p>Converts a string to a byte array.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static byte[] GetBytes(this string source, Encoding encoding = null)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: String to be converted.</li>
+						<li><i>encoding</i>: [Optional] Encoding to be used for conversion. Default value: <code>Encoding.UTF8</code>.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns a byte array generated from the source string or null if the string does not have data.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to convert a string to a byte array using the extension method.
+					</p>
+					<pre><code>// String to be converted to a byte array.
+string source = "source string";
+
+// Create a byte array from a string, using the StringExtensions.GetByte() extension method.
+byte[] data = source.GetBytes();
+
+// Convert the byte array back to string, using whe ByteExtensions.GetString() extension method.
+string result = data.GetString();
+
+Console.WriteLine(result);
+
+// Output: source string</pre></code>
+					
+					<h3>GetDigits()</h3>
+					<p>Get all the digits of the specified string.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string GetDigits(this string source)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: String to be checked.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns a new string containing only the extracted digits.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to extract only the digits of a zip code.
+					</p>
+					<pre><code>// Zip code inputed by user.
+string zipCode = "20091-005";
+
+// Create a new string containing only the digits.
+string rawData = zipCode.GetDigits();
+
+Console.WriteLine(rawData);
+
+// Output: 20091005</pre></code>
+					
+					<h3>GetLetters()</h3>
+					<p>Get all the letters of the specified string.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string GetLetters(this string source)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: String to be checked.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns a new string containing only the extracted letters.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to extract only the letters of a string.
+					</p>
+					<pre><code>string sampleString = "17simple-dashed-string";
+
+// Create a new string containing only the letters.
+string rawData = sampleString.GetLetters();
+
+Console.WriteLine(rawData);
+
+// Output: simpledashedstring</pre></code>
+					
+					<h3>GetLettersOrDigits()</h3>
+					<p>Get all the letters and digits of the specified string.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string GetLettersOrDigits(this string source)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: String to be checked.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns a new string containing only the extracted letters and digits.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to extract only the letters and digits of a string.
+					</p>
+					<pre><code>// Invalid file name.
+string invalidFileName = "file:101 review";
+
+// Create a new string containing only the letters and digits.
+string safeFileName = invalidFileName.GetLettersOrDigits();
+
+Console.WriteLine(safeFileName);
+
+// Output: file101review</pre></code>
+					
+					<h3>IsValidCnpj()</h3>
+					<p>Checks if the current string is a valid CNPJ.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static bool IsValidCnpj(this string source)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: String to be checked.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns true if the string is a valid CNPJ.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to validate a CNPJ document number. The string can contain non digit characters.
+					</p>
+					<pre><code>// CNPJ formated string, inputed by user. Also works with unformatted data like 12123123000112.
+string source = "12.123.123/0001-12";
+
+// Checks if the document number is valid.
+bool result = source.IsValidCnpj();</pre></code>
+					
+					<h3>IsValidCpf()</h3>
+					<p>Checks if the current string is a valid CPF.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static bool IsValidCpf(this string source)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: String to be checked.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns true if the string is a valid CPF.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to validate a CPF document number. The string can contain non digit characters.
+					</p>
+					<pre><code>// CPF formated string, inputed by user. Also works with unformatted data like 12312312312.
+string source = "123.123.123-12";
+
+// Checks if the document number is valid.
+bool result = source.IsValidCpf();</pre></code>
+					
+					<h3>IsValidEmailAddress()</h3>
+					<p>Checks if the current string has a valid email address format.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static bool IsValidEmailAddress(this string source)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: String to be checked.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns true if the string has a valid email address format.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to validate an email address format.
+					</p>
+					<pre><code>// Email string to be validated.
+string email = "email@domain.com";
+
+// Checks if the email address is is a valid format.
+bool result = email.IsValidEmailAddress();</pre></code>
+					
+					<h3>Mask()</h3>
+					<p>Masks the content of the specified string.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string Mask(this string source, StringMaskFormat stringMaskFormat, char maskCharacter = '*')</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: String to be masked.</li>
+						<li><i>stringMaskFormat</i>: Mask format to be used.</li>
+						<li><i>maskCharacter</i>: [Optional] Mask character. Default character is asterisk '*'</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns a new string with masked content.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to mask a credit card data using all the masks options.
+					</p>
+					<pre><code>// Current credit card number.
+string creditCardNumber = "4111111111111111";
+
+// Current security code.
+string cvv2 = "123";
+
+// Mask the current creditcard number for public display in an interface.
+string publicCreditCardNumber = creditCardNumber.Mask(StringMaskFormat.CreditCard);
+
+// Mask the current creditcard number to be saved in a database.
+string privateCreditCardNumber = creditCardNumber.Mask(StringMaskFormat.CreditCardExtended);
+
+// Mask the current security code for feedback display.
+string cvv2Masked = cvv2.Mask(StringMaskFormat.Password);
+
+Console.WriteLine("Masked Number:          " + publicCreditCardNumber);
+Console.WriteLine("Masked Number Extended: " + privateCreditCardNumber);
+Console.WriteLine("CVV2:                   " + cvv2Masked);
+
+/**
+ * Output:
+ * Masked Number:          ************1111
+ * Masked Number Extended: 4111********1111
+ * CVV2:                   ***
+**/</pre></code>
+					
+					<h3>RemoveAccentuation()</h3>
+					<p>Replaces all the accented characters with its unaccented version.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public static string RemoveAccentuation(this string source)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>source</i>: String to be checked.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns a new string without accented characters.</p>
+					<b>Remarks</b>
+					<p>Only Latin characters are supported by this method. Use of unsuported characters will result in the interrogation mark to be used to replace the characters.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to remove the accentuated characters of a string.
+					</p>
+					<pre><code>// Accentuated string.
+string source = "Acentua&ccedil;&atilde;o";
+
+// New string without accents.
+string result = source.RemoveAccentuation();
+
+Console.WriteLine(result);
+
+// Output: Acentuacao</pre></code>
+					
+				</div>
+				
+				
+				
+			</div>
+		</div>
+	</div>
+	<script>hljs.initHighlightingOnLoad();</script>
+	<script src="scripts/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>
