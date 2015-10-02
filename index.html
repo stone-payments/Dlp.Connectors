@@ -635,11 +635,177 @@ string result = source.RemoveAccentuation();
 
 Console.WriteLine(result);
 
-// Output: Acentuacao</pre></code>
-					
+// Output: Acentuacao</pre></code>			
 				</div>
-				
-				
+				<div class="section">
+					<h1 id="utility">Utility classes</h1>
+					<p>The following classes does not provide extension methods but provide useful functionalities for some common tasks.</p>
+					
+					<div class="section">
+						<h2 id="mailservice">MailService</h2>
+						<p>The MailService class contains methods that allows your application to send e-mails.</p>
+						
+						<h3>SendEmail()</h3>
+						<p>Sends an email.</p>
+						<b>Method signature and overloads:</b>
+						<pre class="c#"><code class="c#">public void SendEmail(IMailServerConfiguration mailServerConfiguration, IMailContent mailContent)</code></pre>
+						<b>Parameters</b>
+						<ul>
+							<li><i>mailServerConfiguration</i>: The mail account and smtp configuration.</li>
+							<li><i>mailContent</i>: The mail message content.</li>
+						</ul>
+						
+						<h3>SendEmailAsync()</h3>
+						<p>Sends an email asynchronously.</p>
+						<b>Method signature and overloads:</b>
+						<pre class="c#"><code class="c#">public void SendEmailAsync(IMailServerConfiguration mailServerConfiguration, IMailContent mailContent)</code></pre>
+						<b>Parameters</b>
+						<ul>
+							<li><i>mailServerConfiguration</i>: The mail account and smtp configuration.</li>
+							<li><i>mailContent</i>: The mail message content.</li>
+						</ul>
+					</div>
+					
+					<div class="section">
+						<h2 id="restclient">RestClient</h2>
+						<p>The RestClient class contains methods that allows your application to perform HTTP requests using REST.</p>
+						
+						<h3>SendHttpWebRequest&lt;T&gt;()</h3>
+						<p>Sends an Http request to the specified endpoint.</p>
+						<b>Method signature and overloads:</b>
+						<pre class="c#"><code class="c#">public WebResponse&lt;T&gt; SendHttpWebRequest&lt;T&gt;(object dataToSend, HttpVerb httpVerb, HttpContentType httpContentType, string destinationEndPoint, NameValueCollection headerCollection, bool allowInvalidCertificate = false) where T : class</code></pre>
+						<b>Parameters</b>
+						<ul>
+							<li><i>dataToSend</i>: Object containing the data to be sent in the request. This parameter can be null if no data is to be sent. It is also ignored for <b>GET</b> operations.</li>
+							<li><i>httpVerb</i>: HTTP verb to be using when sending the data.</li>
+							<li><i>httpContentType</i>: Content type of the transferred data.</li>
+							<li><i>destinationEndPoint</i>: Endpoint where the request will be sent to.</li>
+							<li><i>headerCollection</i>: Custom data to be added to the request header.</li>
+							<li><i>allowInvalidCertificate</i>: [Optional] When set to true, allows the request to be done even if the destination certificate is not valid. Default value: <code>false</code></li>
+						</ul>
+						<b>Return value</b>
+						<p>Returns a new WebResponse with the return value converted to the specified type T.</p>
+						
+						<h3>SendHttpWebRequestAsync&lt;T&gt;()</h3>
+						<p>Sends an Http request to the specified endpoint asyncrounously.</p>
+						<b>Method signature and overloads:</b>
+						<pre class="c#"><code class="c#">public Task&lt;WebResponse&lt;T&gt;&gt; SendHttpWebRequestAsync&lt;T&gt;(IMailServerConfiguration mailServerConfiguration, IMailContent mailContent)</code></pre>
+						<b>Parameters</b>
+						<ul>
+							<li><i>dataToSend</i>: Object containing the data to be sent in the request. This parameter can be null if no data is to be sent. It is also ignored for <b>GET</b> operations.</li>
+							<li><i>httpVerb</i>: HTTP verb to be using when sending the data.</li>
+							<li><i>httpContentType</i>: Content type of the transferred data.</li>
+							<li><i>destinationEndPoint</i>: Endpoint where the request will be sent to.</li>
+							<li><i>headerCollection</i>: Custom data to be added to the request header.</li>
+							<li><i>allowInvalidCertificate</i>: [Optional] When set to true, allows the request to be done even if the destination certificate is not valid. Default value: <code>false</code></li>
+						</ul>
+						<b>Return value</b>
+						<p>Returns a new WebResponse as a Task with the return value converted to the specified type T.</p>
+					</div>
+					
+					<div class="section">
+						<h2 id="serializer">Serializer</h2>
+						<p>The Serializer class contains methods that allows your application to perform binary, JSON and XML serialization operations.</p>
+						
+						<h3>BinaryDeserialize&lt;T&gt;()</h3>
+						<p>Deserializes a byte array to a new instance of type T.</p>
+						<b>Method signature and overloads:</b>
+						<pre class="c#"><code class="c#">public static T BinaryDeserialize&lt;T&gt;(byte[] source)</code></pre>
+						<b>Parameters</b>
+						<ul>
+							<li><i>source</i>: Byte array to be deserialized.</li>
+						</ul>
+						<b>Return value</b>
+						<p>Returns a new instance of type T with the deserialized data, or <code>default(T)</code>, if the byte array is null.</p>
+						
+						<h3>BinarySerialize()</h3>
+						<p>Serializes the object to a byte array. The object to be serialized must have the <code>[Serializable]</code> attribute.</p>
+						<b>Method signature and overloads:</b>
+						<pre class="c#"><code class="c#">public static byte[] BinarySerialize(object source)</code></pre>
+						<b>Parameters</b>
+						<ul>
+							<li><i>source</i>: Object to be serialized.</li>
+						</ul>
+						<b>Return value</b>
+						<p>Returns a byte array representation of the object, or null if the object is not specified.</p>
+						
+						<h3>JsonDeserialize()</h3>
+						<p>Deserializes a JSON string to an object instance.</p>
+						<b>Method signature and overloads:</b>
+						<pre class="c#"><code class="c#">public static object JsonDeserialize(Type returnType, string source, Encoding encoding = null)</code></pre>
+						<b>Parameters</b>
+						<ul>
+							<li><i>returnType</i>: Type of the instance to be returned.</li>
+							<li><i>source</i>: JSON string to be deserialized.</li>
+							<li><i>encoding</i>: [Optional] Encoding to be used for deserialization. Default value: <code>Encoding.UTF8</code>.</li>
+						</ul>
+						<b>Return value</b>
+						<p>Returns a new instance of the specified type with the deserialized data.</p>
+						
+						<h3>JsonDeserialize&lt;T&gt;()</h3>
+						<p>Deserializes a JSON string to an instance of type T.</p>
+						<b>Method signature and overloads:</b>
+						<pre class="c#"><code class="c#">public static T JsonDeserialize&lt;T&gt;(string source, Encoding encoding = null) where T : class</code></pre>
+						<b>Parameters</b>
+						<ul>
+							<li><i>source</i>: JSON string to be deserialized.</li>
+							<li><i>encoding</i>: [Optional] Encoding to be used for deserialization. Default value: <code>Encoding.UTF8</code>.</li>
+						</ul>
+						<b>Return value</b>
+						<p>Return a new instance of type T with the deserialized data, or <code>default(T)</code>, if the JSON string is null.</p>
+						
+						<h3>JsonSerialize()</h3>
+						<p>Serializes an object to a JSON string format.</p>
+						<b>Method signature and overloads:</b>
+						<pre class="c#"><code class="c#">public static string JsonSerialize(object source, Encoding encoding = null)</code></pre>
+						<b>Parameters</b>
+						<ul>
+							<li><i>source</i>: Object to be serialized.</li>
+							<li><i>encoding</i>: [Optional] Encoding to be used for serialization. Default value: <code>Encoding.UTF8</code>.</li>
+						</ul>
+						<b>Return value</b>
+						<p>Returns the serialized string, or null, if the source object was not suplied.</p>
+						
+						<h3>XmlDeserialize()</h3>
+						<p>Deserializes a XML string to an object instance.</p>
+						<b>Method signature and overloads:</b>
+						<pre class="c#"><code class="c#">public static object XmlDeserialize(Type returnType, string source, Encoding encoding = null)</code></pre>
+						<b>Parameters</b>
+						<ul>
+							<li><i>returnType</i>: Type of the instance to be returned.</li>
+							<li><i>source</i>: Object to be deserialized.</li>
+							<li><i>encoding</i>: [Optional] Encoding to be used for deserialization. Default value: <code>Encoding.UTF8</code>.</li>
+						</ul>
+						<b>Return value</b>
+						<p>Returns a new instance of the specified type with the deserialized data.</p>
+						
+						<h3>XmlDeserialize&lt;T&gt;()</h3>
+						<p>Deserializes a XML string to a new instance of type T.</p>
+						<b>Method signature and overloads:</b>
+						<pre class="c#"><code class="c#">public static T XmlDeserialize&lt;T&gt;(string source, Encoding encoding = null) where T : class</code></pre>
+						<b>Parameters</b>
+						<ul>
+							<li><i>source</i>: Object to be deserialized.</li>
+							<li><i>encoding</i>: [Optional] Encoding to be used for deserialization. Default value: <code>Encoding.UTF8</code>.</li>
+						</ul>
+						<b>Return value</b>
+						<p>Return a new instance of type T with the deserialized data, or <code>default(T)</code>, if the XML string is null.</p>
+						
+						<h3>XmlSerialize()</h3>
+						<p>Serialize an object to a XML string.</p>
+						<b>Method signature and overloads:</b>
+						<pre class="c#"><code class="c#">public static string XmlSerialize(object source, bool indent = false, Encoding encoding = null)</code></pre>
+						<b>Parameters</b>
+						<ul>
+							<li><i>source</i>: Object to be serialized.</li>
+							<li><i>indent</i>: [Optional] Set to true to generate a indented XML string. Default: <code>false</code>.</li>
+							<li><i>encoding</i>: [Optional] Encoding to be used for serialization. Default value: <code>Encoding.UTF8</code>.</li>
+						</ul>
+						<b>Return value</b>
+						<p>Returns the serialized string, or null, if the source object was not suplied.</p>
+						
+					</div>
+				</div>
 				
 			</div>
 		</div>
