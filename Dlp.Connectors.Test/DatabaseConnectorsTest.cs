@@ -141,6 +141,41 @@ namespace Dlp.Connectors.Test {
 		public int SimpleTableId { get; set; }
 	}
 
+	internal class Address {
+
+		public Address() { }
+
+		public int Id { get; set; }
+
+		public string Street { get; set; }
+
+		public string Number { get; set; }
+
+		public string Complement { get; set; }
+	}
+
+	internal class Contact {
+
+		public Contact() { }
+
+		public int Id { get; set; }
+
+		public string Name { get; set; }
+	}
+
+	internal class Lead {
+
+		public Lead() {		}
+
+		public int Id { get; set; }
+
+		public Address Address { get; set; }
+
+		public Contact Contact { get; set; }
+
+		public string Name { get; set; }
+	}
+
 	#endregion
 
 	[ExcludeFromCodeCoverage]
@@ -1252,6 +1287,19 @@ namespace Dlp.Connectors.Test {
 			Assert.AreEqual(result.Id, 2);
 			Assert.AreEqual(result.SimpleTableId, 1);
 			Assert.AreEqual(result.Name, "Main configuration");
+		}
+
+		[TestMethod]
+		public void LoadSubProperties() {
+
+			string query = @"SELECT Id, AddressId AS 'Address.Id', ContactId AS 'Contact.Id', Name AS 'Contact.Name' FROM Lead WHERE Id = @LeadId;";
+
+			Lead result = null;
+
+			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+				result = databaseConnector.ExecuteReader<Lead>(query, new { @LeadId = 1 }).FirstOrDefault();
+			}
 		}
 	}
 }

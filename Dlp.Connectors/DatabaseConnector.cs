@@ -711,8 +711,11 @@ namespace Dlp.Connectors {
 			// Armazena o nome da propriedade esperada.
 			string memberName = explicitClassName ?? propertyName;
 
-			// Sai do método caso a propriedade já tenha sido mapeada.
-			if (mappedProperties.Contains(returnType.Name + "." + propertyName) == true) { return false; }
+			if (string.IsNullOrWhiteSpace(explicitClassName) == true) {
+				// Sai do método caso a propriedade já tenha sido mapeada.
+				//if (mappedProperties.Contains(returnType.Name + "." + ((string.IsNullOrWhiteSpace(memberName) == false) ? memberName + "." : string.Empty) + propertyName) == true) { return false; }
+				if (mappedProperties.Contains(returnType.Name + "." + propertyName) == true) { return false; }
+			}
 
 			// Obtém a propriedade que possui o mesmo nome da propriedade encontrada na consulta ao banco.
 			PropertyInfo propertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
@@ -804,6 +807,7 @@ namespace Dlp.Connectors {
 
 				// Adiciona a propriedade na lista de dados já mapeados.
 				mappedProperties.Add(returnType.Name + "." + propertyName);
+				//mappedProperties.Add(returnType.Name + "." + ((string.IsNullOrWhiteSpace(memberName) == false) ? memberName + "." : string.Empty) + propertyName);
 			}
 
 			return true;
