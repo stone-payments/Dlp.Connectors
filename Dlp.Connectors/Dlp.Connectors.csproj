@@ -40,8 +40,7 @@
     <DocumentationFile>bin\Release\Dlp.Connectors.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dlp.Framework, Version=0.1.5736.32044, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Dlp.Framework">
       <HintPath>..\packages\Dlp.Framework.dll.0.8.4\lib\net45\Dlp.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
