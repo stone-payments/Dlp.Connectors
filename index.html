@@ -11,802 +11,557 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
-				<h1 id="overview">DLP Framework Overview</h1>
+				<h1 id="overview">DLP Connectors Overview</h1>
 				<p>
-					The DLP Framework is a set of services and methods elaborated to simplify and standardize simple everyday tasks. The methods provided were tested and approved, being used in real production applications, ensuring quality and safety. In addition to this, all the code are covered by unit tests, giving you the security to focus exclusivelly on your business logic.
+					The DLP Connectors is intended to be a container for several communication services like databases, cache services, sockets and more. At the moment only the DatabaseConnector is available for use, specifically with MSSQL databases.
 				</p>
 				<p>
-					The framework is mainly consisted of extension methods, creating a transparent flow in the development process, without the need to instantiate several classes just for simple operations.
+					The main funcionality of the DatabaseConnector is the ability to auto map database tables and columns to your entity objects, without any additional instructions or configurations.
 				</p>
 				<p>
-					<b>If you are looking for the project page on GitHub, please navigate to <a href="https://github.com/stone-payments/Dlp.Framework" target="_blank">Dlp.Framework Project page</a>.</b>
+					<b>If you are looking for the project page on GitHub, please navigate to <a href="https://github.com/stone-payments/Dlp.Connectors" target="_blank">Dlp.Connectors Project page</a>.</b>
 				</p>
 				<h1 id="installation">Installation</h1>
 				<p>
-					The official DLP Framework Package can be installed in your projects just like any other NuGet package.
+					The official DLP Connectors Package can be installed in your projects just like any other NuGet package.
 				</p>
 				<h4>Installing via command line:</h4>
 				<ol>
 					<li>Open the Nuget Package Manager Console: Tools > Nuget Package Manager > Package Manager Console</li>
 					<li>Install the package with the following command:
 				</ol>
-				<pre><code>PM> Install-Package Dlp.Framework.dll</code></pre>
+				<pre><code>PM> Install-Package Dlp.Connectors.dll</code></pre>
 				<h4>Installing using the graphical interface:</h4>
 				<ol>
 					<li>Right click the Project you want to include the DLP Framework package.</li>
 					<li>Choose <i>Manage Nuget Packages...</i> option.</li>
-					<li>With <i>nuget.org</i> selected as the online source, search for <i>DLP Framework</i>.</li>
+					<li>With <i>nuget.org</i> selected as the online source, search for <i>DLP Connectors</i>.</li>
 					<li>You can now click the <b>Install</b> button to add the package to your selected project.</li>
 				</ol>
 				<span style="text-align: center;"><img src="images/nugetui.jpg"/></span>
-				<h4>Using the DLP Framework</h4>
+				<h4>Using the DLP Connectors</h4>
 				<p>
-					To have the framework features available, don't forget to include the Dlp.Framework reference to any file you want to use them.
+					To have the Dlp.Connectors features available, don't forget to include the Dlp.Connectors reference to any file you want to use them.
 				</p>
-				<pre><code>using Dlp.Framework;</code></pre>
+				<pre><code>using Dlp.Connectors;</code></pre>
 				<p>
-					In the next sessions are presented the extension methods and some example of usage.
+					In the next sessions are presented the Dlp.Connectors methods and some example of usage.
 				</p>
 				<div class="section">
-					<h1 id="byte">Byte Extensions</h1>
-					<p>The byte extension methods provide funcionality to perform operarions over a single byte and/or byte arrays.</p>
-					<h3>GetString()</h3>
-					<p>This method converts a byte array into a string.</p>				
+					<h1 id="databaseConnector">DatabaseConnector</h1>
+					<p>The DatabaseConnector class provides all the necessary methods and utilities for access MSSQL databases with ease and simplicity.</p>
+					<h3>ExecuteNonQuery()</h3>
+					<p>This method executes the specified query in a database and returns the number of affected rows.</p>				
 					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string GetString(this byte[] source, Encoding encoding = null)</code></pre>
+					<pre class="c#"><code class="c#">public int ExecuteNonQuery(string query, dynamic parameters = null)</code></pre>
 					<b>Parameters</b>
 					<ul>
-						<li><i>source</i>: The byte array to be converted to string.</li>
-						<li><i>encoding</i>: [Optional] Encoding to be used for conversion. Default value: <code>Encoding.UTF8</code>.</li>
+						<li><i>query</i>: Query to be executed. The parameter is mandatory.</li>
+						<li><i>parameters</i>: [Optional] Query parameters. May be an entity or a dynamic object with the following the format: <code>new {Param1 = value1, Param2 = value2, ...}</code>.</li>
 					</ul>
 					<b>Return value</b>
-					<p>Returns a new string generated from the byte array or null if an invalid byte array is received.</p>
+					<p>Returns an integer with the number of rows affected by your query.</p>
 					<b>Examples</b>
 					<p>
-						The following example shows how to convert a byte array to string using the extension method.
+						The following example shows how to use the insert statement to create a new row with the ExecuteNonQuery method.
 					</p>
-					<pre><code>// String to be converted to a byte array.
-string source = "source string";
+					<pre><code>// Query to be used to insert the new row.
+string query = "INSERT INTO Address (Street, Number) VALUES ('Main Street', '119b')";
 
-// Create a byte array from a string, using the StringExtensions.GetByte() extension method.
-byte[] data = source.GetBytes();
+// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-// Convert the byte array back to string, using whe ByteExtensions.GetString() extension method.
-string result = data.GetString();
-
-Console.WriteLine(result);
-
-// Output: source string</pre></code>
-				</div>
-				<div class="section">
-					<h1 id="collection">Collection Extensions</h1>
-					<p>The collection extension methods provide funcionality to perform operarions over any type of list or collection.</p>
-					<h3>AsString()</h3>
-					<p>This method converts a collection into a string. You can choose the separator and any surrounding character for each element</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string AsString(this IEnumerable source, char separator = ',', string surroundWith = null)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: Collection to be converted to string.</li>
-						<li><i>separator</i>: [Optional] Char separator. The default separator is comma.</li>
-						<li><i>surroundWith</i>: [Optional] Specify the surrounding chars for the elements. For example.: single quotation mark "'": 'element1','element2',...</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns a new string containing all the elements received, or null, if the source collection is null.</p>
-					<b>Examples</b>
+	// Calls the ExecuteNonQuery to insert the new row.
+	return databaseConnector.ExecuteNonQuery(query);
+}</pre></code>
 					<p>
-						The following example shows how to convert a <code>IEnumerable&lt;int&gt;</code> into a string separated by commas.
+						Although the previous example is not a good practice (by having the parameters hard coded), the next example shows how to use SqlParameters to execute the same task of inserting a row using the ExecuteNonQuery method.
 					</p>
-					<pre><code>// Create a collection with 4 elements.
-IEnumerable<int> idCollection = new[] int { 1, 2, 3, 4 };
+					<pre><code>internal int SaveAddress(string street, string number) {
+						
+	// Query to be used to insert the new row.
+	string query = "INSERT INTO Address (Street, Number) VALUES (@Street, @Number);";
 
-// Convert the collection to a string.
-string result = idCollection.AsString();
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-Console.WriteLine(result);
-
-// Output: 1,2,3,4</pre></code>
+		// Calls the ExecuteNonQuery to insert the new row, creating a new dynamic object to be used as the parameter.
+		return databaseConnector.ExecuteNonQuery(query, new { Street = street, Number = number });
+	}
+}</pre></code>
 					<p>
-						The next example shows how to convert a List<string> into a string where each element is separated by a semi-colon and surrounded with sigle quotation marks.
+						Another option is to use your own class or entity as the SqlParameters for any query, as shown in the next example.
 					</p>
-					<pre><code>// List to hold names.
-List<string> nameCollection = new List<string>();
+					<pre><code>public sealed class AddressEntity {
 
-nameCollection.Add("First Name");
-nameCollection.Add("Middle Name");
-nameCollection.Add("Last Name");
-
-// Convert the collection to a string.
-string result = nameCollection.AsString(';', "'");
-
-Console.WriteLine(result);
-
-// Output: 'First Name';'Middle Name';'Last Name'</pre></code>
-				</div>
-				<div class="section">
-					<h1 id="datetime">DateTime Extensions</h1>
-					<p>
-						The DateTime extension methods provide funcionality to perform operarions over a DateTime object.
-					</p>
-					<h3>ChangeTimeZone()</h3>
-					<p>Converts a <code>DateTime</code> object to the specified <code>TimeZoneId</code>. The converted date considers the <b>Daylight Saving Time</b> automatically.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static DateTime ChangeTimeZone(this DateTime source, string sourceTimeZoneId, string targetTimeZoneId)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: DateTime object to be converted.</li>
-						<li><i>sourceTimeZoneId</i>: TimeZoneId for the current DateTime object.</li>
-						<li><i>targetTimeZoneId</i>: Target TimeZoneId to witch the DateTime will be converted.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns a new DateTime object with the specified target TimeZoneId.</p>
-					<b>Remarks</b>
-					<p>To get a list of all the available TimeZones, check the <code>SystemTimeZones()</code> method.</p>
-					<b>Examples</b>
-					<p>
-						The following example shows how to convert a <code>DateTime</code> object between different time zones.
-					</p>
-					<pre><code>// Current local DateTime for time, assuming we are working in a region within Bras&iacute;lia/Brazil time zone.
-DateTime brasiliaDateTime = DateTime.Now;
-
-// Convert the DateTime from Bras&iacute;lia time zone to a new DateTime for Hawaii time zone.
-DateTime hawaiiDateTime = brasiliaDateTime.ChangeTimeZone("E. South America Standard Time", "Hawaiian Standard Time");</pre></code>
-					<p>
-						The next example shows how to convert UTC DateTime to a specific time zone.
-					</p>
-					<pre><code>// Convert the UTC current DateTime to Brasília time zone.
-DateTime brasiliaDateTime = DateTime.UtcNow.ChangeTimeZone(TimeZoneInfo.Utc.Id, "E. South America Standard Time");</pre></code>
-					<h3>SystemTimeZones()</h3>
-					<p>Gets all the availables TimeZones, with its Id and Display Name. Useful for display in ComboBoxes or ListBoxes.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static IDictionary&lt;string, string&gt; SystemTimeZones()</code></pre>
-					<b>Return value</b>
-					<p>Returns a dictionaty with the Id as the Key and the Display Name as the value.</p>
-					<h3>ToIso8601String()</h3>
-					<p>Converts a DateTime object to a ISO8601 string. Very useful for REST operation contracts.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string ToIso8601String(this DateTime source)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: DateTime object to be converted.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns the date and time in ISO8601 format.</p>
-					<b>Examples</b>
-					<p>
-						The following example shows how to convert a <code>DateTime</code> object to an ISO 8601 standard string.
-					</p>
-					<pre><code>// Current local DateTime.
-DateTime dateTime = new DateTime(2015, 08, 29, 12, 35, 40);
-
-// Convert the DateTime to a ISO 8601 string.
-string result = dateTime.ToIso8601String();
-
-Console.WriteLine(result);
-
-// Output: 2015-08-29T12:35:40</pre></code>
-				</div>
-				<div class="section">
-					<h1 id="object">Object Extensions</h1>
-					<p>
-						The Object extension methods provide funcionality to perform operarions over any type of object.
-					</p>
-					<h3>Clone()</h3>
-					<p>Creates a new instance of the current object without references to the original.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static object Clone(this object source)
-public static T Clone<T>(this T source) where T : class, new()</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: Object to be cloned.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns a new independent instance of the original object.</p>
-					<b>Examples</b>
-					<p>
-						The following example shows how to clone an object.
-					</p>
-					<pre><code>// Instantiate a reference type.
-MerchantData merchantData = new MerchantData();
-
-// Set the name property.
-merchantData.Name = "Original Name";
-
-// Clone the merchantData object, removing all the references to original object.
-MerchantData clonedMerchantData = merchantData.Clone();
-
-Console.WriteLine("Original Merchant Name: " + merchantData.Name);
-Console.WriteLine("Cloned Merchant Name: " + clonedMerchantData.Name);
-
-// Change the name of the cloned merchant. The original merchant won't be changed.
-clonedMerchantData.Name = "New Name";
-
-Console.WriteLine("Original Merchant Name: " + merchantData.Name);
-Console.WriteLine("Cloned Merchant Name: " + clonedMerchantData.Name);
-
-/**
- * Output:
- * Original Merchant Name: Original Name
- * Cloned Merchant Name: Original Name
- * Original Merchant Name: Original Name
- * Cloned Merchant Name: New Name
- **/</pre></code>
- 					<h3>DiffProperties()</h3>
-					<p>Compares all the properties between two objects.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static IEnumerable&lt;DiffProperty&gt; DiffProperties<T>(this T firstObject, T secondObject) where T : new()</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>firstObject</i>: First object to be checked.</li>
-						<li><i>secondObject</i>: Second object to be checked.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns a collection of <code>DiffProperty</code> containing all the properties that does not match.</p>
-					<b>Examples</b>
-					<p>
-						The following example shows how to extract the properties that are different between two objects of the same type.
-					</p>
-					<pre><code>Student studentA = new Student();
-studentA.Name = "Bob";
-studentA.Age = 17;
-studentA.Gender = "M";
-
-Student studentB = new Student();
-studentB.Name = "Anna";
-studentB.Age = 17;
-studentB.Gender = "F";
-
-// Compare the properties of the two students.
-IEnumerable&lt;DiffProperty&gt; diffProperties = studentA.DiffProperties<Student>(studentB);
-	
-// Displays every property that have different values.
-foreach(DiffProperty diffProperty in diffProperties) {
-	Console.WriteLine("PropertyName: " + diffProperty.PropertyName);
-	Console.WriteLine("    studentA value: " + diffProperty.FirstValue);
-	Console.WriteLine("    studentB value: " + diffProperty.SecondValue);
+	public string Street { get; set; }	
+	public string Number { get; set; }
 }
 
-/**
-* Output:
-* PropertyName: Name
-*     studentA value: Bob
-*     studentB value: Anna
-* PropertyName: Gender
-*     studentA value: M
-*     studentB value: F
-**/</pre></code>
+...
+
+internal int SaveAddress(AddressEntity addressEntity) {
+						
+	// Query to be used to insert the new row.
+	string query = "INSERT INTO Address (Street, Number) VALUES (@Street, @Number);";
+
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+		// Calls the ExecuteNonQuery to insert the new row, using our entity as the parameter.
+		return databaseConnector.ExecuteNonQuery(query, addressEntity);
+	}
+}</pre></code>
+					<p>
+						You should keep in mind that the entity's properties must match the SqlParameters names, but not necessarily the name of the columns in the database. The following example shows the previous example with different property names in entity.
+					</p>
+					<pre><code>public sealed class AddressEntity {
+
+	public string StreetName { get; set; }	
+	public string StreetNumber { get; set; }
+}
+
+...
+
+internal int SaveAddress(AddressEntity addressEntity) {
+						
+	// Query to be used to insert the new row.
+	// Pay attention to the @StreetName and @StreetNumber that must match the name of the properties of your entity.
+	string query = "INSERT INTO Address (Street, Number) VALUES (@StreetName, @StreetNumber);";
+
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+		// Calls the ExecuteNonQuery to insert the new row, using our entity as the parameter.
+		return databaseConnector.ExecuteNonQuery(query, addressEntity);
+	}
+}</pre></code>				
+					<h3>ExecuteScalar()</h3>
+					<p>This method executes the specified query and returns the first column of the first row returned by the database server.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public T ExecuteScalar&lt;T&gt;(string query, dynamic parameters = null)
+					</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>query</i>: Query to be executed. This parameter is mandatory.</li>
+						<li><i>parameters</i>: [Optional] Query parameters. May be an entity or a dynamic object with the following the format: <code>new {Param1 = value1, Param2 = value2, ...}</code>.</li>
+					</ul>
+					<b>Return value</b>
+					<p>Returns a new instance of type T with the mapped result returned by the database, or <code>default(T)</code>, if the the query execution returns no result.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to retrieve the number of rows from a table.
+					</p>
+					<pre><code>// Query to be executed.
+string query = "SELECT COUNT(1) FROM Address;";
+
+// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+	// Calls the ExecuteScalar to count the number of rows as an integer.
+	int rowCount = databaseConnector.ExecuteScalar&lt;int&gt;(query);
+}</pre></code>
+					<p>
+						The next example shows how to get the database server current date and time.
+					</p>
+					<pre><code>// Query to be executed.
+string query = "SELECT GETDATE();";
+
+// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+	// Calls the ExecuteScalar to get the database server date and time.
+	DateTime serverDateTime = databaseConnector.ExecuteScalar&lt;DateTime&gt;(query);
+}</pre></code>
+					<h3>ExecuteReader()</h3>
+					<p>This method executes the specified query and returns a list containing the returned rows already mapped to the specified type. Optionally the result can be paginated for better performance.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public IEnumerable&lt;T&gt; ExecuteReader&lt;T&gt;(string query, dynamic parameters = null)
+public KeyValuePair&lt;int, IEnumerable&lt;T&gt;&gt; ExecuteReader&lt;T&gt;(string query, int pageNumber, int pageSize, string orderByColumnName, SortDirection sortDirection, dynamic parameters = null)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>query</i>: Query to be executed. This parameter is mandatory.</li>
+						<li><i>pageNumber</i>: Number of the page to be retrieved when the result is paginated.</li>
+						<li><i>pageSize</i>: Number of rows to be returned by page.</li>
+						<li><i>orderByColumnName</i>: Name of the colum to be used in the SQL <code>ORDER BY</code> clause.</li>
+						<li><i>sortDirection</i>: The direction of the ordering results.</li>
+						<li><i>parameters</i>: [Optional] Query parameters. May be an entity or a dynamic object with the following the format: <code>new {Param1 = value1, Param2 = value2, ...}</code></li>
+					</ul>
+					<b>Return value</b>
+					<p>Using the non paginated method, the return value is a collection of type T. If no results are found, an empty collection is returned.</p>
+					<p>When the paginated overload is used the method returns a <code>KeyValuePair</code> where the <code>key</code> is the number of available pages and the <code>value</code> is the list of rows of the requested page.</p>
+					<b>Examples</b>
+					<p>
+						The following example shows how to load a collection of addresses using the ExecuteReader method.
+					</p>
+					<pre><code>public sealed class AddressEntity {
+					
+	public string Name { get; set; }	
+	public string Number { get; set; }
+}
+
+...
+
+internal IEnumerable&lt;AddressEntity&gt; LoadAddresses() {
+						
+	// Query to be used to load the addresses.
+	string query = "SELECT Name, Number FROM Address;";
+
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+		// Calls the ExecuteReader to load all the addresses from the database.
+		return databaseConnector.ExecuteReader&lt;AddressEntity&gt;(query);
+	}
+}</pre></code>	
+					<p>
+						The next example shows the same query from the previous example, but returning a paginated result.
+					</p>
+					<pre><code>public sealed class AddressEntity {
+					
+	public string Name { get; set; }	
+	public string Number { get; set; }
+}
+
+...
+
+internal KeyValuePair&lt;int, IEnumerable&lt;AddressEntity&gt;&gt; LoadAddresses() {
+						
+	// Query to be used to load the addresses.
+	string query = "SELECT Name, Number FROM Address;";
+
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+		// Calls the ExecuteReader to load the first page of addresses containing 50 rows per page, alphabetically ordered by the "Name" column.
+		return databaseConnector.ExecuteReader&lt;AddressEntity&gt;(query, 1, 50, "Name", SortDirection.ASC);
+	}
+}</pre></code>
+					<p>
+						Using parameters with the ExecuteReader method is the same as with ExecuteScalar and ExecuteNonQuery. 
+					</p>
+					<pre><code>public sealed class AddressEntity {
+					
+	public long AddressId { get; set; }
+	public string Name { get; set; }	
+	public string Number { get; set; }
+}
+
+...
+
+internal AddressEntity LoadAddressById(long addressId) {
+
+	// Query to be used to load the address.
+	string query = "SELECT AddressId, Name, Number FROM Address WHERE AddressId = @AddressId;";
+
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+		// Calls the ExecuteReader to load the specified address. If nothing is found the FirstOrDefault extension method returns null.
+		return databaseConnector.ExecuteReader&lt;AddressEntity&gt;(query, new { AddressId = addressId }).FirstOrDefault();
+	}
+}</pre></code>
+					<div class="alert alert-info"><p><b>Important: </b>Keep in mind that the <i>ExecuteReader</i> mapper works based on names by convention. The mapper search primarily a property that matches the name of the column from a database. If a property with the same name of a column name is found the value is mapped to that property. When using complex objects, the mapper searches for any property that matches the name of the table. Having the property found, the mapper starts the search for the property containing the name of the column, to store the returned value.</p>
+					<p>In the <a href="#samples">Advanced samples</a> section we provide some examples, including options to map data automatically when your properties does not match the name of columns or tables from database.</p></div>
+					<h3>BulkInsert()</h3>
+					<p>This method allows the insertion of multiple rows using batch operations. You simply informs a collection and the name of the table where the data must be inserted, without the need of any query.</p>
+					<b>Method signature and overloads:</b>
+					<pre class="c#"><code class="c#">public void BulkInsert(string tableName, IEnumerable collection, SqlBulkCopyOptions sqlBulkCopyOptions = SqlBulkCopyOptions.Default)</code></pre>
+					<b>Parameters</b>
+					<ul>
+						<li><i>tableName</i>: Query to be executed. This parameter is mandatory.</li>
+						<li><i>collection</i>: Number of the page to be retrieved when the result is paginated.</li>
+						<li><i>sqlBulkCopyOptions</i>: [Optional] Number of rows to be returned by page.</li>
+					</ul>
+					<b>Example</b>
+					<p>The following example demonstrates how to insert multiple items in a table using the BulkInsert method. The properties from the class ShoppingCartItem will be mapped to the columns with the same name from the ShoppingCartItems table.</p>
+					<pre><code>public sealed class ShoppingCartItem {
+					
+	public string ItemName { get; set; }
+	public int Quantity { get; set; }	
+	public int AmountInCents { get; set; }
+	public string ItemDescription { get; set; }
+	public long ShoppingCartId { get; set; }
+}
+
+...
+
+internal void SaveShoppingCartItems(IEnumerable&lt;ShoppingCartItem&gt; shoppingCartItems) {
+
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+		// Calls the BulkInsert to insert all the shoppingCartItems.
+		databaseConnector.BulkInsert("ShoppingCartItems", shoppingCartItems);
+	}
+}</code></pre>
 				</div>
 				<div class="section">
-					<h1 id="string">String Extensions</h1>
-					<p>
-						The String extension methods provide funcionality to perform operarions over strings.
-					</p>
-					<h3>AsCnpj()</h3>
-					<p>Formats a string as CNPJ (00.000.000/0001-00). If the value is not a valid CNPJ, returns the original string.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string AsCnpj(this string value)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>value</i>: String to be formatted as CNPJ.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns the string formatted as a CNPJ.</p>
-					
-					<h3>AsCpf()</h3>
-					<p>Formats a string as CPF (999.999.999-99). If the value is not a valid CPF, returns the original string.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string AsCpf(this string value)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>value</i>: String to be formatted as CPF.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns the string formatted as a CPF.</p>
-					
-					<h3>AsPhoneNumber()</h3>
-					<p>Formats a string as phone number.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string AsPhoneNumber(this string value)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>value</i>: String to be formatted as a phone number.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns the string formatted as a phone number.</p>
-					
-					<h3>AsZipCode()</h3>
-					<p>Formats a string as ZipCode. If the value is not a valid ZipCode, returns the original string.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string AsZipCode(this string value)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>value</i>: String to be formatted as a ZipCode.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns the string formatted as a zip code.</p>
-					
-					<h3>CalculateMd5()</h3>
-					<p>Calculates the MD5 for a string.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string CalculateMd5(this string source)
-public static string CalculateMd5(this string source, string secretKey)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: Source string to generate the MD5 from.</li>
-						<li><i>secretKey</i>: The secret key to be used for MD5 calculation.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns the hexadecimal MD5 hash of the string.</p>
-					
-					<h3>CalculateSha1()</h3>
-					<p>Calculates the hash from a string, using the SHA1 algoritm.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string CalculateSha1(this string source, string secretKey)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: Source string to be hashed.</li>
-						<li><i>secretKey</i>: The secret key to generate the hash.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns the generated hashed string, or null, if the string is not valid.</p>
-					
-					<h3>CalculateSha256()</h3>
-					<p>Calculates the hash from a string, using the SHA256 algoritm.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string CalculateSha256(this string source, string secretKey)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: Source string to be hashed.</li>
-						<li><i>secretKey</i>: The secret key to generate the hash.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns the generated hashed string, or null, if the string is not valid.</p>
-					
-					<h3>CalculateSha384()</h3>
-					<p>Calculates the hash from a string, using the SHA384 algoritm.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string CalculateSha384(this string source, string secretKey)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: Source string to be hashed.</li>
-						<li><i>secretKey</i>: The secret key to generate the hash.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns the generated hashed string, or null, if the string is not valid.</p>
-					
-					<h3>CalculateSha512()</h3>
-					<p>Calculates the hash from a string, using the SHA512 algoritm.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string CalculateSha512(this string source, string secretKey)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: Source string to be hashed.</li>
-						<li><i>secretKey</i>: The secret key to generate the hash.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns the generated hashed string, or null, if the string is not valid.</p>
-					
-					<h3>Decrypt()</h3>
-					<p>Decrypts a string using the provided secretKey.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string Decrypt(this string source, string secretKey)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: String to be decrypted.</li>
-						<li><i>secretKey</i>: The secret key used in the encrypt process.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns a UTF8 decrypted string.</p>
-					
-					<h3>Encrypt()</h3>
-					<p>Encrypts a string using the provided secretKey.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string Encrypt(this string source, string secretKey)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: String to be encrypted.</li>
-						<li><i>secretKey</i>: The secret key to be used to calculate the encryption.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns the encrypted hexadecimal string.</p>
-					
-					<h3>GetBytes()</h3>
-					<p>Converts a string to a byte array.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static byte[] GetBytes(this string source, Encoding encoding = null)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: String to be converted.</li>
-						<li><i>encoding</i>: [Optional] Encoding to be used for conversion. Default value: <code>Encoding.UTF8</code>.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns a byte array generated from the source string or null if the string does not have data.</p>
-					<b>Examples</b>
-					<p>
-						The following example shows how to convert a string to a byte array using the extension method.
-					</p>
-					<pre><code>// String to be converted to a byte array.
-string source = "source string";
+					<h1 id="samples">Advanced samples</h1>
+					<p>In this section we demonstrate some common use scenarios using simple and complex object structures.</p>
+					<h3>Working with JOIN</h3>
+					<p>The DatabaseConnector can handle joins like any other query statement. And it is pretty simple to have a query result from several tables with joins to be automatically mapped to your business entity or database entity.</p>
+					<b>Join to populate a business entity</b>
+					<p>Business entities are classes focused in your business logic, therefore containing only the specific data required to execute a specific role or purpose. For example, consider the following business entity:</p>
+					<pre class="c#"><code class="c#">public sealed class Customer {
 
-// Create a byte array from a string, using the StringExtensions.GetByte() extension method.
-byte[] data = source.GetBytes();
+	public string Name { get; set; }
+	public int Age { get; set; }
+	public bool IsEnabled { get; set; }
+	public string SecurityQuestion { get; set; }						
+}</code></pre>
+					<p>For our example, the customer information are stored in two different tables. The <i>Name</i> and <i>Age</i> values are stored in <i>Customer</i> table and <i>IsEnabled</i> and <i>SecurityQuestion</i> are persisted in <i>CustomerConfiguration</i> table.</p>
+					<p>The following query can retrieve the data from both tables and the result is mapped to our business entity.</p>
+					<pre class="c#"><code class="c#">internal Customer GetCustomerById(long customerId) {
+						
+// Query to retrieve the customer information to our business entity.
+string query = @"SELECT Customer.Name, Customer.Age, CustomerConfiguration.IsEnabled, CustomerConfiguration.SecurityQuestion
+                 FROM Customer
+                 INNER JOIN CustomerConfiguration ON CustomerConfiguration.CustomerId = Customer.CustomerId
+                 WHERE Customer.CustomerId = @CustomerId;";
 
-// Convert the byte array back to string, using whe ByteExtensions.GetString() extension method.
-string result = data.GetString();
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-Console.WriteLine(result);
+		// Calls the ExecuteReader to load the specified customer. If nothing is found the FirstOrDefault extension method returns null.
+		return databaseConnector.ExecuteReader&lt;Customer&gt;(query, new { CustomerId = customerId }).FirstOrDefault();
+	}
+}</code></pre>
+					<b>Join to populate a database entity</b>
+					<p>The bellow code represents a customer database entity. Database entities are intended to represent the database structure inside your code. Although it is not recomended for critical operations that requires performance, a good number of developers are used to work with database entities.</p>
+					<pre class="c#"><code class="c#">public sealed class CustomerConfigurationEntity {
 
-// Output: source string</pre></code>
-					
-					<h3>GetDigits()</h3>
-					<p>Get all the digits of the specified string.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string GetDigits(this string source)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: String to be checked.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns a new string containing only the extracted digits.</p>
-					<b>Examples</b>
-					<p>
-						The following example shows how to extract only the digits of a zip code.
-					</p>
-					<pre><code>// Zip code inputed by user.
-string zipCode = "20091-005";
+	public bool IsEnabled { get; set; }
+	public string SecurityQuestion { get; set; }
+}
 
-// Create a new string containing only the digits.
-string rawData = zipCode.GetDigits();
+public sealed class CustomerEntity {
+	
+	public string Name { get; set; }
+	public int Age { get; set; }	
+	public CostumerConfigurationEntity CustomerConfiguration { get; set; }						
+}</code></pre>
+					<p>The same piece of code from the previous example also works to map the result to the database entity</p>
+					<pre class="c#"><code class="c#">internal Customer GetCustomerById(long customerId) {
+						
+    // Query to retrieve the customer information to our database entity. 
+    string query = @"SELECT Customer.Name, Customer.Age, CustomerConfiguration.IsEnabled, CustomerConfiguration.SecurityQuestion
+                     FROM Customer
+                     INNER JOIN CustomerConfiguration ON CustomerConfiguration.CustomerId = Customer.CustomerId
+                     WHERE Customer.CustomerId = @CustomerId;";
 
-Console.WriteLine(rawData);
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-// Output: 20091005</pre></code>
-					
-					<h3>GetLetters()</h3>
-					<p>Get all the letters of the specified string.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string GetLetters(this string source)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: String to be checked.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns a new string containing only the extracted letters.</p>
-					<b>Examples</b>
-					<p>
-						The following example shows how to extract only the letters of a string.
-					</p>
-					<pre><code>string sampleString = "17simple-dashed-string";
+		// Calls the ExecuteReader to load the specified customer. If nothing is found the FirstOrDefault extension method returns null.
+		return databaseConnector.ExecuteReader&lt;Customer&gt;(query, new { CustomerId = customerId }).FirstOrDefault();
+	}
+}</code></pre>
+					<h3>Working with inheritance</h3>
+					<p>The DatabaseConnector supports auto mapping of properties from a base class in the same way as self properties. Consider the class structure bellow, where the <i>VipCustomer</i> class inherits from <i>Customer</i> class:</p>
+					<pre class="c#"><code class="c#">public class Customer {
 
-// Create a new string containing only the letters.
-string rawData = sampleString.GetLetters();
+	public string Name { get; set; }
+	public int Age { get; set; }
+}
 
-Console.WriteLine(rawData);
+public sealed class VipCustomer : Customer {
+		
+	public string PersonalManagerName { get; set; }
+	public int CurrentPlanPoints { get; set; }						
+}</code></pre>
+					<p>Classes that have inheritance are automatically mapped by the DatabaseConnector without any additional configuration. The following example demonstrates how to select informations from two separate tables to populate the <i>VipCostumer</i> class.</p>
+					<pre><code>internal VipCustomer GetVipCustomerById(long vipCustomerId) {
+						
+    // Query to retrieve the customer information.
+    string query = @"SELECT Customer.Name, Customer.Age, VipCustomer.PersonalManagerName, VipCustomer.CurrentPlanPoints
+                     FROM VipCustomer
+                     INNER JOIN Customer ON Customer.CustomerId = VipCustomer.CustomerId
+                     WHERE VipCustomer.VipCustomerId = @VipCustomerId;";
 
-// Output: simpledashedstring</pre></code>
-					
-					<h3>GetLettersOrDigits()</h3>
-					<p>Get all the letters and digits of the specified string.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string GetLettersOrDigits(this string source)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: String to be checked.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns a new string containing only the extracted letters and digits.</p>
-					<b>Examples</b>
-					<p>
-						The following example shows how to extract only the letters and digits of a string.
-					</p>
-					<pre><code>// Invalid file name.
-string invalidFileName = "file:101 review";
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-// Create a new string containing only the letters and digits.
-string safeFileName = invalidFileName.GetLettersOrDigits();
+		// Calls the ExecuteReader to load the specified customer. If nothing is found the FirstOrDefault extension method returns null.
+		return databaseConnector.ExecuteReader&lt;VipCustomer&gt;(query, new { VipCustomerId = vipCustomerId }).FirstOrDefault();
+	}
+}</code></pre>
+					<h3>Dealing with ambiguity</h3>
+					<p>When you have more than one user defined type in an entity, may occur that those types can contain properties with the same name. In these situations is recomended that you include the name of the table for each column in your query to explicitily map each column to the correct property.</p>
+					<p>Consider the following Account class that contains the User and Service properties and both of them have a Name property including its own Name property.</p>
+					<pre class="c#"><code class="c#">public sealed class UserEntity {
 
-Console.WriteLine(safeFileName);
+	public string Name { get; set; }
+	public string Email { get; set; }
+}
 
-// Output: file101review</pre></code>
-					
-					<h3>IsValidCnpj()</h3>
-					<p>Checks if the current string is a valid CNPJ.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static bool IsValidCnpj(this string source)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: String to be checked.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns true if the string is a valid CNPJ.</p>
-					<b>Examples</b>
-					<p>
-						The following example shows how to validate a CNPJ document number. The string can contain non digit characters.
-					</p>
-					<pre><code>// CNPJ formated string, inputed by user. Also works with unformatted data like 12123123000112.
-string source = "12.123.123/0001-12";
+public sealed class ServiceEntity {
 
-// Checks if the document number is valid.
-bool result = source.IsValidCnpj();</pre></code>
-					
-					<h3>IsValidCpf()</h3>
-					<p>Checks if the current string is a valid CPF.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static bool IsValidCpf(this string source)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: String to be checked.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns true if the string is a valid CPF.</p>
-					<b>Examples</b>
-					<p>
-						The following example shows how to validate a CPF document number. The string can contain non digit characters.
-					</p>
-					<pre><code>// CPF formated string, inputed by user. Also works with unformatted data like 12312312312.
-string source = "123.123.123-12";
+	public string Name { get; set; }
+	public string Url { get; set; }
+}
 
-// Checks if the document number is valid.
-bool result = source.IsValidCpf();</pre></code>
-					
-					<h3>IsValidEmailAddress()</h3>
-					<p>Checks if the current string has a valid email address format.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static bool IsValidEmailAddress(this string source)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: String to be checked.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns true if the string has a valid email address format.</p>
-					<b>Examples</b>
-					<p>
-						The following example shows how to validate an email address format.
-					</p>
-					<pre><code>// Email string to be validated.
-string email = "email@domain.com";
+public sealed class AccountEntity {
 
-// Checks if the email address is is a valid format.
-bool result = email.IsValidEmailAddress();</pre></code>
-					
-					<h3>Mask()</h3>
-					<p>Masks the content of the specified string.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string Mask(this string source, StringMaskFormat stringMaskFormat, char maskCharacter = '*')</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: String to be masked.</li>
-						<li><i>stringMaskFormat</i>: Mask format to be used.</li>
-						<li><i>maskCharacter</i>: [Optional] Mask character. Default character is asterisk '*'</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns a new string with masked content.</p>
-					<b>Examples</b>
-					<p>
-						The following example shows how to mask a credit card data using all the masks options.
-					</p>
-					<pre><code>// Current credit card number.
-string creditCardNumber = "4111111111111111";
+	public string Name { get; set; }
+	public ServiceEntity Service { get; set; }
+	public UserEntity User { get; set; }
+}</code></pre>
+					<p>The following example demonstrates a query containing the name of the table owner of each column to explicity map each Name property for the AccountEntity class.</p>
+					<pre><code>internal AccountEntity GetAccountEntityByUserEmail(string email) {
+						
+    // Query to retrieve the account information.
+    string query = @"SELECT Account.Name, Service.Name, Service.Url, User.Name, User.Email
+                     FROM User
+                     INNER JOIN Account ON Account.UserId = User.UserId
+                     INNER JOIN Service ON Service.AccountId = Account.ServiceId
+                     WHERE User.Email = @Email;";
 
-// Current security code.
-string cvv2 = "123";
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-// Mask the current creditcard number for public display in an interface.
-string publicCreditCardNumber = creditCardNumber.Mask(StringMaskFormat.CreditCard);
+		// Calls the ExecuteReader to load the specified AccountEntity. If nothing is found the FirstOrDefault extension method returns null.
+		return databaseConnector.ExecuteReader&lt;AccountEntity&gt;(query, new { Email = email }).FirstOrDefault();
+	}
+}</code></pre>
+					<div class="alert alert-warning"><b>Warning: </b>Do not use aliases for this kind of situation or the mapper will not be able to correlate the table names with the properties. If you want to know more about aliases take a look at the Explicity property mapping section.</div>
+					<h3>Explicity property mapping</h3>
+					<p>In the previous section we used a well defined class structure where every property name matched the desired data from the database. However that is not always the case. Sometimes your classes will not have every property exactly the same as the column or table name.</p>
+					<p>For example, consider the following class structure:</p>
+					<pre class="c#"><code class="c#">public sealed class UserEntity {
 
-// Mask the current creditcard number to be saved in a database.
-string privateCreditCardNumber = creditCardNumber.Mask(StringMaskFormat.CreditCardExtended);
+	public string UserName { get; set; }
+	public string UserEmail { get; set; }
+}
 
-// Mask the current security code for feedback display.
-string cvv2Masked = cvv2.Mask(StringMaskFormat.Password);
+public sealed class ServiceEntity {
 
-Console.WriteLine("Masked Number:          " + publicCreditCardNumber);
-Console.WriteLine("Masked Number Extended: " + privateCreditCardNumber);
-Console.WriteLine("CVV2:                   " + cvv2Masked);
+	public string ServiceName { get; set; }
+	public string ServiceUrl { get; set; }
+}
 
-/**
- * Output:
- * Masked Number:          ************1111
- * Masked Number Extended: 4111********1111
- * CVV2:                   ***
-**/</pre></code>
-					
-					<h3>RemoveAccentuation()</h3>
-					<p>Replaces all the accented characters with its unaccented version.</p>
-					<b>Method signature and overloads:</b>
-					<pre class="c#"><code class="c#">public static string RemoveAccentuation(this string source)</code></pre>
-					<b>Parameters</b>
-					<ul>
-						<li><i>source</i>: String to be checked.</li>
-					</ul>
-					<b>Return value</b>
-					<p>Returns a new string without accented characters.</p>
-					<b>Remarks</b>
-					<p>Only Latin characters are supported by this method. Use of unsuported characters will result in the interrogation mark to be used to replace the characters.</p>
-					<b>Examples</b>
-					<p>
-						The following example shows how to remove the accentuated characters of a string.
-					</p>
-					<pre><code>// Accentuated string.
-string source = "Acentua&ccedil;&atilde;o";
+public sealed class AccountEntity {
 
-// New string without accents.
-string result = source.RemoveAccentuation();
+	public string AccountName { get; set; }
+	public ServiceEntity AccountService { get; set; }
+	public UserEntity AccountOwner { get; set; }
+}</code></pre>
+					<p>The following example demonstrates how to explicity map each returned value from the database to the correct property using aliases.</p>
+					<pre><code>internal AccountEntity GetAccountEntityByUserEmail(string email) {
+						
+    // Query to retrieve the account information.
+    string query = @"SELECT Account.Name AS 'AccountName', Service.Name AS 'AccountService.ServiceName',
+                     Service.Url AS 'AccountService.ServiceUrl', User.Name AS 'AccountOwner.UserName', User.Email AS 'AccountOwner.UserEmail'
+                     FROM User
+                     INNER JOIN Account ON Account.UserId = User.UserId
+                     INNER JOIN Service ON Service.AccountId = Account.ServiceId
+                     WHERE User.Email = @Email;";
 
-Console.WriteLine(result);
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-// Output: Acentuacao</pre></code>			
+		// Calls the ExecuteReader to load the specified AccountEntity. If nothing is found the FirstOrDefault extension method returns null.
+		return databaseConnector.ExecuteReader&lt;AccountEntity&gt;(query, new { Email = email }).FirstOrDefault();
+	}
+}</code></pre>
+					<div class="alert alert-info"><p>Pay attention to the alias format that differs for the root object and its sub-properties. The query must include an alias with "SubPropertyName.TargetProperty" format for every sub-property like the AccountService and AccountOwner. Take this piece from the query: <code>Service.Name AS 'AccountService.ServiceName'</code>. This instruction says to the mapper to take the value of the Name column from the Service table and store in the ServiceName property of the AccountService instance.</p></div>
+					<div class="alert alert-warning"><p><b>Attention to this piece of code: </b><code>Account.Name AS 'AccountName'</code>. The AccountName property belongs to the root object, so you must specify only the name of the target property.</p></div>
 				</div>
 				<div class="section">
-					<h1 id="utility">Utility classes</h1>
-					<p>The following classes does not provide extension methods but provide useful functionalities for some common tasks.</p>
-					
-					<div class="section">
-						<h2 id="mailservice">MailService</h2>
-						<p>The MailService class contains methods that allows your application to send e-mails.</p>
+					<h1 id="transactions">Database transactions</h1>
+					<p>The DatabaseConnector supports SQL transactions in two ways: global transactions and instance transactions. The following sections describes each one.</p>
+					<h3>Global Transactions</h3>
+					<p>The global transactions are managed internally by the DatabaseConnector and are the most common and simple way to work with SQL transactions. They take advantage of the following static methods:</p>
+					<ul>
+						<li>BeginGlobalTransaction(string connectionString)</li>
+						<li>CommitGlobalTransaction()</li>
+						<li>RollbackGlobalTransaction()</li>
+					</ul>
+					<p>When global transactions are used, you do not need to modify any existing query or connection that already exists in your code.</p>
+					<p><b>Examples</b></p>
+					<p>Consider the following situation where we need to register a user and its profile. We do so saving the data to two different tables: <i>User</i> and <i>Profile</i>, as shown bellow.</p>
+					<pre><code>// Creates a new user entry and returns the id generated by the database.
+public long CreateNewUser(string name, string email) {
 						
-						<h3>SendEmail()</h3>
-						<p>Sends an email.</p>
-						<b>Method signature and overloads:</b>
-						<pre class="c#"><code class="c#">public void SendEmail(IMailServerConfiguration mailServerConfiguration, IMailContent mailContent)</code></pre>
-						<b>Parameters</b>
-						<ul>
-							<li><i>mailServerConfiguration</i>: The mail account and smtp configuration.</li>
-							<li><i>mailContent</i>: The mail message content.</li>
-						</ul>
+	// Query to insert a new user to database.
+	string query = @"INSERT INTO Users (Name, Email) OUTPUT INSERTED.UserId VALUES (@Name, @Email);";
+
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+		// Calls the ExecuteReader to save the new entry and return the generated Id, specified by the OUTPUT INSERTED.UserId clause.
+		return databaseConnector.ExecuteReader&lt;long&gt;(query, new { Name = name, Email = email });
+	}
+}
+
+// Creates a new user profile entry entry.
+public bool CreateNewUserProfile(long userId, string nickname, string avatarUrl, int age) {
 						
-						<h3>SendEmailAsync()</h3>
-						<p>Sends an email asynchronously.</p>
-						<b>Method signature and overloads:</b>
-						<pre class="c#"><code class="c#">public void SendEmailAsync(IMailServerConfiguration mailServerConfiguration, IMailContent mailContent)</code></pre>
-						<b>Parameters</b>
-						<ul>
-							<li><i>mailServerConfiguration</i>: The mail account and smtp configuration.</li>
-							<li><i>mailContent</i>: The mail message content.</li>
-						</ul>
+	// Query to insert a new user profile to database.
+	string query = @"INSERT INTO UserProfiles (UserId, Nickname, AvatarUrl, Age) VALUES (@UserId, @Nickname, @AvatarUrl, @Age);";
+
+	// Creates a new instance of the DatabaseConnector class, passing the database connection string.
+	using(DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+		// Calls the ExecuteNonQuery to save the new entry and returns true if there is at least one affected row.
+		return databaseConnector.ExecuteNonQuery(query, new { UserId = userId, Nickname = nickname, AvatarUrl = avatarUrl, Age = age }) > 0;
+	}
+}</code></pre>
+					<p>Actually the previous code could be used by the following method, as follows:</p>
+					<pre><code>// Creates a new user.
+public bool CreateUser(string name, string email, string nickname, string avatarUrl, int age) {
+
+	// Create a new user and store the generated id. 
+	long userId = CreateNewUser(name, email);
+
+	// Save the profile for the new user.
+	CreateNewUserProfile(userId, nickname, avatarUrl, age);
+	
+	return true;
+}</code></pre>
+					<p>Although this code works, it does have some problems. For example, consider the following situations:</p>
+					<ul>
+						<li><b>Risk of data inconsistency: </b>if the <i>CreateNewUser</i> method succeeds but the <i>CreateNewUserProfile</i> fails, then we are going to have incomplete data stored in database. Usually requiring a manual work for deleting the created registry before we try again.</li>
+						<li><b>Return value is useless: </b>when no problems occurs, the method will always return true. But if something goes wrong it will not return false. The method is goint to throw an exception. So whoever calls this method should have some logic to deal with <i>true</i> or <i>exception</i>, instead of <i>true</i> or <i>false</i>.</li>
+					</ul>
+					<p>To avoid situations like that, your queries and database access should always focus on data integrity. And the DatabaseConnector can handle this kind of situation using global transaction as demonstrated next:</p>
+					<pre><code>// Creates a new user.
+public bool CreateUser(string name, string email, string nickname, string avatarUrl, int age) {
+
+	try {
+		// Creates a new database transaction.
+		DatabaseConnector.BeginGlobalTransaction(connectionString);
+
+		// Create a new user and store the generated id. 
+		long userId = CreateNewUser(name, email);
+
+		// Save the profile for the new user.
+		CreateNewUserProfile(userId, nickname, avatarUrl, age);
+		
+		// If everything worked as expected, than we can persist the data.
+		DatabaseConnector.CommitGlobalTransacton();
+		
+		return true;
+		
+	} catch(Exception ex) {
+	
+		// Rollback the database transaction if anything goes wrong.
+		DatabaseConnector.RollbackGlobalTransaction();
+		
+		// TODO: Create some log to let you know about the error.
+		
+		// If anything goes wrong, the method returns false.
+		return false;
+	}
+}</code></pre>
+					<p>And it is as simple as that. You do not have to touch anything in your already created queries or connections. Just surrounding all your calls with <b>BeginGlobalTransaction</b> and <b>CommitGlobalTransaction/RollbackGlobalTransaction</b> is enough to have the DatabaseConnector to handle all the database transactions for you.</p>
+					<div class="alert alert-success">
+						<b>Tip: </b>Always have your sequential inserts and updates inside a database transaction. It is a good practice and prevents a lot of headache with data loss, integrity and orphan data in your database.
 					</div>
-					
-					<div class="section">
-						<h2 id="restclient">RestClient</h2>
-						<p>The RestClient class contains methods that allows your application to perform HTTP requests using REST.</p>
-						
-						<h3>SendHttpWebRequest&lt;T&gt;()</h3>
-						<p>Sends an Http request to the specified endpoint.</p>
-						<b>Method signature and overloads:</b>
-						<pre class="c#"><code class="c#">public WebResponse&lt;T&gt; SendHttpWebRequest&lt;T&gt;(object dataToSend, HttpVerb httpVerb, HttpContentType httpContentType, string destinationEndPoint, NameValueCollection headerCollection, bool allowInvalidCertificate = false) where T : class</code></pre>
-						<b>Parameters</b>
-						<ul>
-							<li><i>dataToSend</i>: Object containing the data to be sent in the request. This parameter can be null if no data is to be sent. It is also ignored for <b>GET</b> operations.</li>
-							<li><i>httpVerb</i>: HTTP verb to be using when sending the data.</li>
-							<li><i>httpContentType</i>: Content type of the transferred data.</li>
-							<li><i>destinationEndPoint</i>: Endpoint where the request will be sent to.</li>
-							<li><i>headerCollection</i>: Custom data to be added to the request header.</li>
-							<li><i>allowInvalidCertificate</i>: [Optional] When set to true, allows the request to be done even if the destination certificate is not valid. Default value: <code>false</code></li>
-						</ul>
-						<b>Return value</b>
-						<p>Returns a new WebResponse with the return value converted to the specified type T.</p>
-						
-						<h3>SendHttpWebRequestAsync&lt;T&gt;()</h3>
-						<p>Sends an Http request to the specified endpoint asyncrounously.</p>
-						<b>Method signature and overloads:</b>
-						<pre class="c#"><code class="c#">public Task&lt;WebResponse&lt;T&gt;&gt; SendHttpWebRequestAsync&lt;T&gt;(object dataToSend, HttpVerb httpVerb, HttpContentType httpContentType, string destinationEndPoint, NameValueCollection headerCollection, bool allowInvalidCertificate = false) where T : class</code></pre>
-						<b>Parameters</b>
-						<ul>
-							<li><i>dataToSend</i>: Object containing the data to be sent in the request. This parameter can be null if no data is to be sent. It is also ignored for <b>GET</b> operations.</li>
-							<li><i>httpVerb</i>: HTTP verb to be using when sending the data.</li>
-							<li><i>httpContentType</i>: Content type of the transferred data.</li>
-							<li><i>destinationEndPoint</i>: Endpoint where the request will be sent to.</li>
-							<li><i>headerCollection</i>: Custom data to be added to the request header.</li>
-							<li><i>allowInvalidCertificate</i>: [Optional] When set to true, allows the request to be done even if the destination certificate is not valid. Default value: <code>false</code></li>
-						</ul>
-						<b>Return value</b>
-						<p>Returns a new WebResponse as a Task with the return value converted to the specified type T.</p>
-					</div>
-					
-					<div class="section">
-						<h2 id="serializer">Serializer</h2>
-						<p>The Serializer class contains methods that allows your application to perform binary, JSON and XML serialization operations.</p>
-						
-						<h3>BinaryDeserialize&lt;T&gt;()</h3>
-						<p>Deserializes a byte array to a new instance of type T.</p>
-						<b>Method signature and overloads:</b>
-						<pre class="c#"><code class="c#">public static T BinaryDeserialize&lt;T&gt;(byte[] source)</code></pre>
-						<b>Parameters</b>
-						<ul>
-							<li><i>source</i>: Byte array to be deserialized.</li>
-						</ul>
-						<b>Return value</b>
-						<p>Returns a new instance of type T with the deserialized data, or <code>default(T)</code>, if the byte array is null.</p>
-						
-						<h3>BinarySerialize()</h3>
-						<p>Serializes the object to a byte array. The object to be serialized must have the <code>[Serializable]</code> attribute.</p>
-						<b>Method signature and overloads:</b>
-						<pre class="c#"><code class="c#">public static byte[] BinarySerialize(object source)</code></pre>
-						<b>Parameters</b>
-						<ul>
-							<li><i>source</i>: Object to be serialized.</li>
-						</ul>
-						<b>Return value</b>
-						<p>Returns a byte array representation of the object, or null if the object is not specified.</p>
-						
-						<h3>JsonDeserialize()</h3>
-						<p>Deserializes a JSON string to an object instance.</p>
-						<b>Method signature and overloads:</b>
-						<pre class="c#"><code class="c#">public static object JsonDeserialize(Type returnType, string source, Encoding encoding = null)</code></pre>
-						<b>Parameters</b>
-						<ul>
-							<li><i>returnType</i>: Type of the instance to be returned.</li>
-							<li><i>source</i>: JSON string to be deserialized.</li>
-							<li><i>encoding</i>: [Optional] Encoding to be used for deserialization. Default value: <code>Encoding.UTF8</code>.</li>
-						</ul>
-						<b>Return value</b>
-						<p>Returns a new instance of the specified type with the deserialized data.</p>
-						
-						<h3>JsonDeserialize&lt;T&gt;()</h3>
-						<p>Deserializes a JSON string to an instance of type T.</p>
-						<b>Method signature and overloads:</b>
-						<pre class="c#"><code class="c#">public static T JsonDeserialize&lt;T&gt;(string source, Encoding encoding = null) where T : class</code></pre>
-						<b>Parameters</b>
-						<ul>
-							<li><i>source</i>: JSON string to be deserialized.</li>
-							<li><i>encoding</i>: [Optional] Encoding to be used for deserialization. Default value: <code>Encoding.UTF8</code>.</li>
-						</ul>
-						<b>Return value</b>
-						<p>Return a new instance of type T with the deserialized data, or <code>default(T)</code>, if the JSON string is null.</p>
-						
-						<h3>JsonSerialize()</h3>
-						<p>Serializes an object to a JSON string format.</p>
-						<b>Method signature and overloads:</b>
-						<pre class="c#"><code class="c#">public static string JsonSerialize(object source, Encoding encoding = null)</code></pre>
-						<b>Parameters</b>
-						<ul>
-							<li><i>source</i>: Object to be serialized.</li>
-							<li><i>encoding</i>: [Optional] Encoding to be used for serialization. Default value: <code>Encoding.UTF8</code>.</li>
-						</ul>
-						<b>Return value</b>
-						<p>Returns the serialized string, or null, if the source object was not suplied.</p>
-						
-						<h3>XmlDeserialize()</h3>
-						<p>Deserializes a XML string to an object instance.</p>
-						<b>Method signature and overloads:</b>
-						<pre class="c#"><code class="c#">public static object XmlDeserialize(Type returnType, string source, Encoding encoding = null)</code></pre>
-						<b>Parameters</b>
-						<ul>
-							<li><i>returnType</i>: Type of the instance to be returned.</li>
-							<li><i>source</i>: Object to be deserialized.</li>
-							<li><i>encoding</i>: [Optional] Encoding to be used for deserialization. Default value: <code>Encoding.UTF8</code>.</li>
-						</ul>
-						<b>Return value</b>
-						<p>Returns a new instance of the specified type with the deserialized data.</p>
-						
-						<h3>XmlDeserialize&lt;T&gt;()</h3>
-						<p>Deserializes a XML string to a new instance of type T.</p>
-						<b>Method signature and overloads:</b>
-						<pre class="c#"><code class="c#">public static T XmlDeserialize&lt;T&gt;(string source, Encoding encoding = null) where T : class</code></pre>
-						<b>Parameters</b>
-						<ul>
-							<li><i>source</i>: Object to be deserialized.</li>
-							<li><i>encoding</i>: [Optional] Encoding to be used for deserialization. Default value: <code>Encoding.UTF8</code>.</li>
-						</ul>
-						<b>Return value</b>
-						<p>Return a new instance of type T with the deserialized data, or <code>default(T)</code>, if the XML string is null.</p>
-						
-						<h3>XmlSerialize()</h3>
-						<p>Serialize an object to a XML string.</p>
-						<b>Method signature and overloads:</b>
-						<pre class="c#"><code class="c#">public static string XmlSerialize(object source, bool indent = false, Encoding encoding = null)</code></pre>
-						<b>Parameters</b>
-						<ul>
-							<li><i>source</i>: Object to be serialized.</li>
-							<li><i>indent</i>: [Optional] Set to true to generate a indented XML string. Default: <code>false</code>.</li>
-							<li><i>encoding</i>: [Optional] Encoding to be used for serialization. Default value: <code>Encoding.UTF8</code>.</li>
-						</ul>
-						<b>Return value</b>
-						<p>Returns the serialized string, or null, if the source object was not suplied.</p>
-						
-					</div>
-				</div>
-				
+					<h3>Instance Transactions</h3>
+					<p>The instance transactions requires that you manage the SQL transaction manually. This comes in handy for more specific needs and are useful when working with transaction scopes and design patterns such as Unit Of Work.</p>
+					<div class="alert alert-info">The documentation for this section is not available yet. Check back later.</div>					
+				</div>				
 			</div>
 		</div>
 	</div>

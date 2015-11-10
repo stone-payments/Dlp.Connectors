@@ -36,7 +36,7 @@ Visual Studio-like style based on original C# coloring by Jason Diamond <jason@d
 }
 
 .hljs-string,
-.hljs-title,
+/*.hljs-title,*/
 .hljs-parent,
 .hljs-tag .hljs-value,
 .hljs-rule .hljs-value,
@@ -69,6 +69,7 @@ Visual Studio-like style based on original C# coloring by Jason Diamond <jason@d
 .hljs-shebang,
 .hljs-preprocessor,
 .hljs-pragma,
+.hljs-type,
 .userType,
 .apache .hljs-sqbracket,
 .nginx .hljs-built_in,
