@@ -7,7 +7,7 @@
     <version>0.6.0</version>
     <authors>Stone Pagamentos S/A</authors>
     <owners>Stone Pagamentos S/A</owners>
-    <projectUrl>https://github.com/stone-payments/Dlp.Connectors</projectUrl>
+    <projectUrl>http://stone-payments.github.io/Dlp.Connectors</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Database connector for MSSQL with ADO.</description>
     <releaseNotes>Database values are now mapped explicitly to the destination property type, instead of being a generic object.</releaseNotes>
