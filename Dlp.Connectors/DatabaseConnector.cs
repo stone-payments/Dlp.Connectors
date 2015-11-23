@@ -539,7 +539,7 @@ namespace Dlp.Connectors {
 					if ((valueType.IsClass == true && valueType.FullName.StartsWith("System") == false && valueType.IsEnum == false)) { continue; }
 
 					// Verifica se é uma coleção que não seja uma string. Caso positivo, transforma os elementos da coleção para uma string.
-					if (typeof(IEnumerable).IsAssignableFrom(valueType) && (value is string == false)) {
+					if (typeof(IEnumerable).IsAssignableFrom(valueType) && (value is string == false) && (value is byte[] == false)) {
 
 						// Converte a coleção para uma string a ser adicionada na query.
 						value = ((IEnumerable)value).AsString(',', "'");

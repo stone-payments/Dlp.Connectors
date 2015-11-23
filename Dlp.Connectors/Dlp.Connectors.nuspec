@@ -4,13 +4,13 @@
     <id>Dlp.Connectors.dll</id>
 		<title>DLP Connectors</title>
 		<iconUrl>http://www.stone.com.br/img/stone32x32.png</iconUrl>
-    <version>0.6.0</version>
+    <version>0.6.2</version>
     <authors>Stone Pagamentos S/A</authors>
     <owners>Stone Pagamentos S/A</owners>
     <projectUrl>http://stone-payments.github.io/Dlp.Connectors</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Database connector for MSSQL with ADO.</description>
-    <releaseNotes>Database values are now mapped explicitly to the destination property type, instead of being a generic object.</releaseNotes>
+    <releaseNotes>Corrected a bug when saving byte arrays to a VarBinary columns.</releaseNotes>
     <copyright>Stone Pagamentos S/A - Copyright 2015</copyright>
     <tags>Database ADO</tags>
     <dependencies>
