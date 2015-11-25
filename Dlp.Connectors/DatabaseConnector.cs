@@ -343,7 +343,7 @@ namespace Dlp.Connectors {
 		/// <exception cref="System.InvalidOperationException"></exception>
 		/// <exception cref="System.ObjectDisposedException"></exception>
 		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReader"]/*'/>
-		public IEnumerable<T> ExecuteReader<T>(string query, dynamic parameters = null) {
+		public IList<T> ExecuteReader<T>(string query, dynamic parameters = null) {
 
 			this.WriteOutput("ExecuteReader", "Iniciando ExecuteReader.");
 
@@ -371,7 +371,7 @@ namespace Dlp.Connectors {
 					using (SqlDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo)) {
 
 						// Mapeia e armazena todos os registros encontrados.
-						IEnumerable<T> result = this.InternalReader<T>(reader);
+						IList<T> result = this.InternalReader<T>(reader);
 
 						this.WriteOutput("ExecuteReader", "Operação concluída.");
 
@@ -589,7 +589,7 @@ namespace Dlp.Connectors {
 		/// <typeparam name="T">Tipo do objeto que será preenchido.</typeparam>
 		/// <param name="reader">Reader a ser utilizado para obter as informações do banco de dados.</param>
 		/// <returns>Retorna uma coleção com os registros do tipo T encontrados no banco de dados.</returns>
-		private IEnumerable<T> InternalReader<T>(SqlDataReader reader) {
+		private IList<T> InternalReader<T>(SqlDataReader reader) {
 
 			Type returnType = typeof(T);
 
