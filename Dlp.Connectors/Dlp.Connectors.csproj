@@ -56,6 +56,7 @@
     <Compile Include="CacheConnector.cs" />
     <Compile Include="DatabaseConnector.cs" />
     <Compile Include="ICacheConnector.cs" />
+    <Compile Include="IDisposableEnumerable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OutputEventArgs.cs" />
   </ItemGroup>
