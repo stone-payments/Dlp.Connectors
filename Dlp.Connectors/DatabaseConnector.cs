@@ -410,19 +410,22 @@ namespace Dlp.Connectors {
 
 		private sealed class SqlEnumerableHelper<T> : IDisposableEnumerable<T> {
 
-			private readonly SqlDataReader reader;
+            private readonly SqlDataReader reader;
 			private readonly IEnumerable<T> enumerable;
-			private readonly IDisposable disposable;
+			private readonly IDisposable[] disposables;
 
-			public SqlEnumerableHelper(IEnumerable<T> enumerable, SqlDataReader reader, IDisposable disposable) {
+			public SqlEnumerableHelper(IEnumerable<T> enumerable, SqlDataReader reader, IDisposable[] disposables) {
 				this.enumerable = enumerable;
 				this.reader = reader;
-				this.disposable = disposable;
+				this.disposables = disposables;
 			}
 
 			public void Dispose() {
 				((IDisposable)this.reader).Dispose();
-				this.disposable.Dispose();
+				foreach (var disposable in this.disposables)
+				{
+					disposable.Dispose();
+				}
 			}
 
 			public IEnumerator<T> GetEnumerator() {
@@ -448,7 +451,7 @@ namespace Dlp.Connectors {
 		/// <exception cref="System.InvalidOperationException"></exception>
 		/// <exception cref="System.ObjectDisposedException"></exception>
 		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReader"]/*'/>
-		public IDisposableEnumerable<T> ExecuteReaderAsEnumerable<T>(string query, dynamic parameters = null) {
+		public IDisposableEnumerable<T> ExecuteReaderAsEnumerable<T>(string query, dynamic parameters = null, bool closeOnDispose = true) {
 
 			this.WriteOutput("ExecuteReader", "Iniciando ExecuteReader.");
 
@@ -476,7 +479,8 @@ namespace Dlp.Connectors {
 
 				// Instancia o reader responsável pela leitura dos dados.
 				SqlDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo);
-				return new SqlEnumerableHelper<T>(this.InternalReader<T>(reader), reader, command);
+				return new SqlEnumerableHelper<T>(this.InternalReader<T>(reader), reader, 
+					closeOnDispose ? new IDisposable[] { command, this } : new IDisposable[] { command } );
 
 			}
 			catch (Exception ex) {
