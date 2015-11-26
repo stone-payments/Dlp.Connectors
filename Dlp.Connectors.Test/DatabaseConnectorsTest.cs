@@ -301,7 +301,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query).FirstOrDefault();
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query).FirstOrDefault();
 			}
 
 			Assert.IsNotNull(actual);
@@ -325,7 +325,7 @@ namespace Dlp.Connectors.Test {
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
 				databaseConnector.OnOutput += databaseConnector_OnOutput;
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, request).FirstOrDefault();
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, request).FirstOrDefault();
 			}
 
 			string output = this.ConnectorOutput.ToString();
@@ -351,7 +351,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query);
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query);
 			}
 
 			stopwatch.Stop();
@@ -393,7 +393,7 @@ namespace Dlp.Connectors.Test {
 
 				databaseConnector.OnOutput += databaseConnector_OnOutput;
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, merchantEntity).FirstOrDefault();
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, merchantEntity).FirstOrDefault();
 			}
 
 			string output = this.ConnectorOutput.ToString();
@@ -413,7 +413,7 @@ namespace Dlp.Connectors.Test {
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
 				databaseConnector.OnOutput += databaseConnector_OnOutput;
-				actual = databaseConnector.ExecuteReader<MerchantData>(query);
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query);
 			}
 
 			string output = this.ConnectorOutput.ToString();
@@ -446,7 +446,7 @@ namespace Dlp.Connectors.Test {
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
 				// Define o parâmetro IsEnabled da query como true, para retornar apenas as lojas habilitadas.
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, new { IsEnabled = true });
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { IsEnabled = true });
 			}
 
 			Assert.IsNotNull(actual);
@@ -464,7 +464,7 @@ namespace Dlp.Connectors.Test {
 		public void LoadRowWithEmptyQuery() {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
-				databaseConnector.ExecuteReader<int>(string.Empty);
+				databaseConnector.ExecuteReaderFetchAll<int>(string.Empty);
 			}
 		}
 
@@ -480,7 +480,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 				databaseConnector.OnOutput += databaseConnector_OnOutput;
-				actual = databaseConnector.ExecuteReader<MerchantEntity>(query).FirstOrDefault();
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantEntity>(query).FirstOrDefault();
 			}
 
 			string output = this.ConnectorOutput.ToString();
@@ -639,12 +639,12 @@ namespace Dlp.Connectors.Test {
 				// Inicializa uma transação de banco de dados.
 				databaseConnector.BeginTransaction();
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, new { MerchantId = 1 }).FirstOrDefault();
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantId = 1 }).FirstOrDefault();
 
 				Assert.IsNotNull(actual);
 				Assert.AreEqual("Merchant Number One", actual.Name);
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, new { MerchantId = 2 }).FirstOrDefault();
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantId = 2 }).FirstOrDefault();
 
 				Assert.IsNotNull(actual);
 				Assert.AreEqual("Another Merchant", actual.Name);
@@ -672,12 +672,12 @@ namespace Dlp.Connectors.Test {
 				// Inicializa uma transação de banco de dados.
 				databaseConnector.BeginTransaction();
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, new { MerchantId = 1 }).FirstOrDefault();
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantId = 1 }).FirstOrDefault();
 
 				Assert.IsNotNull(actual);
 				Assert.AreEqual("Merchant Number One", actual.Name);
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, new { MerchantId = 2 }).FirstOrDefault();
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantId = 2 }).FirstOrDefault();
 
 				Assert.IsNotNull(actual);
 				Assert.AreEqual("Another Merchant", actual.Name);
@@ -760,7 +760,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query);
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query);
 			}
 
 			Assert.IsNotNull(actual);
@@ -780,7 +780,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query).FirstOrDefault();
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query).FirstOrDefault();
 			}
 		}
 
@@ -793,7 +793,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, new { Status = StatusType.Disabled }).FirstOrDefault();
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { Status = StatusType.Disabled }).FirstOrDefault();
 			}
 
 			Assert.IsNotNull(actual);
@@ -809,7 +809,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				actual = databaseConnector.ExecuteReader<MerchantBool>(query);
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantBool>(query);
 			}
 
 			Assert.IsNotNull(actual);
@@ -826,7 +826,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, new { Name = string.Empty });
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { Name = string.Empty });
 			}
 
 			Assert.IsNotNull(actual);
@@ -1078,7 +1078,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				actual = databaseConnector.ExecuteReader<BulkData>(query).FirstOrDefault();
+				actual = databaseConnector.ExecuteReaderFetchAll<BulkData>(query).FirstOrDefault();
 			}
 
 			Assert.IsNotNull(actual);
@@ -1100,7 +1100,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query).FirstOrDefault();
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query).FirstOrDefault();
 			}
 
 			Assert.IsNotNull(actual);
@@ -1116,7 +1116,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				actual = databaseConnector.ExecuteReader<int>(query);
+				actual = databaseConnector.ExecuteReaderFetchAll<int>(query);
 			}
 
 			Assert.IsNotNull(actual);
@@ -1135,7 +1135,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				actual = databaseConnector.ExecuteReader<Guid>(query);
+				actual = databaseConnector.ExecuteReaderFetchAll<Guid>(query);
 			}
 
 			Assert.IsNotNull(actual);
@@ -1154,7 +1154,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				actual = databaseConnector.ExecuteReader<DateTime>(query);
+				actual = databaseConnector.ExecuteReaderFetchAll<DateTime>(query);
 			}
 
 			Assert.IsNotNull(actual);
@@ -1173,7 +1173,7 @@ namespace Dlp.Connectors.Test {
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
 				databaseConnector.OnOutput += databaseConnector_OnOutput;
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, new { MerchantKeyCollection = merchantKeyCollection });
+				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantKeyCollection = merchantKeyCollection });
 			}
 
 			string output = this.ConnectorOutput.ToString();
@@ -1200,7 +1200,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				actual = databaseConnector.ExecuteReader<ComposedMerchant>(query, new { MerchantId = 1 }).FirstOrDefault();
+				actual = databaseConnector.ExecuteReaderFetchAll<ComposedMerchant>(query, new { MerchantId = 1 }).FirstOrDefault();
 			}
 
 			Assert.IsNotNull(actual);
@@ -1247,7 +1247,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				result = databaseConnector.ExecuteReader<MistypedClass>(query).FirstOrDefault();
+				result = databaseConnector.ExecuteReaderFetchAll<MistypedClass>(query).FirstOrDefault();
 			}
 
 			Assert.IsNotNull(result);
@@ -1280,7 +1280,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				result = databaseConnector.ExecuteReader<SimpleTableRelationship>(query).FirstOrDefault();
+				result = databaseConnector.ExecuteReaderFetchAll<SimpleTableRelationship>(query).FirstOrDefault();
 			}
 
 			Assert.IsNotNull(result);
@@ -1298,7 +1298,7 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				result = databaseConnector.ExecuteReader<Lead>(query, new { @LeadId = 1 }).FirstOrDefault();
+				result = databaseConnector.ExecuteReaderFetchAll<Lead>(query, new { @LeadId = 1 }).FirstOrDefault();
 			}
 		}
 	}
