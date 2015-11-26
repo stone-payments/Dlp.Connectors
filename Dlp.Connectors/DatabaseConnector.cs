@@ -434,35 +434,34 @@ namespace Dlp.Connectors
             }
         }
 
-	public interface IDisposableEnumerable<T> : IEnumerable<T>, IDisposable { }
 
         private sealed class SqlEnumerableHelper<T> : IDisposableEnumerable<T>
         {
             private readonly SqlDataReader reader;
-            private readonly IEnumerable<T> e;
-            private readonly IDisposable d;
+            private readonly IEnumerable<T> enumerable;
+            private readonly IDisposable disposable;
 
-        public SqlEnumerableHelper(IEnumerable<T> e, SqlDataReader r, SqlCommand d)
+        public SqlEnumerableHelper(IEnumerable<T> enumerable, SqlDataReader reader, IDisposable disposable)
             {
-                this.e = e;
-                this.reader = r;
-                this.d = d;
+                this.enumerable = enumerable;
+                this.reader = reader;
+                this.disposable = disposable;
             }
 
             public void Dispose()
             {
                 ((IDisposable)this.reader).Dispose();
-                this.d.Dispose();
+                this.disposable.Dispose();
             }
 
             public IEnumerator<T> GetEnumerator()
             {
-                return this.e.GetEnumerator();
+                return this.enumerable.GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return this.e.GetEnumerator();
+                return this.enumerable.GetEnumerator();
             }
         }
 
@@ -486,7 +485,9 @@ namespace Dlp.Connectors
             this.WriteOutput("ExecuteReader", "Iniciando ExecuteReader.");
 
             // Verifica se a query foi especificada.
-            if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
+            if (string.IsNullOrWhiteSpace(query)) {
+                throw new ArgumentNullException("query");
+            }
 
             // Limpa a query, removendo espaços e informações desnecessárias.
             query = this.CleanQuery(query);
