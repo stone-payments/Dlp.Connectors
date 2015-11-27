@@ -410,7 +410,7 @@ namespace Dlp.Connectors {
 
 		private sealed class SqlEnumerableHelper<T> : IDisposableEnumerable<T> {
 
-            private readonly SqlDataReader reader;
+			private readonly SqlDataReader reader;
 			private readonly IEnumerable<T> enumerable;
 			private readonly IDisposable[] disposables;
 
@@ -420,10 +420,11 @@ namespace Dlp.Connectors {
 				this.disposables = disposables;
 			}
 
+			~SqlEnumerableHelper() { this.Dispose(); }
+
 			public void Dispose() {
 				((IDisposable)this.reader).Dispose();
-				foreach (var disposable in this.disposables)
-				{
+				foreach (var disposable in this.disposables) {
 					disposable.Dispose();
 				}
 			}
@@ -479,8 +480,8 @@ namespace Dlp.Connectors {
 
 				// Instancia o reader responsável pela leitura dos dados.
 				SqlDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo);
-				return new SqlEnumerableHelper<T>(this.InternalReader<T>(reader), reader, 
-					closeOnDispose ? new IDisposable[] { command, this } : new IDisposable[] { command } );
+				return new SqlEnumerableHelper<T>(this.InternalReader<T>(reader), reader,
+					closeOnDispose ? new IDisposable[] { command, this } : new IDisposable[] { command });
 
 			}
 			catch (Exception ex) {
