@@ -330,7 +330,7 @@ namespace Dlp.Connectors {
 		}
 
 		/// <summary>
-		/// Sends the query to be executed by the database and return a collection of type T containing all records
+		/// Sends the query to be executed by the database and return a collection of type T containing all records. Has the same effect as ExecuteReaderFetchAll.
 		/// </summary>
 		/// <typeparam name="T">Type of the object instance to be returned.</typeparam>
 		/// <param name="query">Query to be executed. The parameter is mandatory.</param>
@@ -343,7 +343,6 @@ namespace Dlp.Connectors {
 		/// <exception cref="System.InvalidOperationException"></exception>
 		/// <exception cref="System.ObjectDisposedException"></exception>
 		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReader"]/*'/>
-		[Obsolete("Please use ExecuteReaderFetchAll instead.", false)]
 		public IList<T> ExecuteReader<T>(string query, dynamic parameters = null) {
 			return ExecuteReaderFetchAll<T>(query, parameters);
 		}
