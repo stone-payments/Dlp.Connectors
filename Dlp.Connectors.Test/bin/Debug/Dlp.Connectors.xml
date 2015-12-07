@@ -348,7 +348,163 @@
         </member>
         <member name="M:Dlp.Connectors.DatabaseConnector.ExecuteReader``1(System.String,System.Object)">
             <summary>
-            Sends the query to be executed by the database and return a collection of type T with the retrieved data.
+            Sends the query to be executed by the database and return a collection of type T containing all records. Has the same effect as ExecuteReaderFetchAll.
+            </summary>
+            <typeparam name="T">Type of the object instance to be returned.</typeparam>
+            <param name="query">Query to be executed. The parameter is mandatory.</param>
+            <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
+            <returns>Returns a list of type T with the retrieved data.</returns>
+            <exception cref="T:System.ArgumentNullException">Missing the query parameter.</exception>
+            <exception cref="T:System.InvalidCastException"></exception>
+            <exception cref="T:System.Data.SqlClient.SqlException"></exception>
+            <exception cref="T:System.IO.IOException"></exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
+            <exception cref="T:System.ObjectDisposedException"></exception>
+            <example>
+      <para>The following example shows how to use the ExecuteReader method to get a list of rows.</para>
+      <code lang="C#">
+        // Query to load transactions.
+        string query = @"SELECT TransactionId, AmountInCents FROM Transaction WHERE CreateDate &gt;= @SearchStartDate AND CreateDate &lt; @SearchEndDate;";
+
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+          // Return a list of transactions, sorted by the CreateDate column in descending order.
+          IEnumerable&lt;Transaction&gt; result = databaseConnector.ExecuteReader&lt;Transaction&gt;(query, new { SearchStartDate = searchStartDate, SearchEndDate = searchEndDate });
+        }
+      </code>
+      <para>The following example shows how to load data with inner join to fill an entity.</para>
+      <code lang="C#">
+        // Query to load MerchantData.
+        string query = @"SELECT Merchant.MerchantId, Merchant.MerchantName, MerchantConfiguration.IsEnabled, MerchantConfiguration.MerchantDomain
+                         FROM Merchant
+                         INNER JOIN MerchantConfiguration ON Merchant.MerchantId = MerchantConfiguration.MerchantId";
+
+        IEnumerable&lt;MerchantData&gt; result;
+        
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+          // Get the merchant data.
+          result = databaseConnector.ExecuteReader&lt;MerchantData&gt;(query);
+        }
+        
+        // Parse each row returned.
+        foreach (MerchantData merchantData in result) {
+        
+          int merchantId = merchantData.MerchantId;
+          string merchantName = merchantData.MerchantName;
+          
+          // The property MerchantConfiguration is populated automatically.
+          
+          bool isEnabled = merchantData.MerchantConfiguration.IsEnabled;
+          string domain = merchantData.MerchantConfiguration.MerchantDomain;
+          
+          .
+          .
+          .
+        }
+      </code>
+      <para>The following example shows how to load data with a collection as parameter for an 'IN' clause.</para>
+      <code lang="C#">
+        // Query to load MerchantData.
+        string query = @"SELECT Name FROM Merchant WHERE MerchantKey IN (@MerchantKeyCollection)";
+
+        // A collection to be used as the query MerchantKeyCollection parameter.
+        IEnumerable&lt;Guid&gt; merchantKeyCollection = new Guid[] { Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76"), Guid.Parse("c5d66001-8a39-4a04-a22c-d3a190018c46") };
+
+        IEnumerable&lt;MerchantData&gt; result;
+        
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+          // Get the merchant data.
+          result = databaseConnector.ExecuteReader&lt;MerchantData&gt;(query, new { MerchantKeyCollection = merchantKeyCollection });
+        }
+      </code>
+    </example>
+        </member>
+        <member name="M:Dlp.Connectors.DatabaseConnector.ExecuteReaderFetchAll``1(System.String,System.Object)">
+            <summary>
+            Sends the query to be executed by the database and return a collection of type T containing all records
+            </summary>
+            <typeparam name="T">Type of the object instance to be returned.</typeparam>
+            <param name="query">Query to be executed. The parameter is mandatory.</param>
+            <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
+            <returns>Returns a list of type T with the retrieved data.</returns>
+            <exception cref="T:System.ArgumentNullException">Missing the query parameter.</exception>
+            <exception cref="T:System.InvalidCastException"></exception>
+            <exception cref="T:System.Data.SqlClient.SqlException"></exception>
+            <exception cref="T:System.IO.IOException"></exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
+            <exception cref="T:System.ObjectDisposedException"></exception>
+            <example>
+      <para>The following example shows how to use the ExecuteReader method to get a list of rows.</para>
+      <code lang="C#">
+        // Query to load transactions.
+        string query = @"SELECT TransactionId, AmountInCents FROM Transaction WHERE CreateDate &gt;= @SearchStartDate AND CreateDate &lt; @SearchEndDate;";
+
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+          // Return a list of transactions, sorted by the CreateDate column in descending order.
+          IEnumerable&lt;Transaction&gt; result = databaseConnector.ExecuteReader&lt;Transaction&gt;(query, new { SearchStartDate = searchStartDate, SearchEndDate = searchEndDate });
+        }
+      </code>
+      <para>The following example shows how to load data with inner join to fill an entity.</para>
+      <code lang="C#">
+        // Query to load MerchantData.
+        string query = @"SELECT Merchant.MerchantId, Merchant.MerchantName, MerchantConfiguration.IsEnabled, MerchantConfiguration.MerchantDomain
+                         FROM Merchant
+                         INNER JOIN MerchantConfiguration ON Merchant.MerchantId = MerchantConfiguration.MerchantId";
+
+        IEnumerable&lt;MerchantData&gt; result;
+        
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+          // Get the merchant data.
+          result = databaseConnector.ExecuteReader&lt;MerchantData&gt;(query);
+        }
+        
+        // Parse each row returned.
+        foreach (MerchantData merchantData in result) {
+        
+          int merchantId = merchantData.MerchantId;
+          string merchantName = merchantData.MerchantName;
+          
+          // The property MerchantConfiguration is populated automatically.
+          
+          bool isEnabled = merchantData.MerchantConfiguration.IsEnabled;
+          string domain = merchantData.MerchantConfiguration.MerchantDomain;
+          
+          .
+          .
+          .
+        }
+      </code>
+      <para>The following example shows how to load data with a collection as parameter for an 'IN' clause.</para>
+      <code lang="C#">
+        // Query to load MerchantData.
+        string query = @"SELECT Name FROM Merchant WHERE MerchantKey IN (@MerchantKeyCollection)";
+
+        // A collection to be used as the query MerchantKeyCollection parameter.
+        IEnumerable&lt;Guid&gt; merchantKeyCollection = new Guid[] { Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76"), Guid.Parse("c5d66001-8a39-4a04-a22c-d3a190018c46") };
+
+        IEnumerable&lt;MerchantData&gt; result;
+        
+        // Instantiate the database connector.
+        using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+          // Get the merchant data.
+          result = databaseConnector.ExecuteReader&lt;MerchantData&gt;(query, new { MerchantKeyCollection = merchantKeyCollection });
+        }
+      </code>
+    </example>
+        </member>
+        <member name="M:Dlp.Connectors.DatabaseConnector.ExecuteReaderAsEnumerable``1(System.String,System.Object,System.Boolean)">
+            <summary>
+            Sends the query to be executed by the database and return a disposable enumerable of type T
             </summary>
             <typeparam name="T">Type of the object instance to be returned.</typeparam>
             <param name="query">Query to be executed. The parameter is mandatory.</param>
@@ -465,7 +621,15 @@
             <param name="reader">Reader a ser utilizado para obter as informações do banco de dados.</param>
             <returns>Retorna uma coleção com os registros do tipo T encontrados no banco de dados.</returns>
         </member>
-        <member name="M:Dlp.Connectors.DatabaseConnector.ParseProperty(System.Type,System.Reflection.PropertyInfo[],System.Data.DataTable,System.Object,System.String,System.Object,System.Int32,System.Collections.Generic.List{System.String})">
+        <member name="M:Dlp.Connectors.DatabaseConnector.InternalReaderFetchAll``1(System.Data.SqlClient.SqlDataReader)">
+            <summary>
+            Executa a leitura dos dados de um DataReader.
+            </summary>
+            <typeparam name="T">Tipo do objeto que será preenchido.</typeparam>
+            <param name="reader">Reader a ser utilizado para obter as informações do banco de dados.</param>
+            <returns>Retorna uma coleção com os registros do tipo T encontrados no banco de dados.</returns>
+        </member>
+        <member name="M:Dlp.Connectors.DatabaseConnector.ParseProperty(System.Type,System.Reflection.PropertyInfo[],System.Data.DataTable,System.Object,System.String,System.Object,System.Int32,System.Collections.Generic.IList{System.String})">
             <summary>
             Tenta mapear uma coluna encontrada no banco de dados para uma propriedade do objeto especificado.
             </summary>

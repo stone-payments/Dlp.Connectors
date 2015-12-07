@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-
 namespace Dlp.Connectors.Test {
 
 	#region Classes específicas para testes
@@ -1180,6 +1179,8 @@ namespace Dlp.Connectors.Test {
 
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(2, actual.Count());
+
+			
 
 			Assert.IsTrue(actual.Any(p => p.Name.Equals("Merchant Number One")));
 			Assert.IsTrue(actual.Any(p => p.Name.Equals("Merchant Test")));

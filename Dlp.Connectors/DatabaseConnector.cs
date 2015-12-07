@@ -343,8 +343,10 @@ namespace Dlp.Connectors {
 		/// <exception cref="System.InvalidOperationException"></exception>
 		/// <exception cref="System.ObjectDisposedException"></exception>
 		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReader"]/*'/>
-		public IList<T> ExecuteReader<T>(string query, dynamic parameters = null) {
-			return ExecuteReaderFetchAll<T>(query, parameters);
+		public IEnumerable<T> ExecuteReader<T>(string query, dynamic parameters = null) {
+
+			// Não remover este cast.
+			return ExecuteReaderFetchAll<T>(query, parameters) as IEnumerable<T>;
 		}
 
 		/// <summary>
@@ -361,7 +363,7 @@ namespace Dlp.Connectors {
 		/// <exception cref="System.InvalidOperationException"></exception>
 		/// <exception cref="System.ObjectDisposedException"></exception>
 		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReader"]/*'/>
-		public IList<T> ExecuteReaderFetchAll<T>(string query, dynamic parameters = null) {
+		public IEnumerable<T> ExecuteReaderFetchAll<T>(string query, dynamic parameters = null) {
 
 			this.WriteOutput("ExecuteReader", "Iniciando ExecuteReader.");
 
@@ -389,7 +391,7 @@ namespace Dlp.Connectors {
 					using (SqlDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo)) {
 
 						// Mapeia e armazena todos os registros encontrados.
-						IList<T> result = this.InternalReaderFetchAll<T>(reader);
+						IEnumerable<T> result = this.InternalReaderFetchAll<T>(reader);
 
 						this.WriteOutput("ExecuteReader", "Operação concluída.");
 
@@ -757,7 +759,7 @@ namespace Dlp.Connectors {
 		/// <typeparam name="T">Tipo do objeto que será preenchido.</typeparam>
 		/// <param name="reader">Reader a ser utilizado para obter as informações do banco de dados.</param>
 		/// <returns>Retorna uma coleção com os registros do tipo T encontrados no banco de dados.</returns>
-		private IList<T> InternalReaderFetchAll<T>(SqlDataReader reader) {
+		private IEnumerable<T> InternalReaderFetchAll<T>(SqlDataReader reader) {
 
 			Type returnType = typeof(T);
 
