@@ -512,13 +512,16 @@ namespace Dlp.Connectors {
 			// Sai do método caso não existam dados a serem inseridos.
 			if (collection == null) { return; }
 
-			// Obtém o tipo do elemento da coleção.
-			Type underlyingType = collection.GetType().GetGenericArguments()[0];
+			// Obtém um enumerador para a coleção recebida.
+			IEnumerator enumerator = collection.GetEnumerator();
+
+			// Acessa o primeiro item da coleção.
+			enumerator.MoveNext();
 
 			this.WriteOutput("BulkInsert", "Obtendo as propriedades públicas do objeto a ser inserido.");
 
 			// Obtém as informações sobre as propriedades de cada item da coleção.
-			PropertyInfo[] propertyInfoCollection = underlyingType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+			PropertyInfo[] propertyInfoCollection = enumerator.Current.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
 			this.WriteOutput("BulkInsert", string.Format("Criando o DataTable para a tabela '{0}'.", tableName));
 
@@ -544,19 +547,21 @@ namespace Dlp.Connectors {
 			this.WriteOutput("BulkInsert", "Iniciando o preenchimento DataTable com os dados recebidos.");
 
 			// Começamos a preencher cada linha do DataTable com os dados da coleção recebida.
-			foreach (var item in collection) {
+			do {
+				object element = enumerator.Current;
 
 				// Cria uma nova linha que será adicionada ao Datatable.
 				DataRow dataRow = dataTable.NewRow();
 
 				// Obtém os valores de cada propriedade do item da coleção e adiciona na coluna correspondente.
 				foreach (PropertyInfo propertyInfo in propertyInfoCollection) {
-					dataRow[propertyInfo.Name] = propertyInfo.GetValue(item, null) ?? DBNull.Value;
+					dataRow[propertyInfo.Name] = propertyInfo.GetValue(element, null) ?? DBNull.Value;
 				}
 
 				// Adiciona a linha ao DataTable.
 				dataTable.Rows.Add(dataRow);
-			}
+
+			} while (enumerator.MoveNext() == true);
 
 			try {
 				// Cria um novo SqlBulkCopy que será utilizado para inserir todas as informações da coleção de uma vez.
