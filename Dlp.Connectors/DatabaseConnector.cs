@@ -512,16 +512,13 @@ namespace Dlp.Connectors {
 			// Sai do método caso não existam dados a serem inseridos.
 			if (collection == null) { return; }
 
-			// Obtém um enumerador para a coleção recebida.
-			IEnumerator enumerator = collection.GetEnumerator();
-
-			// Acessa o primeiro item da coleção.
-			enumerator.MoveNext();
+			// Obtém o tipo do elemento da coleção.
+			Type underlyingType = collection.GetType().GetGenericArguments()[0];
 
 			this.WriteOutput("BulkInsert", "Obtendo as propriedades públicas do objeto a ser inserido.");
 
 			// Obtém as informações sobre as propriedades de cada item da coleção.
-			PropertyInfo[] propertyInfoCollection = enumerator.Current.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+			PropertyInfo[] propertyInfoCollection = underlyingType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
 			this.WriteOutput("BulkInsert", string.Format("Criando o DataTable para a tabela '{0}'.", tableName));
 
