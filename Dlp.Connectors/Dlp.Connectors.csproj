@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheConnector.cs" />
-    <Compile Include="ColumnNameAttribute.cs" />
+    <Compile Include="ColumnMapperAttribute.cs" />
     <Compile Include="DatabaseConnector.cs" />
     <Compile Include="ICacheConnector.cs" />
     <Compile Include="IDisposableEnumerable.cs" />

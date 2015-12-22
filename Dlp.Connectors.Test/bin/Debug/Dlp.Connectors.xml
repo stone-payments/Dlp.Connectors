@@ -4,6 +4,40 @@
         <name>Dlp.Connectors</name>
     </assembly>
     <members>
+        <member name="M:Dlp.Connectors.ICacheConnector.Connect">
+            <summary>
+            Connects to the cache service.
+            </summary>
+        </member>
+        <member name="M:Dlp.Connectors.ICacheConnector.IsConnected">
+            <summary>
+            Checks if the cache service is connected.
+            </summary>
+            <returns>Returns true if we are connected to the cache service.</returns>
+        </member>
+        <member name="M:Dlp.Connectors.ICacheConnector.Disconnect">
+            <summary>
+            Disconnects from the cache service.
+            </summary>
+        </member>
+        <member name="M:Dlp.Connectors.ICacheConnector.Set``1(System.String,``0,System.Int32)">
+            <summary>
+            Adiciona um atualiza um item existente no cache.
+            </summary>
+            <typeparam name="T">Tipo do item a ser inserido/atualziado.</typeparam>
+            <param name="key">Nome único no cache.</param>
+            <param name="item">Objeto a ser inserido/atualizado.</param>
+            <param name="itemExpirationInMinutes">Quanto tempo o item deverá permanecer no cache.</param>
+            <returns>Retorna true caso a operação seja realizada com sucesso.</returns>
+        </member>
+        <member name="M:Dlp.Connectors.ICacheConnector.GetByKey``1(System.String)">
+            <summary>
+            Obtém um item do cache a partir do nome.
+            </summary>
+            <typeparam name="T">Tipo do objeto a ser retornado.</typeparam>
+            <param name="key">Nome do objeto no cache.</param>
+            <returns>Retorna um objeto do tipo T, encontrado no cache, ou default(T), caso o item não exista.</returns>
+        </member>
         <member name="F:Dlp.Connectors.CacheConnector._callingAssembly">
             <summary>
             Armazena o nome da aplicação que esta chamando o serviço de cache.
@@ -12,21 +46,6 @@
         <member name="F:Dlp.Connectors.CacheConnector._bufferSize">
             <summary>
             Obtém ou define o tamanho do buffer a ser utilizado na comunicação com o serviço de cache.
-            </summary>
-        </member>
-        <member name="P:Dlp.Connectors.CacheConnector.ServerAddress">
-            <summary>
-            Obtém o endereço do servidor de cache.
-            </summary>
-        </member>
-        <member name="P:Dlp.Connectors.CacheConnector.Port">
-            <summary>
-            Obtém a porta de conexão na qual o cache será disponibilizado.
-            </summary>
-        </member>
-        <member name="P:Dlp.Connectors.CacheConnector.AccessKey">
-            <summary>
-            Obtém a chave de acesso ao serviço de cache.
             </summary>
         </member>
         <member name="F:Dlp.Connectors.CacheConnector.Handler">
@@ -78,6 +97,21 @@
             <param name="itemExpirationInMinutes"></param>
             <returns></returns>
         </member>
+        <member name="P:Dlp.Connectors.CacheConnector.ServerAddress">
+            <summary>
+            Obtém o endereço do servidor de cache.
+            </summary>
+        </member>
+        <member name="P:Dlp.Connectors.CacheConnector.Port">
+            <summary>
+            Obtém a porta de conexão na qual o cache será disponibilizado.
+            </summary>
+        </member>
+        <member name="P:Dlp.Connectors.CacheConnector.AccessKey">
+            <summary>
+            Obtém a chave de acesso ao serviço de cache.
+            </summary>
+        </member>
         <member name="F:Dlp.Connectors.CacheConnector.CacheOperationType.Set">
             <summary>
             Operação de inserção ou atualização de um item no cache.
@@ -98,22 +132,26 @@
             Operação de exclusão de um item do cache.
             </summary>
         </member>
-        <member name="T:Dlp.Connectors.ColumnNameAttribute">
+        <member name="T:Dlp.Connectors.ColumnMapperAttribute">
             <summary>
-            Classe de atributo usada para identificar o nome da coluna que corresponde a propriedade.
+            This class specifies wich column from a table must be mapped to the specified Property. Supported the BulkInsert method only.
             </summary>
         </member>
-        <member name="M:Dlp.Connectors.ColumnNameAttribute.#ctor(System.String)">
+        <member name="M:Dlp.Connectors.ColumnMapperAttribute.#ctor">
             <summary>
-            Construtor da classe.
+            Specifies the mapping options for this Property. 
             </summary>
-            <param name="name">Nome da coluna que corresponde à propriedade.</param>
         </member>
-        <member name="M:Dlp.Connectors.ColumnNameAttribute.GetName">
+        <member name="M:Dlp.Connectors.ColumnMapperAttribute.#ctor(System.String)">
             <summary>
-            Retorna o nome da coluna que corresponde à propriedade..
+            Specifies the mapping options for this Property. 
             </summary>
-            <returns></returns>
+            <param name="columnName">Name of the column that is going to receive the value from this property.</param>
+        </member>
+        <member name="P:Dlp.Connectors.ColumnMapperAttribute.ColumnName">
+            <summary>
+            Name of the column that is going to receive the value from this property.
+            </summary>
         </member>
         <member name="T:Dlp.Connectors.DatabaseConnector">
             <summary>
@@ -138,21 +176,6 @@
         <member name="M:Dlp.Connectors.DatabaseConnector.Finalize">
             <summary>
             Destrutor que fechará os recursos utilizados, caso o usuário não tenha fechado explicitamente.
-            </summary>
-        </member>
-        <member name="P:Dlp.Connectors.DatabaseConnector.Connection">
-            <summary>
-            Gets or sets the database connection used by this connector.
-            </summary>
-        </member>
-        <member name="P:Dlp.Connectors.DatabaseConnector.Transaction">
-            <summary>
-            Gets or sets the current database transaction.
-            </summary>
-        </member>
-        <member name="P:Dlp.Connectors.DatabaseConnector.CommandTimeoutInSeconds">
-            <summary>
-            Gets the database operation timeout. Default: 90 seconds.
             </summary>
         </member>
         <member name="M:Dlp.Connectors.DatabaseConnector.OpenConnection">
@@ -186,11 +209,11 @@
             <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
             <returns>Returns a typed object with the found value. If no data is found, default(T) is returned.</returns>
             <exception cref="T:System.ArgumentNullException">Missing the query parameter.</exception>
-            <exception cref="T:System.InvalidCastException" />
-            <exception cref="T:System.Data.SqlClient.SqlException" />
-            <exception cref="T:System.IO.IOException" />
-            <exception cref="T:System.InvalidOperationException" />
-            <exception cref="T:System.ObjectDisposedException" />
+            <exception cref="T:System.InvalidCastException"></exception>
+            <exception cref="T:System.Data.SqlClient.SqlException"></exception>
+            <exception cref="T:System.IO.IOException"></exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
+            <exception cref="T:System.ObjectDisposedException"></exception>
             <example>
       <para>The following example shows how to get the current database server time with ExecuteScalar, already mapped to a DateTime object.</para>
       <code lang="C#">
@@ -244,11 +267,11 @@
             <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
             <returns>Returns the number of rows affected.</returns>
             <exception cref="T:System.ArgumentNullException">Missing the query parameter.</exception>
-            <exception cref="T:System.InvalidCastException" />
-            <exception cref="T:System.Data.SqlClient.SqlException" />
-            <exception cref="T:System.IO.IOException" />
-            <exception cref="T:System.InvalidOperationException" />
-            <exception cref="T:System.ObjectDisposedException" />
+            <exception cref="T:System.InvalidCastException"></exception>
+            <exception cref="T:System.Data.SqlClient.SqlException"></exception>
+            <exception cref="T:System.IO.IOException"></exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
+            <exception cref="T:System.ObjectDisposedException"></exception>
             <example>
       <para>The following example shows how to update a row using the ExecuteNonQuery method.</para>
       <code lang="C#">
@@ -353,11 +376,11 @@
             <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
             <returns>Returns a list of type T with the retrieved data.</returns>
             <exception cref="T:System.ArgumentNullException">Missing the query parameter.</exception>
-            <exception cref="T:System.InvalidCastException" />
-            <exception cref="T:System.Data.SqlClient.SqlException" />
-            <exception cref="T:System.IO.IOException" />
-            <exception cref="T:System.InvalidOperationException" />
-            <exception cref="T:System.ObjectDisposedException" />
+            <exception cref="T:System.InvalidCastException"></exception>
+            <exception cref="T:System.Data.SqlClient.SqlException"></exception>
+            <exception cref="T:System.IO.IOException"></exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
+            <exception cref="T:System.ObjectDisposedException"></exception>
             <example>
       <para>The following example shows how to use the ExecuteReader method to get a list of rows.</para>
       <code lang="C#">
@@ -431,11 +454,11 @@
             <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
             <returns>Returns a list of type T with the retrieved data.</returns>
             <exception cref="T:System.ArgumentNullException">Missing the query parameter.</exception>
-            <exception cref="T:System.InvalidCastException" />
-            <exception cref="T:System.Data.SqlClient.SqlException" />
-            <exception cref="T:System.IO.IOException" />
-            <exception cref="T:System.InvalidOperationException" />
-            <exception cref="T:System.ObjectDisposedException" />
+            <exception cref="T:System.InvalidCastException"></exception>
+            <exception cref="T:System.Data.SqlClient.SqlException"></exception>
+            <exception cref="T:System.IO.IOException"></exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
+            <exception cref="T:System.ObjectDisposedException"></exception>
             <example>
       <para>The following example shows how to use the ExecuteReader method to get a list of rows.</para>
       <code lang="C#">
@@ -509,11 +532,11 @@
             <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
             <returns>Returns a list of type T with the retrieved data.</returns>
             <exception cref="T:System.ArgumentNullException">Missing the query parameter.</exception>
-            <exception cref="T:System.InvalidCastException" />
-            <exception cref="T:System.Data.SqlClient.SqlException" />
-            <exception cref="T:System.IO.IOException" />
-            <exception cref="T:System.InvalidOperationException" />
-            <exception cref="T:System.ObjectDisposedException" />
+            <exception cref="T:System.InvalidCastException"></exception>
+            <exception cref="T:System.Data.SqlClient.SqlException"></exception>
+            <exception cref="T:System.IO.IOException"></exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
+            <exception cref="T:System.ObjectDisposedException"></exception>
             <example>
       <para>The following example shows how to use the ExecuteReader method to get a list of rows.</para>
       <code lang="C#">
@@ -846,6 +869,21 @@
             </summary>
             <param name="disposing">Flag indicating the dispose process.</param>
         </member>
+        <member name="P:Dlp.Connectors.DatabaseConnector.Connection">
+            <summary>
+            Gets or sets the database connection used by this connector.
+            </summary>
+        </member>
+        <member name="P:Dlp.Connectors.DatabaseConnector.Transaction">
+            <summary>
+            Gets or sets the current database transaction.
+            </summary>
+        </member>
+        <member name="P:Dlp.Connectors.DatabaseConnector.CommandTimeoutInSeconds">
+            <summary>
+            Gets the database operation timeout. Default: 90 seconds.
+            </summary>
+        </member>
         <member name="T:Dlp.Connectors.SortDirection">
             <summary>
             Enumerates all the available options for sorting queries result.
@@ -860,40 +898,6 @@
             <summary>
             Organize the result of a query in as acending order.
             </summary>
-        </member>
-        <member name="M:Dlp.Connectors.ICacheConnector.Connect">
-            <summary>
-            Connects to the cache service.
-            </summary>
-        </member>
-        <member name="M:Dlp.Connectors.ICacheConnector.IsConnected">
-            <summary>
-            Checks if the cache service is connected.
-            </summary>
-            <returns>Returns true if we are connected to the cache service.</returns>
-        </member>
-        <member name="M:Dlp.Connectors.ICacheConnector.Disconnect">
-            <summary>
-            Disconnects from the cache service.
-            </summary>
-        </member>
-        <member name="M:Dlp.Connectors.ICacheConnector.Set``1(System.String,``0,System.Int32)">
-            <summary>
-            Adiciona um atualiza um item existente no cache.
-            </summary>
-            <typeparam name="T">Tipo do item a ser inserido/atualziado.</typeparam>
-            <param name="key">Nome único no cache.</param>
-            <param name="item">Objeto a ser inserido/atualizado.</param>
-            <param name="itemExpirationInMinutes">Quanto tempo o item deverá permanecer no cache.</param>
-            <returns>Retorna true caso a operação seja realizada com sucesso.</returns>
-        </member>
-        <member name="M:Dlp.Connectors.ICacheConnector.GetByKey``1(System.String)">
-            <summary>
-            Obtém um item do cache a partir do nome.
-            </summary>
-            <typeparam name="T">Tipo do objeto a ser retornado.</typeparam>
-            <param name="key">Nome do objeto no cache.</param>
-            <returns>Retorna um objeto do tipo T, encontrado no cache, ou default(T), caso o item não exista.</returns>
         </member>
         <member name="T:Dlp.Connectors.OutputEventArgs">
             <summary>

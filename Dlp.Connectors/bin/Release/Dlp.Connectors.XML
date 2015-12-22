@@ -132,6 +132,27 @@
             Operação de exclusão de um item do cache.
             </summary>
         </member>
+        <member name="T:Dlp.Connectors.ColumnMapperAttribute">
+            <summary>
+            This class specifies wich column from a table must be mapped to the specified Property. Supported the BulkInsert method only.
+            </summary>
+        </member>
+        <member name="M:Dlp.Connectors.ColumnMapperAttribute.#ctor">
+            <summary>
+            Specifies the mapping options for this Property.
+            </summary>
+        </member>
+        <member name="M:Dlp.Connectors.ColumnMapperAttribute.#ctor(System.String)">
+            <summary>
+            Specifies the mapping options for this Property. 
+            </summary>
+            <param name="columnName">Name of the column that is going to receive the value from this property.</param>
+        </member>
+        <member name="P:Dlp.Connectors.ColumnMapperAttribute.ColumnName">
+            <summary>
+            Name of the column that is going to receive the value from this property.
+            </summary>
+        </member>
         <member name="T:Dlp.Connectors.DatabaseConnector">
             <summary>
             Connector for database operations.
