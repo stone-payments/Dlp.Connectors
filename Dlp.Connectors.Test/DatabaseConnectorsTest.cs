@@ -8,1188 +8,1380 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Dlp.Connectors.Test {
+namespace Dlp.Connectors.Test
+{
 
-	#region Classes específicas para testes
+    #region Classes específicas para testes
 
-	[ExcludeFromCodeCoverage]
-	internal class ServiceLogData {
+    [ExcludeFromCodeCoverage]
+    internal class ServiceLogData
+    {
 
-		public ServiceLogData() { }
+        public ServiceLogData() { }
 
-		public DateTime CreateDate { get; set; }
-		public string Category { get; set; }
-		public string LogData { get; set; }
-	}
+        public DateTime CreateDate { get; set; }
+        public string Category { get; set; }
+        public string LogData { get; set; }
+    }
 
-	[ExcludeFromCodeCoverage]
-	internal class MerchantData {
+    [ExcludeFromCodeCoverage]
+    internal class MerchantData
+    {
 
-		public MerchantData() { }
+        public MerchantData() { }
 
-		public string Name { get; set; }
-		public string Merchant { get; set; }
-		public int MerchantId { get; set; }
-		public DateTime CreateDate { get; set; }
-		public Guid MerchantKey { get; set; }
-		public bool IsEnabled { get; set; }
-		public string Url { get; set; }
-		public StatusType Status { get; set; }
-		public Nullable<int> OptionalId { get; set; }
-	}
+        public string Name { get; set; }
+        public string Merchant { get; set; }
+        public int MerchantId { get; set; }
+        public DateTime CreateDate { get; set; }
+        public Guid MerchantKey { get; set; }
+        public bool IsEnabled { get; set; }
+        public string Url { get; set; }
+        public StatusType Status { get; set; }
+        public Nullable<int> OptionalId { get; set; }
+    }
 
-	[ExcludeFromCodeCoverage]
-	internal class MerchantEntity {
+    [ExcludeFromCodeCoverage]
+    internal class MerchantEntity
+    {
 
-		public MerchantEntity() { }
+        public MerchantEntity() { }
 
-		public string Name { get; set; }
-		public int MerchantId { get; set; }
-		public MerchantConfigurationEntity MerchantConfiguration { get; set; }
-	}
+        public string Name { get; set; }
+        public int MerchantId { get; set; }
+        public MerchantConfigurationEntity MerchantConfiguration { get; set; }
+    }
 
-	[ExcludeFromCodeCoverage]
-	internal class MerchantConfigurationEntity {
+    [ExcludeFromCodeCoverage]
+    internal class MerchantConfigurationEntity
+    {
 
-		public MerchantConfigurationEntity() { }
+        public MerchantConfigurationEntity() { }
 
-		public string Url { get; set; }
-		public bool IsEnabled { get; set; }
-		public Nullable<long> OptionalId { get; set; }
-	}
+        public string Url { get; set; }
+        public bool IsEnabled { get; set; }
+        public Nullable<long> OptionalId { get; set; }
+    }
 
-	[ExcludeFromCodeCoverage]
-	internal class ComposedMerchant : AbstractMerchant {
+    [ExcludeFromCodeCoverage]
+    internal class ComposedMerchant : AbstractMerchant
+    {
 
-		public ComposedMerchant() { }
+        public ComposedMerchant() { }
 
-		public string Name { get; set; }
-		public int MerchantId { get; set; }
-	}
+        public string Name { get; set; }
+        public int MerchantId { get; set; }
+    }
 
-	[ExcludeFromCodeCoverage]
-	internal class AbstractMerchant {
+    [ExcludeFromCodeCoverage]
+    internal class AbstractMerchant
+    {
 
-		public string Url { get; set; }
-		public bool IsEnabled { get; set; }
-	}
+        public string Url { get; set; }
+        public bool IsEnabled { get; set; }
+    }
 
-	[ExcludeFromCodeCoverage]
-	internal class MistypedClass {
+    [ExcludeFromCodeCoverage]
+    internal class MistypedClass
+    {
 
-		public MistypedClass() { }
+        public MistypedClass() { }
 
-		public string MistypedName { get; set; }
-		public int MistypedMerchantId { get; set; }
-		public MistypedProperty SubProperty { get; set; }
-	}
+        public string MistypedName { get; set; }
+        public int MistypedMerchantId { get; set; }
+        public MistypedProperty SubProperty { get; set; }
+    }
 
-	[ExcludeFromCodeCoverage]
-	internal class MistypedProperty {
+    [ExcludeFromCodeCoverage]
+    internal class MistypedProperty
+    {
 
-		public MistypedProperty() { }
+        public MistypedProperty() { }
 
-		public int SubPropertyId { get; set; }
-		public int MistypedClassId { get; set; }
-		public bool IsEnabled { get; set; }
-		public string Address { get; set; }
-		public MistypedProperty AnotherSubProperty { get; set; }
-	}
+        public int SubPropertyId { get; set; }
+        public int MistypedClassId { get; set; }
+        public bool IsEnabled { get; set; }
+        public string Address { get; set; }
+        public MistypedProperty AnotherSubProperty { get; set; }
+    }
 
-	internal enum StatusType {
+    internal enum StatusType
+    {
 
-		Undefined = 0,
-		Created = 1,
-		Disabled = 2,
-		Suspended = 3
-	}
+        Undefined = 0,
+        Created = 1,
+        Disabled = 2,
+        Suspended = 3
+    }
 
-	[ExcludeFromCodeCoverage]
-	internal class MerchantBool {
+    [ExcludeFromCodeCoverage]
+    internal class MerchantBool
+    {
 
-		public MerchantBool() { }
+        public MerchantBool() { }
 
-		public bool MerchantId { get; set; }
-	}
+        public bool MerchantId { get; set; }
+    }
 
-	[ExcludeFromCodeCoverage]
-	internal class BulkData {
+    [ExcludeFromCodeCoverage]
+    internal class BulkData
+    {
 
-		public BulkData() { }
+        public BulkData() { }
 
-		public string Name { get; set; }
-		public string Value { get; set; }
-		public Nullable<DateTime> CreateDate { get; set; }
-	}
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public Nullable<DateTime> CreateDate { get; set; }
+    }
 
-	internal class SimpleTable {
+    [ExcludeFromCodeCoverage]
+    internal class BulkDataAttribute
+    {
 
-		public SimpleTable() { }
+        public BulkDataAttribute() { }
 
-		public int Id { get; set; }
-		public string Name { get; set; }
-		public SimpleTableRelationship SimpleTableRelationship { get; set; }
-	}
+        [ColumnName("Name")]
+        public string banana { get; set; }
 
-	internal class SimpleTableRelationship {
+        [ColumnName("Value")]
+        public string maca { get; set; }
 
-		public SimpleTableRelationship() { }
+        [ColumnName("CreateDate")]
+        public Nullable<DateTime> goiaba { get; set; }
+    }
 
-		public int Id { get; set; }
-		public string Name { get; set; }
-		public int SimpleTableId { get; set; }
-	}
+    internal class SimpleTable
+    {
 
-	internal class Address {
+        public SimpleTable() { }
 
-		public Address() { }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public SimpleTableRelationship SimpleTableRelationship { get; set; }
+    }
 
-		public int Id { get; set; }
+    internal class SimpleTableRelationship
+    {
 
-		public string Street { get; set; }
+        public SimpleTableRelationship() { }
 
-		public string Number { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int SimpleTableId { get; set; }
+    }
 
-		public string Complement { get; set; }
-	}
+    internal class Address
+    {
 
-	internal class Contact {
+        public Address() { }
 
-		public Contact() { }
+        public int Id { get; set; }
 
-		public int Id { get; set; }
+        public string Street { get; set; }
 
-		public string Name { get; set; }
-	}
+        public string Number { get; set; }
 
-	internal class Lead {
+        public string Complement { get; set; }
+    }
 
-		public Lead() {		}
+    internal class Contact
+    {
 
-		public int Id { get; set; }
+        public Contact() { }
 
-		public Address Address { get; set; }
+        public int Id { get; set; }
 
-		public Contact Contact { get; set; }
+        public string Name { get; set; }
+    }
 
-		public string Name { get; set; }
-	}
+    internal class Lead
+    {
 
-	#endregion
+        public Lead() { }
 
-	[ExcludeFromCodeCoverage]
-	[TestClass]
-	public class DatabaseConnectorTest {
+        public int Id { get; set; }
 
-		private static string connectionString;
+        public Address Address { get; set; }
 
-		private static bool _tempDirCreated = false;
+        public Contact Contact { get; set; }
 
-		private const string _databaseDirectory = @"C:\temp";
+        public string Name { get; set; }
+    }
 
-		private StringBuilder ConnectorOutput;
+    #endregion
 
-		[ClassInitialize]
-		public static void PrepareDatabaseTests(TestContext context) {
+    [ExcludeFromCodeCoverage]
+    [TestClass]
+    public class DatabaseConnectorTest
+    {
 
-			// Verifica se o diretório temporário existe.
-			if (Directory.Exists(_databaseDirectory) == false) {
+        private static string connectionString;
 
-				Directory.CreateDirectory(_databaseDirectory);
+        private static bool _tempDirCreated = false;
 
-				_tempDirCreated = true;
-			}
+        private const string _databaseDirectory = @"C:\temp";
 
-			// Apaga o banco de dados, se por acaso ele estiver carregado no SqlServer.
-			ClearTempDatabase();
+        private StringBuilder ConnectorOutput;
 
-			// Monta o nome do arquivo temporário.
-			string databaseTempFile = string.Format(@"{0}\UnitTestDatabase.mdf", _databaseDirectory);
+        [ClassInitialize]
+        public static void PrepareDatabaseTests(TestContext context)
+        {
 
-			// Copia o banco de dados de testes para o diretório temporário.
-			File.Copy("UnitTestDatabase.mdf", databaseTempFile, true);
+            // Verifica se o diretório temporário existe.
+            if (Directory.Exists(_databaseDirectory) == false)
+            {
 
-			connectionString = string.Format(@"Data Source=(LocalDB)\v11.0;AttachDbFilename={0};Integrated Security=True;Connect Timeout=10;", databaseTempFile);
-		}
+                Directory.CreateDirectory(_databaseDirectory);
 
-		[ClassCleanup]
-		public static void FinalizeDatabaseTests() {
+                _tempDirCreated = true;
+            }
 
-			SqlConnection.ClearAllPools();
+            // Apaga o banco de dados, se por acaso ele estiver carregado no SqlServer.
+            ClearTempDatabase();
 
-			// Aguarda a liberação dos pools.
-			System.Threading.Thread.Sleep(1000);
+            // Monta o nome do arquivo temporário.
+            string databaseTempFile = string.Format(@"{0}\UnitTestDatabase.mdf", _databaseDirectory);
 
-			ClearTempDatabase();
-		}
+            // Copia o banco de dados de testes para o diretório temporário.
+            File.Copy("UnitTestDatabase.mdf", databaseTempFile, true);
 
-		[TestInitialize]
-		public void InitializeOutput() {
+            connectionString = string.Format(@"Data Source=(LocalDB)\v11.0;AttachDbFilename={0};Integrated Security=True;Connect Timeout=10;", databaseTempFile);
+        }
 
-			this.ConnectorOutput = new StringBuilder();
-		}
+        [ClassCleanup]
+        public static void FinalizeDatabaseTests()
+        {
 
-		[TestCleanup]
-		public void ClearOutput() {
+            SqlConnection.ClearAllPools();
 
-			this.ConnectorOutput.Clear();
-			this.ConnectorOutput = null;
-		}
+            // Aguarda a liberação dos pools.
+            System.Threading.Thread.Sleep(1000);
 
-		private void databaseConnector_OnOutput(object sender, OutputEventArgs e) {
+            ClearTempDatabase();
+        }
 
-			lock (this.ConnectorOutput) { this.ConnectorOutput.AppendLine(e.ToString()); }
-		}
+        [TestInitialize]
+        public void InitializeOutput()
+        {
 
-		private static void ClearTempDatabase() {
+            this.ConnectorOutput = new StringBuilder();
+        }
 
-			try {
-				// Monta os nomes do arquivo temporário.
-				string databaseTempFile = string.Format(@"{0}\UnitTestDatabase.mdf", _databaseDirectory);
-				string databaseTempLogFile = string.Format(@"{0}\UnitTestDatabase_log.ldf", _databaseDirectory);
+        [TestCleanup]
+        public void ClearOutput()
+        {
 
-				connectionString = @"server=(local);Data Source=(LocalDB)\v11.0;Integrated Security=True;Connect Timeout=10;";
+            this.ConnectorOutput.Clear();
+            this.ConnectorOutput = null;
+        }
 
-				string query = string.Format(@"DROP DATABASE [{0}]", databaseTempFile);
+        private void databaseConnector_OnOutput(object sender, OutputEventArgs e)
+        {
 
-				using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) { databaseConnector.ExecuteNonQuery(query); }
+            lock (this.ConnectorOutput) { this.ConnectorOutput.AppendLine(e.ToString()); }
+        }
 
-				if (_tempDirCreated == true) {
+        private static void ClearTempDatabase()
+        {
 
-					// Exclui o diretório temporário, caso a aplicação tenha criado.
-					Directory.Delete(_databaseDirectory, true);
+            try
+            {
+                // Monta os nomes do arquivo temporário.
+                string databaseTempFile = string.Format(@"{0}\UnitTestDatabase.mdf", _databaseDirectory);
+                string databaseTempLogFile = string.Format(@"{0}\UnitTestDatabase_log.ldf", _databaseDirectory);
 
-					_tempDirCreated = false;
-				}
-				else {
-					if (File.Exists(databaseTempFile) == true) { File.Delete(databaseTempFile); }
-					if (File.Exists(databaseTempLogFile) == true) { File.Delete(databaseTempLogFile); }
-				}
-			}
-			catch (Exception ex) {
+                connectionString = @"server=(local);Data Source=(LocalDB)\v11.0;Integrated Security=True;Connect Timeout=10;";
 
-				System.Diagnostics.Debug.WriteLine(ex);
-			}
-		}
+                string query = string.Format(@"DROP DATABASE [{0}]", databaseTempFile);
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void CreateDatabaseConnectorWithEmptyConnectionString() {
+                using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) { databaseConnector.ExecuteNonQuery(query); }
 
-			DatabaseConnector databaseConnector = new DatabaseConnector(string.Empty);
-		}
+                if (_tempDirCreated == true)
+                {
 
-		[TestMethod]
-		[ExpectedException(typeof(SqlException))]
-		public void ExecuteNonQueryWithInvalidParameter() {
+                    // Exclui o diretório temporário, caso a aplicação tenha criado.
+                    Directory.Delete(_databaseDirectory, true);
 
-			string query = "SELECT Merchant.Name FROM Merchant WHERE Banana = 1;";
+                    _tempDirCreated = false;
+                }
+                else {
+                    if (File.Exists(databaseTempFile) == true) { File.Delete(databaseTempFile); }
+                    if (File.Exists(databaseTempLogFile) == true) { File.Delete(databaseTempLogFile); }
+                }
+            }
+            catch (Exception ex)
+            {
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+        }
 
-				databaseConnector.ExecuteNonQuery(query);
-			}
-		}
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CreateDatabaseConnectorWithEmptyConnectionString()
+        {
 
-		[TestMethod]
-		public void LoadSingleRow() {
+            DatabaseConnector databaseConnector = new DatabaseConnector(string.Empty);
+        }
 
-			string query = @"SELECT Merchant.Name, Merchant.MerchantId, Merchant.CreateDate, Merchant.MerchantKey FROM Merchant WHERE MerchantId = 1;";
+        [TestMethod]
+        [ExpectedException(typeof(SqlException))]
+        public void ExecuteNonQueryWithInvalidParameter()
+        {
 
-			MerchantData actual = null;
+            string query = "SELECT Merchant.Name FROM Merchant WHERE Banana = 1;";
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query).FirstOrDefault();
-			}
+                databaseConnector.ExecuteNonQuery(query);
+            }
+        }
 
-			Assert.IsNotNull(actual);
+        [TestMethod]
+        public void LoadSingleRow()
+        {
 
-			Assert.AreEqual("Merchant Number One", actual.Name);
-			Assert.AreEqual(1, actual.MerchantId);
-			Assert.AreEqual(Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76"), actual.MerchantKey);
-			Assert.AreEqual("2014-07-30 13:06:10", actual.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
-		}
+            string query = @"SELECT Merchant.Name, Merchant.MerchantId, Merchant.CreateDate, Merchant.MerchantKey FROM Merchant WHERE MerchantId = 1;";
 
-		[TestMethod]
-		public void LoadMerchantByEntityId_Test() {
+            MerchantData actual = null;
 
-			string query = @"SELECT Merchant.Name, Merchant.MerchantId, Merchant.CreateDate, Merchant.MerchantKey FROM Merchant WHERE MerchantId = @MerchantId;";
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-			MerchantData request = new MerchantData();
-			request.MerchantId = 1;
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query).FirstOrDefault();
+            }
 
-			MerchantData actual = null;
+            Assert.IsNotNull(actual);
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            Assert.AreEqual("Merchant Number One", actual.Name);
+            Assert.AreEqual(1, actual.MerchantId);
+            Assert.AreEqual(Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76"), actual.MerchantKey);
+            Assert.AreEqual("2014-07-30 13:06:10", actual.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+        }
 
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, request).FirstOrDefault();
-			}
+        [TestMethod]
+        public void LoadMerchantByEntityId_Test()
+        {
 
-			string output = this.ConnectorOutput.ToString();
+            string query = @"SELECT Merchant.Name, Merchant.MerchantId, Merchant.CreateDate, Merchant.MerchantKey FROM Merchant WHERE MerchantId = @MerchantId;";
 
-			Assert.IsNotNull(actual);
+            MerchantData request = new MerchantData();
+            request.MerchantId = 1;
 
-			Assert.AreEqual("Merchant Number One", actual.Name);
-			Assert.AreEqual(1, actual.MerchantId);
-			Assert.AreEqual(Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76"), actual.MerchantKey);
-			Assert.AreEqual("2014-07-30 13:06:10", actual.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
-		}
+            MerchantData actual = null;
 
-		[TestMethod]
-		public void LoadMultipleRows() {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-			string query = @"SELECT Merchant.Name, Merchant.MerchantId, Merchant.CreateDate, Merchant.MerchantKey FROM Merchant ORDER BY Merchant.MerchantId ASC;";
+                databaseConnector.OnOutput += databaseConnector_OnOutput;
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, request).FirstOrDefault();
+            }
 
-			Stopwatch stopwatch = new Stopwatch();
+            string output = this.ConnectorOutput.ToString();
 
-			stopwatch.Start();
+            Assert.IsNotNull(actual);
 
-			IEnumerable<MerchantData> actual = null;
+            Assert.AreEqual("Merchant Number One", actual.Name);
+            Assert.AreEqual(1, actual.MerchantId);
+            Assert.AreEqual(Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76"), actual.MerchantKey);
+            Assert.AreEqual("2014-07-30 13:06:10", actual.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+        }
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+        [TestMethod]
+        public void LoadMultipleRows()
+        {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query);
-			}
+            string query = @"SELECT Merchant.Name, Merchant.MerchantId, Merchant.CreateDate, Merchant.MerchantKey FROM Merchant ORDER BY Merchant.MerchantId ASC;";
 
-			stopwatch.Stop();
+            Stopwatch stopwatch = new Stopwatch();
 
-			System.Diagnostics.Debug.WriteLine(string.Format("ELAPSED: {0}", stopwatch.ElapsedMilliseconds));
+            stopwatch.Start();
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual(3, actual.Count());
+            IEnumerable<MerchantData> actual = null;
 
-			Assert.AreEqual("Merchant Number One", actual.ElementAt(0).Name);
-			Assert.AreEqual(1, actual.ElementAt(0).MerchantId);
-			Assert.AreEqual(Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76"), actual.ElementAt(0).MerchantKey);
-			Assert.AreEqual("2014-07-30 13:06:10", actual.ElementAt(0).CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-			Assert.AreEqual("Another Merchant", actual.ElementAt(1).Name);
-			Assert.AreEqual(2, actual.ElementAt(1).MerchantId);
-			Assert.AreEqual(Guid.Parse("eb04aaaa-e8ca-4e14-8068-0f3008a716b9"), actual.ElementAt(1).MerchantKey);
-			Assert.AreEqual("2014-07-30 13:06:47", actual.ElementAt(1).CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query);
+            }
 
-			Assert.AreEqual("Merchant Test", actual.ElementAt(2).Name);
-			Assert.AreEqual(3, actual.ElementAt(2).MerchantId);
-			Assert.AreEqual(Guid.Parse("c5d66001-8a39-4a04-a22c-d3a190018c46"), actual.ElementAt(2).MerchantKey);
-			Assert.AreEqual("2014-07-30 13:07:07", actual.ElementAt(2).CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
-		}
+            stopwatch.Stop();
 
-		[TestMethod]
-		[ExpectedException(typeof(SqlException))]
-		public void LoadSingleRowWithParametersFromEntityWithInvalidParameter() {
+            System.Diagnostics.Debug.WriteLine(string.Format("ELAPSED: {0}", stopwatch.ElapsedMilliseconds));
 
-			string query = @"SELECT Merchant.Name FROM Merchant WHERE Merchant.MerchantId = @MerchantId AND Merchant.Name = @MerchantConfiguration;";
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(3, actual.Count());
 
-			MerchantData actual = null;
+            Assert.AreEqual("Merchant Number One", actual.ElementAt(0).Name);
+            Assert.AreEqual(1, actual.ElementAt(0).MerchantId);
+            Assert.AreEqual(Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76"), actual.ElementAt(0).MerchantKey);
+            Assert.AreEqual("2014-07-30 13:06:10", actual.ElementAt(0).CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
 
-			MerchantEntity merchantEntity = new MerchantEntity();
-			merchantEntity.MerchantId = 2;
-			merchantEntity.MerchantConfiguration = new MerchantConfigurationEntity();
+            Assert.AreEqual("Another Merchant", actual.ElementAt(1).Name);
+            Assert.AreEqual(2, actual.ElementAt(1).MerchantId);
+            Assert.AreEqual(Guid.Parse("eb04aaaa-e8ca-4e14-8068-0f3008a716b9"), actual.ElementAt(1).MerchantKey);
+            Assert.AreEqual("2014-07-30 13:06:47", actual.ElementAt(1).CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            Assert.AreEqual("Merchant Test", actual.ElementAt(2).Name);
+            Assert.AreEqual(3, actual.ElementAt(2).MerchantId);
+            Assert.AreEqual(Guid.Parse("c5d66001-8a39-4a04-a22c-d3a190018c46"), actual.ElementAt(2).MerchantKey);
+            Assert.AreEqual("2014-07-30 13:07:07", actual.ElementAt(2).CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+        }
 
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
+        [TestMethod]
+        [ExpectedException(typeof(SqlException))]
+        public void LoadSingleRowWithParametersFromEntityWithInvalidParameter()
+        {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, merchantEntity).FirstOrDefault();
-			}
+            string query = @"SELECT Merchant.Name FROM Merchant WHERE Merchant.MerchantId = @MerchantId AND Merchant.Name = @MerchantConfiguration;";
 
-			string output = this.ConnectorOutput.ToString();
-		}
+            MerchantData actual = null;
 
-		[TestMethod]
-		public void LoadSingleRowWithJoin() {
+            MerchantEntity merchantEntity = new MerchantEntity();
+            merchantEntity.MerchantId = 2;
+            merchantEntity.MerchantConfiguration = new MerchantConfigurationEntity();
 
-			string query = @"SELECT Merchant.Name, Merchant.MerchantId, MerchantConfiguration.Url, MerchantConfiguration.IsEnabled, MerchantConfiguration.OptionalId
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
+
+                databaseConnector.OnOutput += databaseConnector_OnOutput;
+
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, merchantEntity).FirstOrDefault();
+            }
+
+            string output = this.ConnectorOutput.ToString();
+        }
+
+        [TestMethod]
+        public void LoadSingleRowWithJoin()
+        {
+
+            string query = @"SELECT Merchant.Name, Merchant.MerchantId, MerchantConfiguration.Url, MerchantConfiguration.IsEnabled, MerchantConfiguration.OptionalId
                              FROM Merchant
                              INNER JOIN MerchantConfiguration ON MerchantConfiguration.MerchantId = Merchant.MerchantId
                              WHERE Merchant.MerchantId IN (2, 3)
                              ORDER BY Merchant.MerchantId ASC;";
 
-			IEnumerable<MerchantData> actual = null;
+            IEnumerable<MerchantData> actual = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query);
-			}
+                databaseConnector.OnOutput += databaseConnector_OnOutput;
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query);
+            }
 
-			string output = this.ConnectorOutput.ToString();
+            string output = this.ConnectorOutput.ToString();
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual(2, actual.Count());
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(2, actual.Count());
 
-			Assert.AreEqual("Another Merchant", actual.ElementAt(0).Name);
-			Assert.AreEqual(2, actual.ElementAt(0).MerchantId);
-			Assert.AreEqual("http://www.anothermerchant.com.br", actual.ElementAt(0).Url);
-			Assert.IsFalse(actual.ElementAt(0).IsEnabled);
+            Assert.AreEqual("Another Merchant", actual.ElementAt(0).Name);
+            Assert.AreEqual(2, actual.ElementAt(0).MerchantId);
+            Assert.AreEqual("http://www.anothermerchant.com.br", actual.ElementAt(0).Url);
+            Assert.IsFalse(actual.ElementAt(0).IsEnabled);
 
-			Assert.AreEqual("Merchant Test", actual.ElementAt(1).Name);
-			Assert.AreEqual(3, actual.ElementAt(1).MerchantId);
-			Assert.IsNull(actual.ElementAt(1).Url);
-			Assert.IsTrue(actual.ElementAt(1).IsEnabled);
-			Assert.AreEqual(13, actual.ElementAt(1).OptionalId);
-		}
+            Assert.AreEqual("Merchant Test", actual.ElementAt(1).Name);
+            Assert.AreEqual(3, actual.ElementAt(1).MerchantId);
+            Assert.IsNull(actual.ElementAt(1).Url);
+            Assert.IsTrue(actual.ElementAt(1).IsEnabled);
+            Assert.AreEqual(13, actual.ElementAt(1).OptionalId);
+        }
 
-		[TestMethod]
-		public void LoadMultipleRowsWithParameters() {
+        [TestMethod]
+        public void LoadMultipleRowsWithParameters()
+        {
 
-			string query = @"SELECT Merchant.Name, Merchant.MerchantId
+            string query = @"SELECT Merchant.Name, Merchant.MerchantId
                              FROM Merchant
                              INNER JOIN MerchantConfiguration ON MerchantConfiguration.MerchantId = Merchant.MerchantId
                              WHERE MerchantConfiguration.IsEnabled = @IsEnabled;";
 
-			IEnumerable<MerchantData> actual = null;
+            IEnumerable<MerchantData> actual = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				// Define o parâmetro IsEnabled da query como true, para retornar apenas as lojas habilitadas.
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { IsEnabled = true });
-			}
+                // Define o parâmetro IsEnabled da query como true, para retornar apenas as lojas habilitadas.
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { IsEnabled = true });
+            }
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual(2, actual.Count());
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(2, actual.Count());
 
-			Assert.AreEqual("Merchant Number One", actual.ElementAt(0).Name);
-			Assert.AreEqual(1, actual.ElementAt(0).MerchantId);
+            Assert.AreEqual("Merchant Number One", actual.ElementAt(0).Name);
+            Assert.AreEqual(1, actual.ElementAt(0).MerchantId);
 
-			Assert.AreEqual("Merchant Test", actual.ElementAt(1).Name);
-			Assert.AreEqual(3, actual.ElementAt(1).MerchantId);
-		}
+            Assert.AreEqual("Merchant Test", actual.ElementAt(1).Name);
+            Assert.AreEqual(3, actual.ElementAt(1).MerchantId);
+        }
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void LoadRowWithEmptyQuery() {
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void LoadRowWithEmptyQuery()
+        {
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
-				databaseConnector.ExecuteReaderFetchAll<int>(string.Empty);
-			}
-		}
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
+                databaseConnector.ExecuteReaderFetchAll<int>(string.Empty);
+            }
+        }
 
-		[TestMethod]
-		public void LoadSingleRowWithNestedEntity() {
+        [TestMethod]
+        public void LoadSingleRowWithNestedEntity()
+        {
 
-			string query = @"SELECT Merchant.Name, Merchant.MerchantId, MerchantConfiguration.IsEnabled, MerchantConfiguration.Url
+            string query = @"SELECT Merchant.Name, Merchant.MerchantId, MerchantConfiguration.IsEnabled, MerchantConfiguration.Url
                              FROM Merchant
                              INNER JOIN MerchantConfiguration ON MerchantConfiguration.MerchantId = Merchant.MerchantId
                              WHERE Merchant.MerchantId = 1";
 
-			MerchantEntity actual = null;
+            MerchantEntity actual = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantEntity>(query).FirstOrDefault();
-			}
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
+                databaseConnector.OnOutput += databaseConnector_OnOutput;
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantEntity>(query).FirstOrDefault();
+            }
 
-			string output = this.ConnectorOutput.ToString();
+            string output = this.ConnectorOutput.ToString();
 
-			Assert.IsNotNull(actual);
-			Assert.IsNotNull(actual.MerchantConfiguration);
+            Assert.IsNotNull(actual);
+            Assert.IsNotNull(actual.MerchantConfiguration);
 
-			Assert.AreEqual("Merchant Number One", actual.Name);
-			Assert.AreEqual(1, actual.MerchantId);
+            Assert.AreEqual("Merchant Number One", actual.Name);
+            Assert.AreEqual(1, actual.MerchantId);
 
-			Assert.IsTrue(actual.MerchantConfiguration.IsEnabled);
-			Assert.AreEqual("http://www.merchantnumberone.com.br", actual.MerchantConfiguration.Url);
-		}
+            Assert.IsTrue(actual.MerchantConfiguration.IsEnabled);
+            Assert.AreEqual("http://www.merchantnumberone.com.br", actual.MerchantConfiguration.Url);
+        }
 
-		[TestMethod]
-		public void LoadDatabaseDateTimeWithScalar() {
+        [TestMethod]
+        public void LoadDatabaseDateTimeWithScalar()
+        {
 
-			string query = @"SELECT GETDATE();";
+            string query = @"SELECT GETDATE();";
 
-			object actual;
+            object actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
-				actual = databaseConnector.ExecuteScalar<DateTime>(query);
-			}
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
+                databaseConnector.OnOutput += databaseConnector_OnOutput;
+                actual = databaseConnector.ExecuteScalar<DateTime>(query);
+            }
 
-			string output = this.ConnectorOutput.ToString();
+            string output = this.ConnectorOutput.ToString();
 
-			Assert.IsNotNull(actual);
-			Assert.IsInstanceOfType(actual, typeof(DateTime));
-		}
+            Assert.IsNotNull(actual);
+            Assert.IsInstanceOfType(actual, typeof(DateTime));
+        }
 
-		[TestMethod]
-		[ExpectedException(typeof(InvalidCastException))]
-		public void LoadDatabaseDateTimeWithScalarToInt() {
+        [TestMethod]
+        [ExpectedException(typeof(InvalidCastException))]
+        public void LoadDatabaseDateTimeWithScalarToInt()
+        {
 
-			string query = @"SELECT GETDATE();";
+            string query = @"SELECT GETDATE();";
 
-			object actual;
+            object actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
-				actual = databaseConnector.ExecuteScalar<int>(query);
-			}
-		}
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
+                actual = databaseConnector.ExecuteScalar<int>(query);
+            }
+        }
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void LoadDatabaseDateTimeWithoutQuery() {
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void LoadDatabaseDateTimeWithoutQuery()
+        {
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
-				object actual = databaseConnector.ExecuteScalar<DateTime>(null);
-			}
-		}
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
+                object actual = databaseConnector.ExecuteScalar<DateTime>(null);
+            }
+        }
 
-		[TestMethod]
-		public void LoadDatabaseTimeWithoutResult() {
+        [TestMethod]
+        public void LoadDatabaseTimeWithoutResult()
+        {
 
-			string query = @"SELECT GETDATE() WHERE 1 <> 1;";
+            string query = @"SELECT GETDATE() WHERE 1 <> 1;";
 
-			DateTime actual;
+            DateTime actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
-				actual = databaseConnector.ExecuteScalar<DateTime>(query);
-			}
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
+                actual = databaseConnector.ExecuteScalar<DateTime>(query);
+            }
 
-			Assert.AreEqual(DateTime.MinValue, actual);
-		}
+            Assert.AreEqual(DateTime.MinValue, actual);
+        }
 
-		[TestMethod]
-		public void LoadMerchantNameFromId() {
+        [TestMethod]
+        public void LoadMerchantNameFromId()
+        {
 
-			string query = @"SELECT Name FROM Merchant WHERE MerchantId = @MerchantId;";
+            string query = @"SELECT Name FROM Merchant WHERE MerchantId = @MerchantId;";
 
-			string actual;
+            string actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
-				actual = databaseConnector.ExecuteScalar<string>(query, new { MerchantId = 1 });
-			}
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
+                databaseConnector.OnOutput += databaseConnector_OnOutput;
+                actual = databaseConnector.ExecuteScalar<string>(query, new { MerchantId = 1 });
+            }
 
-			string output = this.ConnectorOutput.ToString();
+            string output = this.ConnectorOutput.ToString();
 
-			Assert.AreEqual("Merchant Number One", actual);
-		}
+            Assert.AreEqual("Merchant Number One", actual);
+        }
 
-		[TestMethod]
-		public void ExecuteNonQuery() {
+        [TestMethod]
+        public void ExecuteNonQuery()
+        {
 
-			string query = @"UPDATE Merchant SET Merchant.Name = Merchant.Name WHERE Merchant.MerchantId = 1;";
+            string query = @"UPDATE Merchant SET Merchant.Name = Merchant.Name WHERE Merchant.MerchantId = 1;";
 
-			int actual = 0;
+            int actual = 0;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
-				actual = databaseConnector.ExecuteNonQuery(query);
-			}
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
+                actual = databaseConnector.ExecuteNonQuery(query);
+            }
 
-			Assert.AreEqual(1, actual);
-		}
+            Assert.AreEqual(1, actual);
+        }
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void ExecuteNonQueryWithNullQueryString() {
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ExecuteNonQueryWithNullQueryString()
+        {
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
-				databaseConnector.ExecuteNonQuery(null);
-			}
-		}
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
+                databaseConnector.ExecuteNonQuery(null);
+            }
+        }
 
-		[TestMethod]
-		public void InsertMerchantWithDatabaseRollback() {
+        [TestMethod]
+        public void InsertMerchantWithDatabaseRollback()
+        {
 
-			string query = @"INSERT INTO Merchant (Name) VALUES ('Temp Merchant');";
+            string query = @"INSERT INTO Merchant (Name) VALUES ('Temp Merchant');";
 
-			SqlTransaction sqlTransaction = DatabaseConnector.BeginGlobalTransaction(connectionString);
+            SqlTransaction sqlTransaction = DatabaseConnector.BeginGlobalTransaction(connectionString);
 
-			DatabaseConnector databaseConnector = new DatabaseConnector(connectionString);
+            DatabaseConnector databaseConnector = new DatabaseConnector(connectionString);
 
-			databaseConnector.ExecuteNonQuery(query);
+            databaseConnector.ExecuteNonQuery(query);
 
-			Nullable<int> merchantId = databaseConnector.ExecuteScalar<Nullable<int>>("SELECT MerchantId FROM Merchant WHERE Name = 'Temp Merchant';");
+            Nullable<int> merchantId = databaseConnector.ExecuteScalar<Nullable<int>>("SELECT MerchantId FROM Merchant WHERE Name = 'Temp Merchant';");
 
-			sqlTransaction.Rollback();
+            sqlTransaction.Rollback();
 
-			merchantId = databaseConnector.ExecuteScalar<Nullable<int>>("SELECT MerchantId FROM Merchant WHERE Name = 'Temp Merchant';");
+            merchantId = databaseConnector.ExecuteScalar<Nullable<int>>("SELECT MerchantId FROM Merchant WHERE Name = 'Temp Merchant';");
 
-			databaseConnector.Close();
-		}
+            databaseConnector.Close();
+        }
 
-		[TestMethod]
-		public void LoadDateTimeWithDatabaseCommitTransactionAndEmptyConnectionString() {
+        [TestMethod]
+        public void LoadDateTimeWithDatabaseCommitTransactionAndEmptyConnectionString()
+        {
 
-			string query = @"SELECT GETDATE();";
+            string query = @"SELECT GETDATE();";
 
-			DatabaseConnector.BeginGlobalTransaction(connectionString);
+            DatabaseConnector.BeginGlobalTransaction(connectionString);
 
-			try {
-				using (DatabaseConnector databaseConnector = new DatabaseConnector(string.Empty)) {
-					DateTime actual = databaseConnector.ExecuteScalar<DateTime>(query);
-				}
-			}
-			finally {
-				DatabaseConnector.CommitGlobalTransaction();
-			}
-		}
+            try
+            {
+                using (DatabaseConnector databaseConnector = new DatabaseConnector(string.Empty))
+                {
+                    DateTime actual = databaseConnector.ExecuteScalar<DateTime>(query);
+                }
+            }
+            finally
+            {
+                DatabaseConnector.CommitGlobalTransaction();
+            }
+        }
 
-		[TestMethod]
-		public void LoadMerchantsAndCommitWithLocalTransaction() {
+        [TestMethod]
+        public void LoadMerchantsAndCommitWithLocalTransaction()
+        {
 
-			string query = @"SELECT Merchant.Name FROM Merchant WHERE MerchantId = @MerchantId;";
+            string query = @"SELECT Merchant.Name FROM Merchant WHERE MerchantId = @MerchantId;";
 
-			MerchantData actual = null;
+            MerchantData actual = null;
 
-			DatabaseConnector databaseConnector = new DatabaseConnector(connectionString);
+            DatabaseConnector databaseConnector = new DatabaseConnector(connectionString);
 
-			try {
-				// Inicializa uma transação de banco de dados.
-				databaseConnector.BeginTransaction();
+            try
+            {
+                // Inicializa uma transação de banco de dados.
+                databaseConnector.BeginTransaction();
 
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantId = 1 }).FirstOrDefault();
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantId = 1 }).FirstOrDefault();
 
-				Assert.IsNotNull(actual);
-				Assert.AreEqual("Merchant Number One", actual.Name);
+                Assert.IsNotNull(actual);
+                Assert.AreEqual("Merchant Number One", actual.Name);
 
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantId = 2 }).FirstOrDefault();
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantId = 2 }).FirstOrDefault();
 
-				Assert.IsNotNull(actual);
-				Assert.AreEqual("Another Merchant", actual.Name);
+                Assert.IsNotNull(actual);
+                Assert.AreEqual("Another Merchant", actual.Name);
 
-				databaseConnector.Commit();
-			}
-			catch {
-				databaseConnector.Rollback();
-			}
-			finally {
-				databaseConnector.Close();
-			}
-		}
+                databaseConnector.Commit();
+            }
+            catch
+            {
+                databaseConnector.Rollback();
+            }
+            finally
+            {
+                databaseConnector.Close();
+            }
+        }
 
-		[TestMethod]
-		public void LoadMerchantsAndRollbackWithLocalTransaction() {
+        [TestMethod]
+        public void LoadMerchantsAndRollbackWithLocalTransaction()
+        {
 
-			string query = @"SELECT Merchant.Name FROM Merchant WHERE MerchantId = @MerchantId;";
+            string query = @"SELECT Merchant.Name FROM Merchant WHERE MerchantId = @MerchantId;";
 
-			MerchantData actual = null;
+            MerchantData actual = null;
 
-			DatabaseConnector databaseConnector = new DatabaseConnector(connectionString);
+            DatabaseConnector databaseConnector = new DatabaseConnector(connectionString);
 
-			try {
-				// Inicializa uma transação de banco de dados.
-				databaseConnector.BeginTransaction();
+            try
+            {
+                // Inicializa uma transação de banco de dados.
+                databaseConnector.BeginTransaction();
 
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantId = 1 }).FirstOrDefault();
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantId = 1 }).FirstOrDefault();
 
-				Assert.IsNotNull(actual);
-				Assert.AreEqual("Merchant Number One", actual.Name);
+                Assert.IsNotNull(actual);
+                Assert.AreEqual("Merchant Number One", actual.Name);
 
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantId = 2 }).FirstOrDefault();
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantId = 2 }).FirstOrDefault();
 
-				Assert.IsNotNull(actual);
-				Assert.AreEqual("Another Merchant", actual.Name);
-			}
-			finally {
-				databaseConnector.Rollback();
-				databaseConnector.Close();
-			}
-		}
+                Assert.IsNotNull(actual);
+                Assert.AreEqual("Another Merchant", actual.Name);
+            }
+            finally
+            {
+                databaseConnector.Rollback();
+                databaseConnector.Close();
+            }
+        }
 
-		[TestMethod]
-		[ExpectedException(typeof(InvalidOperationException))]
-		public void CommitNullTransaction() {
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void CommitNullTransaction()
+        {
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				databaseConnector.Commit();
-			}
-		}
+                databaseConnector.Commit();
+            }
+        }
 
-		[TestMethod]
-		[ExpectedException(typeof(InvalidOperationException))]
-		public void RollbackNullTransaction() {
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void RollbackNullTransaction()
+        {
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				databaseConnector.Rollback();
-			}
-		}
+                databaseConnector.Rollback();
+            }
+        }
 
-		[TestMethod]
-		public void DatabaseCommitNullTransaction() {
+        [TestMethod]
+        public void DatabaseCommitNullTransaction()
+        {
 
-			DatabaseConnector.CommitGlobalTransaction();
-		}
+            DatabaseConnector.CommitGlobalTransaction();
+        }
 
-		[TestMethod]
-		public void DatabaseRollbackNullTransaction() {
+        [TestMethod]
+        public void DatabaseRollbackNullTransaction()
+        {
 
-			DatabaseConnector.RollbackGlobalTransaction();
-		}
+            DatabaseConnector.RollbackGlobalTransaction();
+        }
 
-		[TestMethod]
-		public void LoadDateTimeWithDatabaseRollbackTransaction() {
+        [TestMethod]
+        public void LoadDateTimeWithDatabaseRollbackTransaction()
+        {
 
-			string query = @"SELECT GETDATE();";
+            string query = @"SELECT GETDATE();";
 
-			DatabaseConnector.BeginGlobalTransaction(connectionString);
+            DatabaseConnector.BeginGlobalTransaction(connectionString);
 
-			try {
-				using (DatabaseConnector databaseConnector = new DatabaseConnector()) {
-					DateTime actual = databaseConnector.ExecuteScalar<DateTime>(query);
-				}
-			}
-			finally {
-				DatabaseConnector.RollbackGlobalTransaction();
-			}
-		}
+            try
+            {
+                using (DatabaseConnector databaseConnector = new DatabaseConnector())
+                {
+                    DateTime actual = databaseConnector.ExecuteScalar<DateTime>(query);
+                }
+            }
+            finally
+            {
+                DatabaseConnector.RollbackGlobalTransaction();
+            }
+        }
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void BeginTransactionWithNullConnectionString() {
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void BeginTransactionWithNullConnectionString()
+        {
 
-			DatabaseConnector.BeginGlobalTransaction(null);
-		}
+            DatabaseConnector.BeginGlobalTransaction(null);
+        }
 
-		[TestMethod]
-		[ExpectedException(typeof(InvalidOperationException))]
-		public void CreateConnectorWithNullTransaction() {
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void CreateConnectorWithNullTransaction()
+        {
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector()) { }
-		}
+            using (DatabaseConnector databaseConnector = new DatabaseConnector()) { }
+        }
 
-		[TestMethod]
-		public void LoadMultipleRowsWithEnumProperty() {
+        [TestMethod]
+        public void LoadMultipleRowsWithEnumProperty()
+        {
 
-			string query = @"SELECT Merchant.Name, Merchant.Status FROM Merchant WHERE Merchant.MerchantId IN (1, 2) ORDER BY Merchant.MerchantId;";
+            string query = @"SELECT Merchant.Name, Merchant.Status FROM Merchant WHERE Merchant.MerchantId IN (1, 2) ORDER BY Merchant.MerchantId;";
 
-			IEnumerable<MerchantData> actual = null;
+            IEnumerable<MerchantData> actual = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query);
-			}
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query);
+            }
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual(2, actual.Count());
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(2, actual.Count());
 
-			Assert.AreEqual(StatusType.Created, actual.ElementAt(0).Status);
-			Assert.AreEqual(StatusType.Disabled, actual.ElementAt(1).Status);
-		}
+            Assert.AreEqual(StatusType.Created, actual.ElementAt(0).Status);
+            Assert.AreEqual(StatusType.Disabled, actual.ElementAt(1).Status);
+        }
 
-		[TestMethod]
-		[ExpectedException(typeof(AggregateException))]
-		public void LoadSingleRowWithInvalidEnumProperty() {
+        [TestMethod]
+        [ExpectedException(typeof(AggregateException))]
+        public void LoadSingleRowWithInvalidEnumProperty()
+        {
 
-			string query = @"SELECT Merchant.Name, Merchant.Status FROM Merchant WHERE Merchant.MerchantId = 3;";
+            string query = @"SELECT Merchant.Name, Merchant.Status FROM Merchant WHERE Merchant.MerchantId = 3;";
 
-			MerchantData actual = null;
+            MerchantData actual = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query).FirstOrDefault();
-			}
-		}
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query).FirstOrDefault();
+            }
+        }
 
-		[TestMethod]
-		public void LoadSingleRowWithEnumParameter() {
+        [TestMethod]
+        public void LoadSingleRowWithEnumParameter()
+        {
 
-			string query = @"SELECT Merchant.Name FROM Merchant WHERE Merchant.Status = @Status;";
+            string query = @"SELECT Merchant.Name FROM Merchant WHERE Merchant.Status = @Status;";
 
-			MerchantData actual = null;
+            MerchantData actual = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { Status = StatusType.Disabled }).FirstOrDefault();
-			}
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { Status = StatusType.Disabled }).FirstOrDefault();
+            }
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual("Another Merchant", actual.Name);
-		}
+            Assert.IsNotNull(actual);
+            Assert.AreEqual("Another Merchant", actual.Name);
+        }
 
-		[TestMethod]
-		public void ParseIntValueToBooleanProperty() {
+        [TestMethod]
+        public void ParseIntValueToBooleanProperty()
+        {
 
-			string query = @"SELECT Merchant.MerchantId FROM Merchant;";
+            string query = @"SELECT Merchant.MerchantId FROM Merchant;";
 
-			IEnumerable<MerchantBool> actual = null;
+            IEnumerable<MerchantBool> actual = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantBool>(query);
-			}
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantBool>(query);
+            }
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual(3, actual.Count());
-			Assert.IsFalse(actual.Any(p => p.MerchantId == false));
-		}
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(3, actual.Count());
+            Assert.IsFalse(actual.Any(p => p.MerchantId == false));
+        }
 
-		[TestMethod]
-		public void SearchWithEmptyStringParameter() {
+        [TestMethod]
+        public void SearchWithEmptyStringParameter()
+        {
 
-			string query = @"SELECT Merchant.MerchantId FROM Merchant WHERE Merchant.Name = @Name;";
+            string query = @"SELECT Merchant.MerchantId FROM Merchant WHERE Merchant.Name = @Name;";
 
-			IEnumerable<MerchantData> actual = null;
+            IEnumerable<MerchantData> actual = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { Name = string.Empty });
-			}
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { Name = string.Empty });
+            }
 
-			Assert.IsNotNull(actual);
-			Assert.IsFalse(actual.Any());
-		}
+            Assert.IsNotNull(actual);
+            Assert.IsFalse(actual.Any());
+        }
 
-		[TestMethod]
-		public void ParseNullParameter() {
+        [TestMethod]
+        public void ParseNullParameter()
+        {
 
-			//PrivateType privateType = new PrivateType(typeof(DatabaseConnector));
-			//object result = privateType.InvokeStatic("ParseProperty", null, null, null, null, null, null, 0, null);
+            //PrivateType privateType = new PrivateType(typeof(DatabaseConnector));
+            //object result = privateType.InvokeStatic("ParseProperty", null, null, null, null, null, null, 0, null);
 
-			PrivateObject privateObject = new PrivateObject(new DatabaseConnector(connectionString));
+            PrivateObject privateObject = new PrivateObject(new DatabaseConnector(connectionString));
 
-			object result = privateObject.Invoke("ParseProperty", null, null, null, null, null, null, 0, null);
+            object result = privateObject.Invoke("ParseProperty", null, null, null, null, null, null, 0, null);
 
-			bool parsedResult = Convert.ToBoolean(result);
+            bool parsedResult = Convert.ToBoolean(result);
 
-			Assert.IsFalse(parsedResult);
-		}
+            Assert.IsFalse(parsedResult);
+        }
 
-		[TestMethod]
-		public void BulkInsert() {
+        [TestMethod]
+        public void BulkInsert()
+        {
 
-			IList<BulkData> source = new List<BulkData>();
+            IList<BulkData> source = new List<BulkData>();
 
-			int dataCount = 100;
+            int dataCount = 100;
 
-			DateTime currentDate = DateTime.UtcNow;
+            DateTime currentDate = DateTime.UtcNow;
 
-			for (int i = 0; i < dataCount; i++) {
+            for (int i = 0; i < dataCount; i++)
+            {
 
-				BulkData bulkData = new BulkData();
+                BulkData bulkData = new BulkData();
 
-				bulkData.Name = string.Format("Name-{0}", i);
+                bulkData.Name = string.Format("Name-{0}", i);
 
-				if (i % 2 == 0) { bulkData.Value = i.ToString(); }
+                if (i % 2 == 0) { bulkData.Value = i.ToString(); }
 
-				bulkData.CreateDate = currentDate;
+                bulkData.CreateDate = currentDate;
 
-				source.Add(bulkData);
-			}
+                source.Add(bulkData);
+            }
 
-			string query = @"DELETE FROM BulkData;";
+            string query = @"DELETE FROM BulkData;";
 
-			int actual = 0;
+            int actual = 0;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				// Limpa qualquer informação pré-existente.
-				databaseConnector.ExecuteNonQuery(query);
+                // Limpa qualquer informação pré-existente.
+                databaseConnector.ExecuteNonQuery(query);
 
-				// Insere os registros.
-				databaseConnector.BulkInsert("BulkData", source);
+                // Insere os registros.
+                databaseConnector.BulkInsert("BulkData", source);
 
-				// Exclui os registros e armazena a quantidade excluída.
-				actual = databaseConnector.ExecuteNonQuery(query);
-			}
+                // Exclui os registros e armazena a quantidade excluída.
+                actual = databaseConnector.ExecuteNonQuery(query);
+            }
 
-			Assert.AreEqual(dataCount, actual);
-		}
+            Assert.AreEqual(dataCount, actual);
+        }
 
-		[TestMethod]
-		[ExpectedException(typeof(InvalidOperationException))]
-		public void BulkInsertMissingMandatoryField() {
+        [TestMethod]
+        public void BulkInsertAttribute()
+        {
+            IList<BulkDataAttribute> source = new List<BulkDataAttribute>();
 
-			IList<BulkData> source = new List<BulkData>();
+            int dataCount = 100;
 
-			int dataCount = 1;
+            DateTime currentDate = DateTime.UtcNow;
 
-			DateTime currentDate = DateTime.UtcNow;
+            for (int i = 0; i < dataCount; i++)
+            {
 
-			for (int i = 0; i < dataCount; i++) {
+                BulkDataAttribute bulkDataAttribute = new BulkDataAttribute();
 
-				BulkData bulkData = new BulkData();
+                bulkDataAttribute.banana = string.Format("Name-{0}", i);
 
-				bulkData.Name = string.Format("Name-{0}", i);
+                if (i % 2 == 0) { bulkDataAttribute.maca = i.ToString(); }
 
-				if (i % 2 == 0) { bulkData.Value = i.ToString(); }
+                bulkDataAttribute.goiaba = currentDate;
 
-				source.Add(bulkData);
-			}
+                source.Add(bulkDataAttribute);
+            }
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            string query = @"DELETE FROM BulkData;";
 
-				// Insere os registros.
-				databaseConnector.BulkInsert("BulkData", source);
-			}
-		}
+            int actual = 0;
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void BulkInsertEmptyTableName() {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+                // Limpa qualquer informação pré-existente.
+                databaseConnector.ExecuteNonQuery(query);
 
-				databaseConnector.BulkInsert(string.Empty, new List<int>());
-			}
-		}
+                // Insere os registros.
+                databaseConnector.BulkInsert("BulkData", source);
 
-		[TestMethod]
-		public void BulkInsertNullCollection() {
+                // Exclui os registros e armazena a quantidade excluída.
+                actual = databaseConnector.ExecuteNonQuery(query);
+            }
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            Assert.AreEqual(dataCount, actual);
+        }
 
-				databaseConnector.BulkInsert("BulkData", null);
-			}
-		}
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void BulkInsertMissingMandatoryField()
+        {
 
-		[TestMethod]
-		public void LoadPagedData() {
+            IList<BulkData> source = new List<BulkData>();
 
-			string query = @"SELECT Merchant.Name, Merchant.MerchantId, Merchant.MerchantKey FROM Merchant;";
+            int dataCount = 1;
 
-			KeyValuePair<int, IEnumerable<MerchantData>> actual;
+            DateTime currentDate = DateTime.UtcNow;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            for (int i = 0; i < dataCount; i++)
+            {
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, 1, 2, "MerchantId", SortDirection.DESC);
-			}
+                BulkData bulkData = new BulkData();
 
-			Assert.AreEqual(3, actual.Key);
-			Assert.IsNotNull(actual.Value);
-			Assert.AreEqual(2, actual.Value.Count());
+                bulkData.Name = string.Format("Name-{0}", i);
 
-			Assert.AreEqual(3, actual.Value.ElementAt(0).MerchantId);
-			Assert.AreEqual(2, actual.Value.ElementAt(1).MerchantId);
-		}
+                if (i % 2 == 0) { bulkData.Value = i.ToString(); }
 
-		[TestMethod]
-		public void LoadPagedDataWithParameters() {
+                source.Add(bulkData);
+            }
 
-			string query = @"SELECT Name, MerchantId, MerchantKey FROM Merchant WHERE Merchant.Status = @Status;";
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-			KeyValuePair<int, IEnumerable<MerchantData>> actual;
+                // Insere os registros.
+                databaseConnector.BulkInsert("BulkData", source);
+            }
+        }
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void BulkInsertEmptyTableName()
+        {
 
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, 1, 2, "MerchantId", SortDirection.DESC, new { Status = StatusType.Disabled });
-			}
+                databaseConnector.BulkInsert(string.Empty, new List<int>());
+            }
+        }
 
-			string output = this.ConnectorOutput.ToString();
+        [TestMethod]
+        public void BulkInsertNullCollection()
+        {
 
-			Assert.AreEqual(1, actual.Key);
-			Assert.IsNotNull(actual.Value);
-			Assert.AreEqual(1, actual.Value.Count());
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-			Assert.AreEqual(2, actual.Value.ElementAt(0).MerchantId);
-		}
+                databaseConnector.BulkInsert("BulkData", null);
+            }
+        }
 
-		[TestMethod]
-		public void LoadPageDataWithInvalidPages() {
+        [TestMethod]
+        public void LoadPagedData()
+        {
 
-			string query = @"SELECT Name, MerchantId, MerchantKey FROM Merchant;";
+            string query = @"SELECT Merchant.Name, Merchant.MerchantId, Merchant.MerchantKey FROM Merchant;";
 
-			KeyValuePair<int, IEnumerable<MerchantData>> actual;
+            KeyValuePair<int, IEnumerable<MerchantData>> actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, 0, 0, "MerchantId", SortDirection.DESC);
-			}
+                actual = databaseConnector.ExecuteReader<MerchantData>(query, 1, 2, "MerchantId", SortDirection.DESC);
+            }
 
-			Assert.AreEqual(3, actual.Key);
-			Assert.IsNotNull(actual.Value);
-			Assert.AreEqual(1, actual.Value.Count());
-		}
+            Assert.AreEqual(3, actual.Key);
+            Assert.IsNotNull(actual.Value);
+            Assert.AreEqual(2, actual.Value.Count());
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void LoadPageDataWithEmptyQuery() {
+            Assert.AreEqual(3, actual.Value.ElementAt(0).MerchantId);
+            Assert.AreEqual(2, actual.Value.ElementAt(1).MerchantId);
+        }
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+        [TestMethod]
+        public void LoadPagedDataWithParameters()
+        {
 
-				databaseConnector.ExecuteReader<MerchantData>(string.Empty, 1, 2, "MerchantId", SortDirection.DESC);
-			}
-		}
+            string query = @"SELECT Name, MerchantId, MerchantKey FROM Merchant WHERE Merchant.Status = @Status;";
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void LoadPageDataWithNullOrderColumn() {
+            KeyValuePair<int, IEnumerable<MerchantData>> actual;
 
-			string query = @"SELECT Name, MerchantId, MerchantKey FROM Merchant;";
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-			KeyValuePair<int, IEnumerable<MerchantData>> actual;
+                databaseConnector.OnOutput += databaseConnector_OnOutput;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+                actual = databaseConnector.ExecuteReader<MerchantData>(query, 1, 2, "MerchantId", SortDirection.DESC, new { Status = StatusType.Disabled });
+            }
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, 0, 0, null, SortDirection.DESC);
-			}
-		}
+            string output = this.ConnectorOutput.ToString();
 
-		[TestMethod]
-		public void LoadPageDataWithSubquery() {
+            Assert.AreEqual(1, actual.Key);
+            Assert.IsNotNull(actual.Value);
+            Assert.AreEqual(1, actual.Value.Count());
 
-			string query = @"SELECT Name, MerchantId, MerchantKey FROM Merchant WHERE MerchantId IN (SELECT MerchantId FROM MerchantConfiguration WHERE IsEnabled = 1);";
+            Assert.AreEqual(2, actual.Value.ElementAt(0).MerchantId);
+        }
 
-			KeyValuePair<int, IEnumerable<MerchantData>> actual;
+        [TestMethod]
+        public void LoadPageDataWithInvalidPages()
+        {
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            string query = @"SELECT Name, MerchantId, MerchantKey FROM Merchant;";
 
-				actual = databaseConnector.ExecuteReader<MerchantData>(query, 1, 2, "MerchantId", SortDirection.DESC);
-			}
+            KeyValuePair<int, IEnumerable<MerchantData>> actual;
 
-			Assert.AreEqual(2, actual.Key);
-			Assert.IsNotNull(actual.Value);
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-			Assert.AreEqual(3, actual.Value.ElementAt(0).MerchantId);
-			Assert.AreEqual(1, actual.Value.ElementAt(1).MerchantId);
-		}
+                actual = databaseConnector.ExecuteReader<MerchantData>(query, 0, 0, "MerchantId", SortDirection.DESC);
+            }
 
-		[TestMethod]
-		public void LoadPageDataWithJoin() {
+            Assert.AreEqual(3, actual.Key);
+            Assert.IsNotNull(actual.Value);
+            Assert.AreEqual(1, actual.Value.Count());
+        }
 
-			string query = @"SELECT Merchant.Name, Merchant.MerchantId, MerchantConfiguration.Url, MerchantConfiguration.IsEnabled
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void LoadPageDataWithEmptyQuery()
+        {
+
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
+
+                databaseConnector.ExecuteReader<MerchantData>(string.Empty, 1, 2, "MerchantId", SortDirection.DESC);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void LoadPageDataWithNullOrderColumn()
+        {
+
+            string query = @"SELECT Name, MerchantId, MerchantKey FROM Merchant;";
+
+            KeyValuePair<int, IEnumerable<MerchantData>> actual;
+
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
+
+                actual = databaseConnector.ExecuteReader<MerchantData>(query, 0, 0, null, SortDirection.DESC);
+            }
+        }
+
+        [TestMethod]
+        public void LoadPageDataWithSubquery()
+        {
+
+            string query = @"SELECT Name, MerchantId, MerchantKey FROM Merchant WHERE MerchantId IN (SELECT MerchantId FROM MerchantConfiguration WHERE IsEnabled = 1);";
+
+            KeyValuePair<int, IEnumerable<MerchantData>> actual;
+
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
+
+                actual = databaseConnector.ExecuteReader<MerchantData>(query, 1, 2, "MerchantId", SortDirection.DESC);
+            }
+
+            Assert.AreEqual(2, actual.Key);
+            Assert.IsNotNull(actual.Value);
+
+            Assert.AreEqual(3, actual.Value.ElementAt(0).MerchantId);
+            Assert.AreEqual(1, actual.Value.ElementAt(1).MerchantId);
+        }
+
+        [TestMethod]
+        public void LoadPageDataWithJoin()
+        {
+
+            string query = @"SELECT Merchant.Name, Merchant.MerchantId, MerchantConfiguration.Url, MerchantConfiguration.IsEnabled
                              FROM Merchant
                              INNER JOIN MerchantConfiguration ON MerchantConfiguration.MerchantId = Merchant.MerchantId;";
 
-			KeyValuePair<int, IEnumerable<MerchantEntity>> actual;
+            KeyValuePair<int, IEnumerable<MerchantEntity>> actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReader<MerchantEntity>(query, 1, 2, "Merchant.MerchantId", SortDirection.ASC);
-			}
+                actual = databaseConnector.ExecuteReader<MerchantEntity>(query, 1, 2, "Merchant.MerchantId", SortDirection.ASC);
+            }
 
-			Assert.AreEqual(3, actual.Key);
-			Assert.IsNotNull(actual.Value);
+            Assert.AreEqual(3, actual.Key);
+            Assert.IsNotNull(actual.Value);
 
-			Assert.AreEqual(1, actual.Value.ElementAt(0).MerchantId);
-			Assert.AreEqual(2, actual.Value.ElementAt(1).MerchantId);
+            Assert.AreEqual(1, actual.Value.ElementAt(0).MerchantId);
+            Assert.AreEqual(2, actual.Value.ElementAt(1).MerchantId);
 
-			Assert.IsNotNull(actual.Value.ElementAt(0).MerchantConfiguration);
-			Assert.IsNotNull(actual.Value.ElementAt(1).MerchantConfiguration);
+            Assert.IsNotNull(actual.Value.ElementAt(0).MerchantConfiguration);
+            Assert.IsNotNull(actual.Value.ElementAt(1).MerchantConfiguration);
 
-			Assert.IsTrue(actual.Value.ElementAt(0).MerchantConfiguration.IsEnabled);
-			Assert.IsFalse(actual.Value.ElementAt(1).MerchantConfiguration.IsEnabled);
-		}
+            Assert.IsTrue(actual.Value.ElementAt(0).MerchantConfiguration.IsEnabled);
+            Assert.IsFalse(actual.Value.ElementAt(1).MerchantConfiguration.IsEnabled);
+        }
 
-		[TestMethod]
-		public void LoadSingleRowWithColumnAlias() {
+        [TestMethod]
+        public void LoadSingleRowWithColumnAlias()
+        {
 
-			string query = @"SELECT Merchant.Name, MerchantConfiguration.Url AS 'Value', Merchant.CreateDate
+            string query = @"SELECT Merchant.Name, MerchantConfiguration.Url AS 'Value', Merchant.CreateDate
                              FROM Merchant
                              INNER JOIN MerchantConfiguration ON MerchantConfiguration.MerchantId = Merchant.MerchantId
                              WHERE Merchant.MerchantId = 1;";
 
-			BulkData actual;
+            BulkData actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<BulkData>(query).FirstOrDefault();
-			}
+                actual = databaseConnector.ExecuteReaderFetchAll<BulkData>(query).FirstOrDefault();
+            }
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual("Merchant Number One", actual.Name);
-			Assert.AreEqual("http://www.merchantnumberone.com.br", actual.Value);
-		}
+            Assert.IsNotNull(actual);
+            Assert.AreEqual("Merchant Number One", actual.Name);
+            Assert.AreEqual("http://www.merchantnumberone.com.br", actual.Value);
+        }
 
-		[TestMethod]
-		public void LoadSingleRowUsingQueryWithComment() {
+        [TestMethod]
+        public void LoadSingleRowUsingQueryWithComment()
+        {
 
-			string query = @"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+            string query = @"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
                                 
                              -- Campos a serem retornados.
                              SELECT Merchant.Name, Merchant.MerchantId
                              FROM Merchant
                              WHERE Merchant.MerchantId = 1;";
 
-			MerchantData actual = null;
+            MerchantData actual = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query).FirstOrDefault();
-			}
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query).FirstOrDefault();
+            }
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual(1, actual.MerchantId);
-		}
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(1, actual.MerchantId);
+        }
 
-		[TestMethod]
-		public void LoadSimpleTypeIds() {
+        [TestMethod]
+        public void LoadSimpleTypeIds()
+        {
 
-			string query = @"SELECT MerchantId FROM Merchant;";
+            string query = @"SELECT MerchantId FROM Merchant;";
 
-			IEnumerable<int> actual = null;
+            IEnumerable<int> actual = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<int>(query);
-			}
+                actual = databaseConnector.ExecuteReaderFetchAll<int>(query);
+            }
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual(3, actual.Count());
-			Assert.IsTrue(actual.Any(p => p == 1));
-			Assert.IsTrue(actual.Any(p => p == 2));
-			Assert.IsTrue(actual.Any(p => p == 3));
-		}
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(3, actual.Count());
+            Assert.IsTrue(actual.Any(p => p == 1));
+            Assert.IsTrue(actual.Any(p => p == 2));
+            Assert.IsTrue(actual.Any(p => p == 3));
+        }
 
-		[TestMethod]
-		public void LoadSimpleTypeKeys() {
+        [TestMethod]
+        public void LoadSimpleTypeKeys()
+        {
 
-			string query = @"SELECT MerchantKey FROM Merchant;";
+            string query = @"SELECT MerchantKey FROM Merchant;";
 
-			IEnumerable<Guid> actual = null;
+            IEnumerable<Guid> actual = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<Guid>(query);
-			}
+                actual = databaseConnector.ExecuteReaderFetchAll<Guid>(query);
+            }
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual(3, actual.Count());
-			Assert.IsTrue(actual.Any(p => p == Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76")));
-			Assert.IsTrue(actual.Any(p => p == Guid.Parse("eb04aaaa-e8ca-4e14-8068-0f3008a716b9")));
-			Assert.IsTrue(actual.Any(p => p == Guid.Parse("c5d66001-8a39-4a04-a22c-d3a190018c46")));
-		}
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(3, actual.Count());
+            Assert.IsTrue(actual.Any(p => p == Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76")));
+            Assert.IsTrue(actual.Any(p => p == Guid.Parse("eb04aaaa-e8ca-4e14-8068-0f3008a716b9")));
+            Assert.IsTrue(actual.Any(p => p == Guid.Parse("c5d66001-8a39-4a04-a22c-d3a190018c46")));
+        }
 
-		[TestMethod]
-		public void LoadSimpleDateTimes() {
+        [TestMethod]
+        public void LoadSimpleDateTimes()
+        {
 
-			string query = @"SELECT CreateDate FROM Merchant;";
+            string query = @"SELECT CreateDate FROM Merchant;";
 
-			IEnumerable<DateTime> actual = null;
+            IEnumerable<DateTime> actual = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<DateTime>(query);
-			}
+                actual = databaseConnector.ExecuteReaderFetchAll<DateTime>(query);
+            }
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual(3, actual.Count());
-		}
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(3, actual.Count());
+        }
 
-		[TestMethod]
-		public void LoadMerchantsWithInClause() {
+        [TestMethod]
+        public void LoadMerchantsWithInClause()
+        {
 
-			string query = @"SELECT Name FROM Merchant WHERE MerchantKey IN (@MerchantKeyCollection)";
+            string query = @"SELECT Name FROM Merchant WHERE MerchantKey IN (@MerchantKeyCollection)";
 
-			IEnumerable<Guid> merchantKeyCollection = new Guid[] { Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76"), Guid.Parse("c5d66001-8a39-4a04-a22c-d3a190018c46") };
+            IEnumerable<Guid> merchantKeyCollection = new Guid[] { Guid.Parse("fee2437e-c810-4c2b-a836-5f619f80bb76"), Guid.Parse("c5d66001-8a39-4a04-a22c-d3a190018c46") };
 
-			IEnumerable<MerchantData> actual;
+            IEnumerable<MerchantData> actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
-				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantKeyCollection = merchantKeyCollection });
-			}
+                databaseConnector.OnOutput += databaseConnector_OnOutput;
+                actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantKeyCollection = merchantKeyCollection });
+            }
 
-			string output = this.ConnectorOutput.ToString();
+            string output = this.ConnectorOutput.ToString();
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual(2, actual.Count());
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(2, actual.Count());
 
-			
 
-			Assert.IsTrue(actual.Any(p => p.Name.Equals("Merchant Number One")));
-			Assert.IsTrue(actual.Any(p => p.Name.Equals("Merchant Test")));
-		}
 
-		[TestMethod]
-		public void LoadMerchantDataForComposedClass() {
+            Assert.IsTrue(actual.Any(p => p.Name.Equals("Merchant Number One")));
+            Assert.IsTrue(actual.Any(p => p.Name.Equals("Merchant Test")));
+        }
 
-			string query = @"SELECT m.Name,
+        [TestMethod]
+        public void LoadMerchantDataForComposedClass()
+        {
+
+            string query = @"SELECT m.Name,
                              m.MerchantId,
                              mc.Url,
                              mc.IsEnabled
@@ -1197,110 +1389,123 @@ namespace Dlp.Connectors.Test {
                              INNER JOIN MerchantConfiguration mc ON mc.MerchantId = m.MerchantId
                              WHERE m.MerchantId = @MerchantId";
 
-			ComposedMerchant actual;
+            ComposedMerchant actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				actual = databaseConnector.ExecuteReaderFetchAll<ComposedMerchant>(query, new { MerchantId = 1 }).FirstOrDefault();
-			}
+                actual = databaseConnector.ExecuteReaderFetchAll<ComposedMerchant>(query, new { MerchantId = 1 }).FirstOrDefault();
+            }
 
-			Assert.IsNotNull(actual);
-		}
+            Assert.IsNotNull(actual);
+        }
 
-		[TestMethod]
-		public void MultipleTransactions() {
+        [TestMethod]
+        public void MultipleTransactions()
+        {
 
-			DatabaseConnector databaseConnector = new DatabaseConnector(connectionString);
+            DatabaseConnector databaseConnector = new DatabaseConnector(connectionString);
 
-			//DatabaseConnector.BeginTransaction(connectionString);
+            //DatabaseConnector.BeginTransaction(connectionString);
 
-			try {
-				databaseConnector.BeginTransaction();
+            try
+            {
+                databaseConnector.BeginTransaction();
 
-				databaseConnector.ExecuteNonQuery("SELECT banana FROM Merchant;");
+                databaseConnector.ExecuteNonQuery("SELECT banana FROM Merchant;");
 
-				databaseConnector.Commit();
+                databaseConnector.Commit();
 
-				//DatabaseConnector.CommitTransaction();
-			}
-			catch (Exception) {
+                //DatabaseConnector.CommitTransaction();
+            }
+            catch (Exception)
+            {
 
-				//DatabaseConnector.RollbackTransaction();
-				databaseConnector.Rollback();
-			}
+                //DatabaseConnector.RollbackTransaction();
+                databaseConnector.Rollback();
+            }
 
-			using (DatabaseConnector dbConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector dbConnector = new DatabaseConnector(connectionString))
+            {
 
-				DateTime dateTime = dbConnector.ExecuteScalar<DateTime>("SELECT GETUTCDATE();");
-			}
-		}
+                DateTime dateTime = dbConnector.ExecuteScalar<DateTime>("SELECT GETUTCDATE();");
+            }
+        }
 
-		[TestMethod]
-		public void MapNonEntityClass() {
+        [TestMethod]
+        public void MapNonEntityClass()
+        {
 
-			string query = @"SELECT m.Name AS MistypedName, m.MerchantId AS MistypedMerchantId,
+            string query = @"SELECT m.Name AS MistypedName, m.MerchantId AS MistypedMerchantId,
                              mc.Url AS 'SubProperty.Address', mc.IsEnabled AS 'SubProperty.AnotherSubProperty.IsEnabled'
                              FROM Merchant m
                              INNER JOIN MerchantConfiguration mc ON mc.MerchantId = m.MerchantId
                              WHERE m.MerchantId = 1;";
 
-			MistypedClass result = null;
+            MistypedClass result = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				result = databaseConnector.ExecuteReaderFetchAll<MistypedClass>(query).FirstOrDefault();
-			}
+                result = databaseConnector.ExecuteReaderFetchAll<MistypedClass>(query).FirstOrDefault();
+            }
 
-			Assert.IsNotNull(result);
-		}
+            Assert.IsNotNull(result);
+        }
 
-		[TestMethod]
-		public void LoadMerchantIdWithScalarAndInClause() {
+        [TestMethod]
+        public void LoadMerchantIdWithScalarAndInClause()
+        {
 
-			string query = @"SELECT Merchant.Name FROM Merchant WHERE Merchant.MerchantId IN (@MerchantIds);";
+            string query = @"SELECT Merchant.Name FROM Merchant WHERE Merchant.MerchantId IN (@MerchantIds);";
 
-			IEnumerable<int> merchantIds = new int[] { 1 };
+            IEnumerable<int> merchantIds = new int[] { 1 };
 
-			string result = null;
+            string result = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				result = databaseConnector.ExecuteScalar<string>(query, new { MerchantIds = merchantIds });
-			}
+                result = databaseConnector.ExecuteScalar<string>(query, new { MerchantIds = merchantIds });
+            }
 
-			Assert.IsNotNull(result);
-			Assert.AreEqual(result, "Merchant Number One");
-		}
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result, "Merchant Number One");
+        }
 
-		[TestMethod]
-		public void UntrustedColumnNameWithJoin() {
+        [TestMethod]
+        public void UntrustedColumnNameWithJoin()
+        {
 
-			string query = @"SELECT sr.Id, sr.Name, sr.SimpleTableId FROM SimpleTableRelationship AS sr INNER JOIN SimpleTable s ON s.Id = sr.SimpleTableId WHERE sr.Name LIKE 'Main configuration'";
+            string query = @"SELECT sr.Id, sr.Name, sr.SimpleTableId FROM SimpleTableRelationship AS sr INNER JOIN SimpleTable s ON s.Id = sr.SimpleTableId WHERE sr.Name LIKE 'Main configuration'";
 
-			SimpleTableRelationship result = null;
+            SimpleTableRelationship result = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				result = databaseConnector.ExecuteReaderFetchAll<SimpleTableRelationship>(query).FirstOrDefault();
-			}
+                result = databaseConnector.ExecuteReaderFetchAll<SimpleTableRelationship>(query).FirstOrDefault();
+            }
 
-			Assert.IsNotNull(result);
-			Assert.AreEqual(result.Id, 2);
-			Assert.AreEqual(result.SimpleTableId, 1);
-			Assert.AreEqual(result.Name, "Main configuration");
-		}
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.Id, 2);
+            Assert.AreEqual(result.SimpleTableId, 1);
+            Assert.AreEqual(result.Name, "Main configuration");
+        }
 
-		[TestMethod]
-		public void LoadSubProperties() {
+        [TestMethod]
+        public void LoadSubProperties()
+        {
 
-			string query = @"SELECT Id, AddressId AS 'Address.Id', ContactId AS 'Contact.Id', Name AS 'Contact.Name' FROM Lead WHERE Id = @LeadId;";
+            string query = @"SELECT Id, AddressId AS 'Address.Id', ContactId AS 'Contact.Id', Name AS 'Contact.Name' FROM Lead WHERE Id = @LeadId;";
 
-			Lead result = null;
+            Lead result = null;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString))
+            {
 
-				result = databaseConnector.ExecuteReaderFetchAll<Lead>(query, new { @LeadId = 1 }).FirstOrDefault();
-			}
-		}
-	}
+                result = databaseConnector.ExecuteReaderFetchAll<Lead>(query, new { @LeadId = 1 }).FirstOrDefault();
+            }
+        }
+    }
 }

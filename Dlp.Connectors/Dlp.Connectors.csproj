@@ -40,8 +40,9 @@
     <DocumentationFile>bin\Release\Dlp.Connectors.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dlp.Framework">
+    <Reference Include="Dlp.Framework, Version=0.1.5736.32044, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dlp.Framework.dll.0.8.4\lib\net45\Dlp.Framework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheConnector.cs" />
+    <Compile Include="ColumnNameAttribute.cs" />
     <Compile Include="DatabaseConnector.cs" />
     <Compile Include="ICacheConnector.cs" />
     <Compile Include="IDisposableEnumerable.cs" />

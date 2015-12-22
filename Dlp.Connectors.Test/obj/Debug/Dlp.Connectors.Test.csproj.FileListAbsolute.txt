@@ -9,3 +9,16 @@ C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Framework.xml
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.csprojResolveAssemblyReference.cache
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.dll
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.pdb
+C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.csprojResolveAssemblyReference.cache
+C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\UnitTestDatabase.mdf
+C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.Test.dll
+C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.Test.pdb
+C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.dll
+C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Framework.dll
+C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.pdb
+C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.xml
+C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.xml
+C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Framework.xml
+C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.dll
+C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.pdb
