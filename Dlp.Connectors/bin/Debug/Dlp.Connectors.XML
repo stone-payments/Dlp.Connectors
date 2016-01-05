@@ -139,7 +139,7 @@
         </member>
         <member name="M:Dlp.Connectors.ColumnMapperAttribute.#ctor">
             <summary>
-            Specifies the mapping options for this Property. 
+            Specifies the mapping options for this Property.
             </summary>
         </member>
         <member name="M:Dlp.Connectors.ColumnMapperAttribute.#ctor(System.String)">
