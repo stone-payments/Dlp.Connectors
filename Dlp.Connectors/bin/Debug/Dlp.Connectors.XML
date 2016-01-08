@@ -871,7 +871,7 @@
         </member>
         <member name="P:Dlp.Connectors.DatabaseConnector.Connection">
             <summary>
-            Gets or sets the database connection used by this connector.
+            Gets the database connection used by this instance.
             </summary>
         </member>
         <member name="P:Dlp.Connectors.DatabaseConnector.Transaction">

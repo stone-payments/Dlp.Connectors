@@ -75,9 +75,9 @@ namespace Dlp.Connectors {
 		public event OutputEventHandler OnOutput;
 
 		/// <summary>
-		/// Gets or sets the database connection used by this connector.
+		/// Gets the database connection used by this instance.
 		/// </summary>
-		private SqlConnection Connection { get; set; }
+		public SqlConnection Connection { get; private set; }
 
 		/// <summary>
 		/// Gets or sets the current database transaction.
@@ -302,10 +302,14 @@ namespace Dlp.Connectors {
 			for (int i = 0; i < fields.Length; i++) {
 
 				// Separa o nome da tabela do nome da coluna.
-				string[] field = fields[i].Split(new[] { "." }, StringSplitOptions.None);
+				string[] fieldData = fields[i].Split(new[] { "." }, StringSplitOptions.None);
+
+				string fieldName = (fieldData.Length > 1) ? fieldData[1] : fieldData[0];
+
+				string[] columnName = fieldName.Split(new[] { " AS ", " as " }, StringSplitOptions.None);
 
 				// Concatena a string com o nome das colunas sem nomes de tabelas.
-				rawFields = string.Format("{0}, {1}", rawFields, (field.Length > 1) ? field[1] : field[0]);
+				rawFields = string.Format("{0}, {1}", rawFields, (columnName.Length > 1) ? columnName[1] : columnName[0]);
 			}
 
 			// Remove qualquer vírgula extra.

@@ -1358,5 +1358,60 @@ namespace Dlp.Connectors.Test {
 				result = databaseConnector.ExecuteReaderFetchAll<Lead>(query, new { @LeadId = 1 }).FirstOrDefault();
 			}
 		}
+
+		[TestMethod]
+		public void IsEnabledTest() {
+
+			string connection = @"Data Source=RJ10_DSK006\SQLEXPRESS;Initial Catalog=Balthazar;Persist Security Info=True;User ID=AppDbUser;password=bbnsDoTVGpXIaLvgGsf8;Application Name=Balthazar;";
+
+			string query = @"SELECT PRODUCT.[ProductId] AS ProductId
+							,PRODUCT.[CustomerId] AS CustomerId
+							,PRODUCT.[CreateDate] AS CreateDate
+							,PRODUCT.[ProductName] AS ProductName
+							,PRODUCT.[Description] AS Description
+							,PRODUCT.[AmountInCents] AS AmountInCents
+							,PRODUCT.[ImageUrl] AS ImageURL
+							,PRODUCT.[IsEnabled] AS IsProductEnabled
+
+							,PRODUCTCATEGORY.[ProductCategoryId] AS ProductCategoryId
+							,PRODUCTCATEGORY.[CategoryName] AS CategoryName
+							,PRODUCTCATEGORY.[IsEnabled] AS IsCategoryEnabled
+
+							FROM [dbo].[Product] PRODUCT
+							INNER JOIN [dbo].[ProductCategory] PRODUCTCATEGORY ON PRODUCT.[ProductCategoryId] = PRODUCTCATEGORY.[ProductCategoryId]
+							WHERE PRODUCT.[CustomerId] = @CustomerId";
+
+			using (DatabaseConnector databaseConnector = new DatabaseConnector(connection)) {
+
+				KeyValuePair<int, IEnumerable<ProductEntity>> result = databaseConnector.ExecuteReader<ProductEntity>(query, 1, 10, "ProductName", SortDirection.ASC, new { CustomerId = 1 });
+			}
+		}
 	}
+
+	public sealed class ProductEntity {
+
+        public ProductEntity() { }
+
+        public long ProductId { get; set; }
+
+        public long CustomerId { get; set; }
+
+        public DateTime CreateDate { get; set; }
+
+        public string ProductName { get; set; }
+
+        public string Description { get; set; }
+
+        public long AmountInCents { get; set; }
+
+        public string ImageURL { get; set; }
+
+        public bool IsProductEnabled { get; set; }
+
+        public long ProductCategoryId { get; set; }
+
+        public string CategoryName { get; set; }
+
+        public bool IsCategoryEnabled { get; set; }
+    }
 }

@@ -139,7 +139,7 @@
         </member>
         <member name="M:Dlp.Connectors.ColumnMapperAttribute.#ctor">
             <summary>
-            Specifies the mapping options for this Property. 
+            Specifies the mapping options for this Property.
             </summary>
         </member>
         <member name="M:Dlp.Connectors.ColumnMapperAttribute.#ctor(System.String)">
@@ -871,7 +871,7 @@
         </member>
         <member name="P:Dlp.Connectors.DatabaseConnector.Connection">
             <summary>
-            Gets or sets the database connection used by this connector.
+            Gets the database connection used by this instance.
             </summary>
         </member>
         <member name="P:Dlp.Connectors.DatabaseConnector.Transaction">
