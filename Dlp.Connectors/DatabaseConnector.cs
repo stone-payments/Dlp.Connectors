@@ -885,8 +885,14 @@ namespace Dlp.Connectors {
 
 			this.WriteOutput("ParseProperty", string.Format("Mapeando os dados da coluna '{0}' para o objeto {1}.", columnName, returnType.Name));
 
-			// Armazena todas as propriedades do objeto. Importante obter a propriedade desta coleção para que a busca possa ser case insensitive, ao contrário do GetProperty do reflection.
-			//PropertyInfo[] returnTypeProperties = returnType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+			// Extrai os dados da coluna que estamos trabalhando, a partir do schema.
+			DataRow dataRow = schemaTable.Select("ColumnName = '" + columnName + "' AND ColumnOrdinal = " + ordinal).FirstOrDefault();
+
+			// Obtém o nome da tabela a qual a coluna pertence. O nome fica armazenado na coluna 11 para Sql ou 8 para SqlCe.
+			string tableName = (dataRow != null) ? dataRow["BaseTableName"].ToString() : null;
+
+			// Obtém a propriedade que possui o mesmo nome da propriedade encontrada na consulta ao banco.
+			PropertyInfo propertyInfo = null;
 
 			string explicitClassName = null;
 			string explicitPropertyName = null;
@@ -909,19 +915,24 @@ namespace Dlp.Connectors {
 			string memberName = explicitClassName ?? propertyName;
 
 			if (string.IsNullOrWhiteSpace(explicitClassName) == true) {
-				// Sai do método caso a propriedade já tenha sido mapeada.
-				//if (mappedProperties.Contains(returnType.Name + "." + ((string.IsNullOrWhiteSpace(memberName) == false) ? memberName + "." : string.Empty) + propertyName) == true) { return false; }
-				if (mappedProperties.Contains(returnType.Name + "." + propertyName) == true) { return false; }
+
+				// Verifica se a propriedade já foi mapeada.
+				if (mappedProperties.Contains(returnType.Name + "." + propertyName) == true) {
+
+					// Caso a propriedade já tenha sido mapeada, verifica se existe alguma sub-propriedade com o mesmo nome da tabela, para verificar se não é uma propriedade filha.
+					propertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(tableName, StringComparison.OrdinalIgnoreCase));
+
+					// Caso não exista uma propriedade com o nome da tabela, nada será mapeado para a coluna atual.
+					if (propertyInfo == null) { return false; }
+				}
 			}
 
-			// Obtém a propriedade que possui o mesmo nome da propriedade encontrada na consulta ao banco.
-			PropertyInfo propertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
+			if (propertyInfo == null) {
+				// Obtém a propriedade que possui o mesmo nome da propriedade encontrada na consulta ao banco.
+				propertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
+			}
 
-			// Extrai os dados da coluna que estamos trabalhando, a partir do schema.
-			DataRow dataRow = schemaTable.Select("ColumnName = '" + columnName + "' AND ColumnOrdinal = " + ordinal).FirstOrDefault();
-
-			// Obtém o nome da tabela a qual a coluna pertence. O nome fica armazenado na coluna 11 para Sql ou 8 para SqlCe.
-			string tableName = (dataRow != null) ? (explicitClassName ?? dataRow["BaseTableName"].ToString()) : explicitClassName;
+			if (string.IsNullOrWhiteSpace(tableName) == true) { tableName = explicitClassName; }
 
 			this.WriteOutput("ParseProperty", string.Format("Tabela de origem da coluna '{0}': '{1}'.", columnName, tableName));
 
@@ -930,7 +941,7 @@ namespace Dlp.Connectors {
 			if (string.IsNullOrWhiteSpace(tableName) == false) {
 
 				//  Se a propriedade não foi encontrada, não é possível fazer o mapeamento do valor da coluna.
-				if ((returnType.GetProperty(tableName) != null || propertyInfo == null || mappedProperties.IndexOf(returnType.Name + "." + propertyInfo.Name) >= 0) && (propertyInfo == null || (propertyInfo.PropertyType.FullName.IndexOf("System.") < 0 && propertyInfo.PropertyType.IsEnum == false))) {
+				if ((returnType.GetProperty(memberName) != null || propertyInfo == null || mappedProperties.IndexOf(returnType.Name + "." + propertyInfo.Name) >= 0) && (propertyInfo == null || (propertyInfo.PropertyType.FullName.IndexOf("System.") < 0 && propertyInfo.PropertyType.IsEnum == false))) {
 
 					this.WriteOutput("ParseProperty", string.Format("Nenhuma propriedade encontrada no objeto '{0}' para a coluna '{1}'.", returnType.Name, propertyName));
 
@@ -1004,7 +1015,6 @@ namespace Dlp.Connectors {
 
 				// Adiciona a propriedade na lista de dados já mapeados.
 				mappedProperties.Add(returnType.Name + "." + propertyName);
-				//mappedProperties.Add(returnType.Name + "." + ((string.IsNullOrWhiteSpace(memberName) == false) ? memberName + "." : string.Empty) + propertyName);
 			}
 
 			return true;

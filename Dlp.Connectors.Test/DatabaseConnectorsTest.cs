@@ -1386,32 +1386,65 @@ namespace Dlp.Connectors.Test {
 				KeyValuePair<int, IEnumerable<ProductEntity>> result = databaseConnector.ExecuteReader<ProductEntity>(query, 1, 10, "ProductName", SortDirection.ASC, new { CustomerId = 1 });
 			}
 		}
+
+		[TestMethod]
+		public void MyTestMethod() {
+
+			string query = @"SELECT users.UserId, users.Name, AccountActivation.UserId, accountactivation.activationdate
+							FROM Users INNER JOIN AccountActivation ON Users.UserId = AccountActivation.UserId
+							WHERE Users.UserId = 9";
+
+			using (DatabaseConnector connector = new DatabaseConnector("Data Source=RJ10_DSK006\\SQLEXPRESS;Initial Catalog=GlobalIdentity;Persist Security Info=True;User ID=AppDbUser;password=bbnsDoTVGpXIaLvgGsf8;Application Name=Dlp.GlobalIdentity;")) {
+
+				User user = connector.ExecuteReader<User>(query).FirstOrDefault();
+			}
+		}
+	}
+
+	public sealed class User {
+
+		public User() { }
+
+		public long UserId { get; set; }
+
+		public string Name { get; set; }
+
+		public UserActivation AccountActivation { get; set; }
+	}
+
+	public sealed class UserActivation {
+
+		public UserActivation() { }
+
+		public long UserId { get; set; }
+
+		public Nullable<DateTime> ActivationDate { get; set; }
 	}
 
 	public sealed class ProductEntity {
 
-        public ProductEntity() { }
+		public ProductEntity() { }
 
-        public long ProductId { get; set; }
+		public long ProductId { get; set; }
 
-        public long CustomerId { get; set; }
+		public long CustomerId { get; set; }
 
-        public DateTime CreateDate { get; set; }
+		public DateTime CreateDate { get; set; }
 
-        public string ProductName { get; set; }
+		public string ProductName { get; set; }
 
-        public string Description { get; set; }
+		public string Description { get; set; }
 
-        public long AmountInCents { get; set; }
+		public long AmountInCents { get; set; }
 
-        public string ImageURL { get; set; }
+		public string ImageURL { get; set; }
 
-        public bool IsProductEnabled { get; set; }
+		public bool IsProductEnabled { get; set; }
 
-        public long ProductCategoryId { get; set; }
+		public long ProductCategoryId { get; set; }
 
-        public string CategoryName { get; set; }
+		public string CategoryName { get; set; }
 
-        public bool IsCategoryEnabled { get; set; }
-    }
+		public bool IsCategoryEnabled { get; set; }
+	}
 }
