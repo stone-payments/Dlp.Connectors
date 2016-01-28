@@ -1358,47 +1358,6 @@ namespace Dlp.Connectors.Test {
 				result = databaseConnector.ExecuteReaderFetchAll<Lead>(query, new { @LeadId = 1 }).FirstOrDefault();
 			}
 		}
-
-		[TestMethod]
-		public void IsEnabledTest() {
-
-			string connection = @"Data Source=RJ10_DSK006\SQLEXPRESS;Initial Catalog=Balthazar;Persist Security Info=True;User ID=AppDbUser;password=bbnsDoTVGpXIaLvgGsf8;Application Name=Balthazar;";
-
-			string query = @"SELECT PRODUCT.[ProductId] AS ProductId
-							,PRODUCT.[CustomerId] AS CustomerId
-							,PRODUCT.[CreateDate] AS CreateDate
-							,PRODUCT.[ProductName] AS ProductName
-							,PRODUCT.[Description] AS Description
-							,PRODUCT.[AmountInCents] AS AmountInCents
-							,PRODUCT.[ImageUrl] AS ImageURL
-							,PRODUCT.[IsEnabled] AS IsProductEnabled
-
-							,PRODUCTCATEGORY.[ProductCategoryId] AS ProductCategoryId
-							,PRODUCTCATEGORY.[CategoryName] AS CategoryName
-							,PRODUCTCATEGORY.[IsEnabled] AS IsCategoryEnabled
-
-							FROM [dbo].[Product] PRODUCT
-							INNER JOIN [dbo].[ProductCategory] PRODUCTCATEGORY ON PRODUCT.[ProductCategoryId] = PRODUCTCATEGORY.[ProductCategoryId]
-							WHERE PRODUCT.[CustomerId] = @CustomerId";
-
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connection)) {
-
-				KeyValuePair<int, IEnumerable<ProductEntity>> result = databaseConnector.ExecuteReader<ProductEntity>(query, 1, 10, "ProductName", SortDirection.ASC, new { CustomerId = 1 });
-			}
-		}
-
-		[TestMethod]
-		public void MyTestMethod() {
-
-			string query = @"SELECT users.UserId, users.Name, AccountActivation.UserId, accountactivation.activationdate
-							FROM Users INNER JOIN AccountActivation ON Users.UserId = AccountActivation.UserId
-							WHERE Users.UserId = 9";
-
-			using (DatabaseConnector connector = new DatabaseConnector("Data Source=RJ10_DSK006\\SQLEXPRESS;Initial Catalog=GlobalIdentity;Persist Security Info=True;User ID=AppDbUser;password=bbnsDoTVGpXIaLvgGsf8;Application Name=Dlp.GlobalIdentity;")) {
-
-				User user = connector.ExecuteReader<User>(query).FirstOrDefault();
-			}
-		}
 	}
 
 	public sealed class User {

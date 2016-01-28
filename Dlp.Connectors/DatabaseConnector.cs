@@ -301,15 +301,22 @@ namespace Dlp.Connectors {
 			// Extrai o nome de cada coluna, sem o nome da tabela a qual pertence.
 			for (int i = 0; i < fields.Length; i++) {
 
-				// Separa o nome da tabela do nome da coluna.
-				string[] fieldData = fields[i].Split(new[] { "." }, StringSplitOptions.None);
+				string[] partsByAlias = fields[i].Split(new[] { " AS ", " as " }, StringSplitOptions.None);
 
-				string fieldName = (fieldData.Length > 1) ? fieldData[1] : fieldData[0];
+				string columnName = string.Empty;
 
-				string[] columnName = fieldName.Split(new[] { " AS ", " as " }, StringSplitOptions.None);
+				// Caso exista um alias, utiliza-o como nome da coluna.
+				if (partsByAlias.Length >= 2) { columnName = partsByAlias.Last(); }
+				else {
+
+					// Separa o nome da tabela do nome da coluna.
+					string[] fieldData = fields[i].Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+
+					columnName = fieldData.Last();
+				}
 
 				// Concatena a string com o nome das colunas sem nomes de tabelas.
-				rawFields = string.Format("{0}, {1}", rawFields, (columnName.Length > 1) ? columnName[1] : columnName[0]);
+				rawFields = string.Format("{0}, {1}", rawFields, columnName);
 			}
 
 			// Remove qualquer vírgula extra.
