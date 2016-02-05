@@ -953,7 +953,7 @@ namespace Dlp.Connectors {
 					this.WriteOutput("ParseProperty", string.Format("Nenhuma propriedade encontrada no objeto '{0}' para a coluna '{1}'.", returnType.Name, propertyName));
 
 					// Procura uma propriedade com o mesmo nome da tabela.
-					PropertyInfo subPropertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(tableName, StringComparison.OrdinalIgnoreCase));
+					PropertyInfo subPropertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(explicitClassName ?? tableName, StringComparison.OrdinalIgnoreCase));
 
 					// Sai do método caso não exista uma propriedade com o nome da tabela.
 					if (subPropertyInfo == null) { return false; }

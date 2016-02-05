@@ -1358,6 +1358,57 @@ namespace Dlp.Connectors.Test {
 				result = databaseConnector.ExecuteReaderFetchAll<Lead>(query, new { @LeadId = 1 }).FirstOrDefault();
 			}
 		}
+
+		[TestMethod]
+		public void TripleDepthMapper_Test() {
+
+			string query = @"SELECT Users.Name, Users.UserId, Applications.ApplicationName AS 'App.ApplicationName', Applications.ApplicationId AS 'App.ApplicationId',
+							 Organization.OrganizationName AS 'App.Org.OrganizationName', Organization.OrganizationId AS 'App.Org.OrganizationId'
+							 FROM Users
+							 INNER JOIN Applications ON Applications.ParentUserId = Users.UserId
+							 INNER JOIN Organization ON Organization.OrganizationId = Applications.OrganizationId
+							 WHERE Users.UserId = 9";
+
+			string connectionString = @"Data Source=RJ10_DSK006\SQLEXPRESS;Initial Catalog=GlobalIdentity;Persist Security Info=True;User ID=AppDbUser;password=bbnsDoTVGpXIaLvgGsf8;Application Name=Dlp.GlobalIdentity;";
+
+			UserType user = null;
+
+			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+				user = databaseConnector.ExecuteReader<UserType>(query).FirstOrDefault();
+			}
+		}
+	}
+
+	public sealed class UserType {
+
+		public UserType() { }
+
+		public long UserId { get; set; }
+
+		public string Name { get; set; }
+
+		public ApplicationType App { get; set; }
+	}
+
+	public sealed class ApplicationType {
+
+		public ApplicationType() { }
+
+		public string ApplicationName { get; set; }
+
+		public long ApplicationId { get; set; }
+
+		public OrganizationType Org { get; set; }
+	}
+
+	public sealed class OrganizationType {
+
+		public OrganizationType() { }
+
+		public long OrganizationId { get; set; }
+
+		public string OrganizationName { get; set; }
 	}
 
 	public sealed class User {
