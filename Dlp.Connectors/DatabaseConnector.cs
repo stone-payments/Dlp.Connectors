@@ -926,78 +926,108 @@ namespace Dlp.Connectors {
 				// Verifica se a propriedade já foi mapeada.
 				if (mappedProperties.Contains(returnType.Name + "." + propertyName) == true) {
 
-					// Caso a propriedade já tenha sido mapeada, verifica se existe alguma sub-propriedade com o mesmo nome da tabela, para verificar se não é uma propriedade filha.
-					propertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(tableName, StringComparison.OrdinalIgnoreCase));
+					//	// Caso a propriedade já tenha sido mapeada, verifica se existe alguma sub-propriedade com o mesmo nome da tabela, para verificar se não é uma propriedade filha.
+					//	propertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(tableName, StringComparison.OrdinalIgnoreCase));
 
-					// Caso não exista uma propriedade com o nome da tabela, nada será mapeado para a coluna atual.
-					if (propertyInfo == null) { return false; }
+					//	// Caso não exista uma propriedade com o nome da tabela, nada será mapeado para a coluna atual.
+					//	if (propertyInfo == null) { return false; }
+
+					return true;
 				}
-			}
-
-			if (propertyInfo == null) {
-				// Obtém a propriedade que possui o mesmo nome da propriedade encontrada na consulta ao banco.
-				propertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
 			}
 
 			if (string.IsNullOrWhiteSpace(tableName) == true) { tableName = explicitClassName; }
 
-			this.WriteOutput("ParseProperty", string.Format("Tabela de origem da coluna '{0}': '{1}'.", columnName, tableName));
+			if (propertyInfo == null) {
 
-			if (propertyInfo == null && string.IsNullOrWhiteSpace(tableName) == true) { return false; }
+				// Verifica se existe um membro com o nome da tabela/classe, que possa conter a propriedade que receberá o valor da coluna.
+				propertyInfo = returnTypeProperties.FirstOrDefault(p => (p.Name.Equals(tableName, StringComparison.OrdinalIgnoreCase) || p.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase)) && p.PropertyType.FullName.IndexOf("System.") < 0 && p.PropertyType.IsEnum == false);
 
-			if (string.IsNullOrWhiteSpace(tableName) == false) {
-
-				//  Se a propriedade não foi encontrada, não é possível fazer o mapeamento do valor da coluna.
-				if ((returnType.GetProperty(memberName) != null || propertyInfo == null || mappedProperties.IndexOf(returnType.Name + "." + propertyInfo.Name) >= 0) && (propertyInfo == null || (propertyInfo.PropertyType.FullName.IndexOf("System.") < 0 && propertyInfo.PropertyType.IsEnum == false))) {
-
-					this.WriteOutput("ParseProperty", string.Format("Nenhuma propriedade encontrada no objeto '{0}' para a coluna '{1}'.", returnType.Name, propertyName));
-
-					// Procura uma propriedade com o mesmo nome da tabela.
-					PropertyInfo subPropertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(explicitClassName ?? tableName, StringComparison.OrdinalIgnoreCase));
-
-					// Sai do método caso não exista uma propriedade com o nome da tabela.
-					if (subPropertyInfo == null) { return false; }
+				if (propertyInfo != null) {
 
 					// Armazena o tipo da sub-propriedade.
-					Type subPropertyType = subPropertyInfo.PropertyType;
-
-					// Sai do método caso a propriedade já tenha sido mapeada.
-					if (mappedProperties.Contains(returnType.Name + "." + subPropertyType.Name + "." + propertyName) == true) { return false; }
-
-					// Verifica se a propriedade a ser mapeada é do tipo enum.
-					if (subPropertyType.IsEnum == true) {
-
-						object value = Enum.Parse(subPropertyType, databaseValue.ToString(), true);
-
-						// Define o valor da propriedade.
-						subPropertyInfo.SetValue(returnInstance, value, null);
-
-						// Adiciona a propriedade na lista de dados já mapeados.
-						mappedProperties.Add(returnType.Name + "." + subPropertyType.Name + "." + propertyName);
-
-						return true;
-					}
+					Type subPropertyType = propertyInfo.PropertyType;
 
 					// Tenta obter uma instancia para o sub-objeto. Caso não exista uma definida, cria uma nova.
-					object subPropertyInstance = subPropertyInfo.GetValue(returnInstance, null) ?? Activator.CreateInstance(subPropertyType);
+					object subPropertyInstance = propertyInfo.GetValue(returnInstance, null) ?? Activator.CreateInstance(subPropertyType);
 
 					PropertyInfo[] subPropertyTypeProperties = subPropertyType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
-					// Verifica se a propriedade comporta o valor encontrado no banco de dados.
 					if (this.ParseProperty(subPropertyType, subPropertyTypeProperties, schemaTable, subPropertyInstance, propertyName ?? columnName, databaseValue, ordinal, mappedProperties) == true) {
 
 						// Define o valor da propriedade encontrada.
-						subPropertyInfo.SetValue(returnInstance, subPropertyInstance, null);
-
-						// Adiciona a propriedade na lista de dados já mapeados.
-						mappedProperties.Add(returnType.Name + "." + subPropertyType.Name + "." + subPropertyInfo.Name);
+						propertyInfo.SetValue(returnInstance, subPropertyInstance, null);
 
 						return true;
 					}
-
-					return false;
+					else { return false; }
+				}
+				else {
+					// Obtém a propriedade que possui o mesmo nome da propriedade encontrada na consulta ao banco.
+					propertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
 				}
 			}
+
+			// Caso não exista uma propriedade para receber o valor retornado, sai do método.
+			if (propertyInfo == null) { return false; }
+
+			//this.WriteOutput("ParseProperty", string.Format("Tabela de origem da coluna '{0}': '{1}'.", columnName, tableName));
+
+			//if (propertyInfo == null && string.IsNullOrWhiteSpace(tableName) == true) { return false; }
+
+			//if (string.IsNullOrWhiteSpace(tableName) == false) {
+
+			//	//  Se a propriedade não foi encontrada, não é possível fazer o mapeamento do valor da coluna.
+			//	if ((returnType.GetProperty(memberName) != null || propertyInfo == null || mappedProperties.IndexOf(returnType.Name + "." + propertyInfo.Name) >= 0) && (propertyInfo == null || (propertyInfo.PropertyType.FullName.IndexOf("System.") < 0 && propertyInfo.PropertyType.IsEnum == false))) {
+
+			//		this.WriteOutput("ParseProperty", string.Format("Nenhuma propriedade encontrada no objeto '{0}' para a coluna '{1}'.", returnType.Name, propertyName));
+
+			//		// Procura uma propriedade com o mesmo nome da tabela.
+			//		PropertyInfo subPropertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(explicitClassName ?? tableName, StringComparison.OrdinalIgnoreCase));
+
+			//		// Sai do método caso não exista uma propriedade com o nome da tabela.
+			//		if (subPropertyInfo == null) { return false; }
+
+			//		// Armazena o tipo da sub-propriedade.
+			//		Type subPropertyType = subPropertyInfo.PropertyType;
+
+			//		// Sai do método caso a propriedade já tenha sido mapeada.
+			//		if (mappedProperties.Contains(returnType.Name + "." + subPropertyType.Name + "." + propertyName) == true) { return false; }
+
+			//		// Verifica se a propriedade a ser mapeada é do tipo enum.
+			//		if (subPropertyType.IsEnum == true) {
+
+			//			object value = Enum.Parse(subPropertyType, databaseValue.ToString(), true);
+
+			//			// Define o valor da propriedade.
+			//			subPropertyInfo.SetValue(returnInstance, value, null);
+
+			//			// Adiciona a propriedade na lista de dados já mapeados.
+			//			mappedProperties.Add(returnType.Name + "." + subPropertyType.Name + "." + propertyName);
+
+			//			return true;
+			//		}
+
+			//		// Tenta obter uma instancia para o sub-objeto. Caso não exista uma definida, cria uma nova.
+			//		object subPropertyInstance = subPropertyInfo.GetValue(returnInstance, null) ?? Activator.CreateInstance(subPropertyType);
+
+			//		PropertyInfo[] subPropertyTypeProperties = subPropertyType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
+			//		// Verifica se a propriedade comporta o valor encontrado no banco de dados.
+			//		if (this.ParseProperty(subPropertyType, subPropertyTypeProperties, schemaTable, subPropertyInstance, propertyName ?? columnName, databaseValue, ordinal, mappedProperties) == true) {
+
+			//			// Define o valor da propriedade encontrada.
+			//			subPropertyInfo.SetValue(returnInstance, subPropertyInstance, null);
+
+			//			// Adiciona a propriedade na lista de dados já mapeados.
+			//			mappedProperties.Add(returnType.Name + "." + subPropertyType.Name + "." + subPropertyInfo.Name);
+
+			//			return true;
+			//		}
+
+			//		return false;
+			//	}
+			//}
 
 			// Define o valor da propriedade encontrada.
 			if (propertyInfo.CanWrite == true) {

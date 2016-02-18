@@ -4,13 +4,13 @@
     <id>Dlp.Connectors.dll</id>
 		<title>DLP Connectors</title>
 		<iconUrl>http://www.stone.com.br/img/stone32x32.png</iconUrl>
-    <version>0.7.5</version>
+    <version>1.0.0-alpha</version>
     <authors>Stone Pagamentos S/A</authors>
     <owners>Stone Pagamentos S/A</owners>
     <projectUrl>http://stone-payments.github.io/Dlp.Connectors</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Database connector for MSSQL with ADO.</description>
-    <releaseNotes>Added the method ExecuteReaderAsEnumerable to return data in real time.</releaseNotes>
+    <releaseNotes>Optimized the entities mapping.</releaseNotes>
     <copyright>Stone Pagamentos S/A - Copyright 2015</copyright>
     <tags>Database ADO</tags>
     <dependencies>

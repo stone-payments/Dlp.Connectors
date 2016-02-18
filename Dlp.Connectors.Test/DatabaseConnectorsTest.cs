@@ -1236,8 +1236,6 @@ namespace Dlp.Connectors.Test {
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(2, actual.Count());
 
-
-
 			Assert.IsTrue(actual.Any(p => p.Name.Equals("Merchant Number One")));
 			Assert.IsTrue(actual.Any(p => p.Name.Equals("Merchant Test")));
 		}
@@ -1369,13 +1367,39 @@ namespace Dlp.Connectors.Test {
 							 INNER JOIN Organization ON Organization.OrganizationId = Applications.OrganizationId
 							 WHERE Users.UserId = 9";
 
-			string connectionString = @"Data Source=RJ10_DSK006\SQLEXPRESS;Initial Catalog=GlobalIdentity;Persist Security Info=True;User ID=AppDbUser;password=bbnsDoTVGpXIaLvgGsf8;Application Name=Dlp.GlobalIdentity;";
+			string connectionString = @"Data Source=RJ10_DSK006\SQLEXPRESS;Initial Catalog=GlobalIdentity;Persist Security Info=False;Integrated Security=True;Application Name=Database Connectors Test;";
 
 			UserType user = null;
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
 				user = databaseConnector.ExecuteReader<UserType>(query).FirstOrDefault();
+			}
+		}
+
+		[TestMethod]
+		public void MapCreateDate_Test() {
+
+			string query = @"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+							 SELECT Users.UserId, Users.UserKey, Users.CreateDate, Users.Name, Users.Email, Users.EmailConfirmationDate, Users.ParentUserId,
+							 Users.IsLockedOut, Users.LastLoginDate, Users.LastPasswordChangeDate, Users.LastLockoutDate, Users.FailedPasswordAttemptCount,
+							 Applications.ApplicationId, Applications.ApplicationKey, Applications.ApplicationName, Applications.CreateDate,
+							 Applications.IsEnabled, Applications.LogoUrl, Applications.ApplicationUrl,
+							 Membership.MembershipId, Membership.UserId, Membership.ApplicationId, 
+							 Membership.IsApproved, Membership.Comment, Membership.FirstName, Membership.LastName,
+							 Membership.CreateDate, Membership.ActivationDate,
+							 AccountActivation.CreateDate, AccountActivation.ActivationDate																  
+							 FROM Membership
+							 INNER JOIN Users ON Users.UserId = Membership.UserId
+							 INNER JOIN Applications ON Applications.ApplicationId = Membership.ApplicationId
+							 INNER JOIN AccountActivation ON AccountActivation.UserId = Users.UserId
+							 WHERE Membership.ApplicationId = @ApplicationId AND Membership.UserId = @UserId AND AccountActivation.UserId = @UserId;";
+
+			string connectionString = @"Server=RJ10_DSK006\SQLEXPRESS;Initial Catalog=GlobalIdentity;Persist Security Info=False;Integrated Security=True;Application Name=Database Connectors Test;";
+
+			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+
+				IEnumerable<MembershipEntity> membershipEntity = databaseConnector.ExecuteReader<MembershipEntity>(query, new { ApplicationId = 21, UserId = 10129 });
 			}
 		}
 	}
@@ -1457,4 +1481,204 @@ namespace Dlp.Connectors.Test {
 
 		public bool IsCategoryEnabled { get; set; }
 	}
+
+	public sealed class UserEntity {
+
+        public UserEntity() { }
+
+        /// <summary>
+        /// Obtém ou define o Id do usuário.
+        /// </summary>
+        public long UserId { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a chave de identificação do usuário.
+        /// </summary>
+        public Guid UserKey { get; set; }
+
+        /// <summary>
+        /// Obtém ou define o login do usuário.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Obtém ou define o email do usuário.
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a data em que o email foi confirmado como realmente pertencendo ao usuário.
+        /// </summary>
+        public Nullable<DateTime> EmailConfirmationDate { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a data de criação do usuário.
+        /// </summary>
+        public DateTime CreateDate { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a flag que indica se a conta foi bloqueada.
+        /// </summary>
+        public bool IsLockedOut { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a data do último login do usuário.
+        /// </summary>
+        public Nullable<DateTime> LastLoginDate { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a data da última atualização de senha.
+        /// </summary>
+        public Nullable<DateTime> LastPasswordChangedDate { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a data da última vez em que a conta foi bloqueada.
+        /// </summary>
+        public Nullable<DateTime> LastLockoutDate { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a quantidade de erros de login.
+        /// </summary>
+        public int FailedPasswordAttemptCount { get; set; }
+    }
+
+	 public sealed class ApplicationEntity {
+
+        public ApplicationEntity() { }
+
+        /// <summary>
+        /// Obtém ou define o id da aplicação.
+        /// </summary>
+        public int ApplicationId { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a data de criação da aplicação.
+        /// </summary>
+        public DateTime CreateDate { get; set; }
+
+        /// <summary>
+        /// Obtém ou define o nome da aplicação.
+        /// </summary>
+        public string ApplicationName { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a chave da aplicação.
+        /// </summary>
+        public Guid ApplicationKey { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a descrição da aplicação.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a flag que indica se a aplicação esta habilitada.
+        /// </summary>
+        public bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a SecretKey da aplicação.
+        /// </summary>
+        public string SecretKey { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a url da logo da aplicação.
+        /// </summary>
+        public string LogoUrl { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a url da página de login da aplicação.
+        /// </summary>
+        public string ApplicationUrl { get; set; }
+
+        /// <summary>
+        /// Obtém ou define o id do usuário que criou a aplicação.
+        /// </summary>
+        public long ParentUserId { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a flag que indica se o usuário é o dono da aplicação.
+        /// </summary>
+        public bool IsOwner { get; set; }
+
+        /// <summary>
+        /// Obtém ou define o grupo de administração ao qual o usuário pertence.
+        /// </summary>
+        public string AdministrationGroupName { get; set; }
+
+        /// <summary>
+        /// Obtém ou define o id da Organização dona da Aplicação
+        /// </summary>
+        public Nullable<int> OrganizationId { get; set; }
+    }
+
+	public sealed class AccountActivationEntity {
+
+        public AccountActivationEntity() { }
+
+        /// <summary>
+        /// Obtém ou define a data de criação do registro.
+        /// </summary>
+        public DateTime CreateDate { get; set; }
+
+        /// <summary>
+        ///  Obtém ou define a data de ativação da account.
+        /// </summary>
+        public Nullable<DateTime> ActivationDate { get; set; }
+    }
+
+	public sealed class MembershipEntity {
+
+        public MembershipEntity() { }
+
+		/// <summary>
+		/// Obtém ou define o id do membership.
+		/// </summary>
+		public long MembershipId { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a data em que o usuário foi registrado na aplicação.
+        /// </summary>
+        public DateTime CreateDate { get; set; }
+
+        /// <summary>
+        /// Obtém ou define a data da ativação do membership.
+        /// </summary>
+        public Nullable<DateTime> ActivationDate { get; set; }
+        
+        /// <summary>
+        /// Obtém ou dedine a flag que indica se a conta esta liberada para uso.
+        /// </summary>
+        public bool IsApproved { get; set; }
+
+        /// <summary>
+        /// Obtém ou define os comentário sobre a conta do usuário.
+        /// </summary>
+        public string Comment { get; set; }
+
+        /// <summary>
+        /// Obtém ou define o nome do usuário a ser utilizado pela aplicação
+        /// </summary>
+        public string FirstName { get; set; }
+        
+        /// <summary>
+        /// Obtém ou define o último nome do usuário a ser utilizado pela aplicação
+        /// </summary>
+        public string LastName { get; set; }
+               
+        /// <summary>
+        /// Obtém ou define os dados do usuário associado a esta conta.
+        /// </summary>
+        public UserEntity Users { get; set; }
+
+        /// <summary>
+        /// Obtém ou define os dados da aplicação associada a esta conta.
+        /// </summary>
+        public ApplicationEntity Applications { get; set; }
+
+        /// <summary>
+        /// Obtém ou define os dados sobre a ativação da Account.
+        /// </summary>
+        public AccountActivationEntity AccountActivation { get; set; }
+    }
 }
