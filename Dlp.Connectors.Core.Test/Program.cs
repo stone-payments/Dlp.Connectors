@@ -42,7 +42,7 @@ namespace Dlp.Connectors.Core.Test {
 
         public static void Main(string[] args) {
 
-            string connectionString = @"Data Source=RJ10_DSK006\SQLEXPRESS;Initial Catalog=GlobalIdentity;Persist Security Info=True;User ID=AppDbUser;password=bbnsDoTVGpXIaLvgGsf8;Application Name=Dlp.Scow;";
+            string connectionString = @"Server=RJ10_DSK006\SQLEXPRESS;Initial Catalog=GlobalIdentity;Persist Security Info=False;Integrated Security=True;Application Name=Dlp.Scow;";
 
             string queryString = @"SELECT Applications.ApplicationName, Applications.ApplicationKey, Users.Name as 'CurrentUser.Name', Users.Email as 'CurrentUser.Email'
                                    FROM Applications INNER JOIN Users ON Users.UserId = Applications.ParentUserId WHERE ApplicationId = @ApplicationId";
