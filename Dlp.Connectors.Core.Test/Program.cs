@@ -42,14 +42,18 @@ namespace Dlp.Connectors.Core.Test {
 
         public static void Main(string[] args) {
 
-            string connectionString = @"Server=RJ10_DSK006\SQLEXPRESS;Initial Catalog=GlobalIdentity;Persist Security Info=False;Integrated Security=True;Application Name=Dlp.Scow;";
+            string connectionString = @"Server=RJ10_DSK006\SQLEXPRESS;Initial Catalog=Balthazar;Persist Security Info=False;Integrated Security=True;Application Name=Dlp.Scow;";
 
-            string queryString = @"SELECT Applications.ApplicationName, Applications.ApplicationKey, Users.Name as 'CurrentUser.Name', Users.Email as 'CurrentUser.Email'
-                                   FROM Applications INNER JOIN Users ON Users.UserId = Applications.ParentUserId WHERE ApplicationId = @ApplicationId";
+            // Query utilizada para obter as a chave da loja.
+            string queryString = "SELECT MerchantId FROM scow.Merchant WHERE MerchantKey = @MerchantKey;";
 
+            Guid merchantKey = new Guid("FFDDC04F-36A6-4285-98CC-06326B4F3BCD");
+
+            // Instancia o conector de acesso ao banco de dados.
             using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-                Applications name = databaseConnector.ExecuteReader<Applications>(queryString, new { @ApplicationId = 12 }).FirstOrDefault();
+                // Obtém o id da loja para a chave especificada.
+                Nullable<long> merchantId = databaseConnector.ExecuteReader<Nullable<long>>(queryString, new { MerchantKey = merchantKey }).FirstOrDefault();
             }
         }
     }

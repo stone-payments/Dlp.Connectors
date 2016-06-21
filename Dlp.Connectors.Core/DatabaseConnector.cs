@@ -735,8 +735,15 @@ namespace Dlp.Connectors.Core {
                     // Caso o valor da coluna seja nulo, não é necessário fazer mapeamentos adicionais.
                     if (reader.IsDBNull(0) == true) { continue; }
 
-                    // Obtém o valor encontrado na consulta.
-                    returnInstance = (T)Convert.ChangeType(reader[0], returnType);
+                    // Verifica se o tipo a ser retornado é Nullable.
+                    if (returnType.GetTypeInfo().IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Nullable<>)) {
+
+                        returnInstance = (T)reader[0];
+                    }
+                    else {
+                        // Obtém o valor encontrado na consulta.
+                        returnInstance = (T)Convert.ChangeType(reader[0], returnType);
+                    }
 
                     // Adiciona o registro preenchido na coleção que será retornada.
                     returnCollection.Add(returnInstance);
