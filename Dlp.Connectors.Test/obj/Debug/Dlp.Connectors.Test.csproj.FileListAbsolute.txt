@@ -22,3 +22,5 @@ C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Deb
 C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Framework.xml
 C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.dll
 C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.pdb
+C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.xml

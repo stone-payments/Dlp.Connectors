@@ -144,10 +144,9 @@ namespace Dlp.Connectors {
 			// Remove os comentários da query.
 			query = Regex.Replace(query, @"--(.*)", "", RegexOptions.Multiline);
 
-			// Remove espaços em branco desnecessários.
-			query = Regex.Replace(query, @"\s+", " ");
+            query = Regex.Replace(query, @"(?<=^([^']| '[^']*')*)\s+", " ");
 
-			return query;
+            return query;
 		}
 
 		/// <summary>

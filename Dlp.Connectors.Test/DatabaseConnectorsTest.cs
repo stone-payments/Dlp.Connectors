@@ -1404,6 +1404,17 @@ namespace Dlp.Connectors.Test {
 		}
 	}
 
+	public sealed class LixoData {
+
+		public LixoData() { }
+
+		public int LixoId { get; set; }
+
+		public string LixoName { get; set; }
+
+		public DateTime LixoCreateDate { get; set; }
+	}
+
 	public sealed class UserType {
 
 		public UserType() { }
@@ -1484,201 +1495,201 @@ namespace Dlp.Connectors.Test {
 
 	public sealed class UserEntity {
 
-        public UserEntity() { }
+		public UserEntity() { }
 
-        /// <summary>
-        /// Obtém ou define o Id do usuário.
-        /// </summary>
-        public long UserId { get; set; }
+		/// <summary>
+		/// Obtém ou define o Id do usuário.
+		/// </summary>
+		public long UserId { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a chave de identificação do usuário.
-        /// </summary>
-        public Guid UserKey { get; set; }
+		/// <summary>
+		/// Obtém ou define a chave de identificação do usuário.
+		/// </summary>
+		public Guid UserKey { get; set; }
 
-        /// <summary>
-        /// Obtém ou define o login do usuário.
-        /// </summary>
-        public string Name { get; set; }
+		/// <summary>
+		/// Obtém ou define o login do usuário.
+		/// </summary>
+		public string Name { get; set; }
 
-        /// <summary>
-        /// Obtém ou define o email do usuário.
-        /// </summary>
-        public string Email { get; set; }
+		/// <summary>
+		/// Obtém ou define o email do usuário.
+		/// </summary>
+		public string Email { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a data em que o email foi confirmado como realmente pertencendo ao usuário.
-        /// </summary>
-        public Nullable<DateTime> EmailConfirmationDate { get; set; }
+		/// <summary>
+		/// Obtém ou define a data em que o email foi confirmado como realmente pertencendo ao usuário.
+		/// </summary>
+		public Nullable<DateTime> EmailConfirmationDate { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a data de criação do usuário.
-        /// </summary>
-        public DateTime CreateDate { get; set; }
+		/// <summary>
+		/// Obtém ou define a data de criação do usuário.
+		/// </summary>
+		public DateTime CreateDate { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a flag que indica se a conta foi bloqueada.
-        /// </summary>
-        public bool IsLockedOut { get; set; }
+		/// <summary>
+		/// Obtém ou define a flag que indica se a conta foi bloqueada.
+		/// </summary>
+		public bool IsLockedOut { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a data do último login do usuário.
-        /// </summary>
-        public Nullable<DateTime> LastLoginDate { get; set; }
+		/// <summary>
+		/// Obtém ou define a data do último login do usuário.
+		/// </summary>
+		public Nullable<DateTime> LastLoginDate { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a data da última atualização de senha.
-        /// </summary>
-        public Nullable<DateTime> LastPasswordChangedDate { get; set; }
+		/// <summary>
+		/// Obtém ou define a data da última atualização de senha.
+		/// </summary>
+		public Nullable<DateTime> LastPasswordChangedDate { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a data da última vez em que a conta foi bloqueada.
-        /// </summary>
-        public Nullable<DateTime> LastLockoutDate { get; set; }
+		/// <summary>
+		/// Obtém ou define a data da última vez em que a conta foi bloqueada.
+		/// </summary>
+		public Nullable<DateTime> LastLockoutDate { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a quantidade de erros de login.
-        /// </summary>
-        public int FailedPasswordAttemptCount { get; set; }
-    }
+		/// <summary>
+		/// Obtém ou define a quantidade de erros de login.
+		/// </summary>
+		public int FailedPasswordAttemptCount { get; set; }
+	}
 
-	 public sealed class ApplicationEntity {
+	public sealed class ApplicationEntity {
 
-        public ApplicationEntity() { }
+		public ApplicationEntity() { }
 
-        /// <summary>
-        /// Obtém ou define o id da aplicação.
-        /// </summary>
-        public int ApplicationId { get; set; }
+		/// <summary>
+		/// Obtém ou define o id da aplicação.
+		/// </summary>
+		public int ApplicationId { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a data de criação da aplicação.
-        /// </summary>
-        public DateTime CreateDate { get; set; }
+		/// <summary>
+		/// Obtém ou define a data de criação da aplicação.
+		/// </summary>
+		public DateTime CreateDate { get; set; }
 
-        /// <summary>
-        /// Obtém ou define o nome da aplicação.
-        /// </summary>
-        public string ApplicationName { get; set; }
+		/// <summary>
+		/// Obtém ou define o nome da aplicação.
+		/// </summary>
+		public string ApplicationName { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a chave da aplicação.
-        /// </summary>
-        public Guid ApplicationKey { get; set; }
+		/// <summary>
+		/// Obtém ou define a chave da aplicação.
+		/// </summary>
+		public Guid ApplicationKey { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a descrição da aplicação.
-        /// </summary>
-        public string Description { get; set; }
+		/// <summary>
+		/// Obtém ou define a descrição da aplicação.
+		/// </summary>
+		public string Description { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a flag que indica se a aplicação esta habilitada.
-        /// </summary>
-        public bool IsEnabled { get; set; }
+		/// <summary>
+		/// Obtém ou define a flag que indica se a aplicação esta habilitada.
+		/// </summary>
+		public bool IsEnabled { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a SecretKey da aplicação.
-        /// </summary>
-        public string SecretKey { get; set; }
+		/// <summary>
+		/// Obtém ou define a SecretKey da aplicação.
+		/// </summary>
+		public string SecretKey { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a url da logo da aplicação.
-        /// </summary>
-        public string LogoUrl { get; set; }
+		/// <summary>
+		/// Obtém ou define a url da logo da aplicação.
+		/// </summary>
+		public string LogoUrl { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a url da página de login da aplicação.
-        /// </summary>
-        public string ApplicationUrl { get; set; }
+		/// <summary>
+		/// Obtém ou define a url da página de login da aplicação.
+		/// </summary>
+		public string ApplicationUrl { get; set; }
 
-        /// <summary>
-        /// Obtém ou define o id do usuário que criou a aplicação.
-        /// </summary>
-        public long ParentUserId { get; set; }
+		/// <summary>
+		/// Obtém ou define o id do usuário que criou a aplicação.
+		/// </summary>
+		public long ParentUserId { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a flag que indica se o usuário é o dono da aplicação.
-        /// </summary>
-        public bool IsOwner { get; set; }
+		/// <summary>
+		/// Obtém ou define a flag que indica se o usuário é o dono da aplicação.
+		/// </summary>
+		public bool IsOwner { get; set; }
 
-        /// <summary>
-        /// Obtém ou define o grupo de administração ao qual o usuário pertence.
-        /// </summary>
-        public string AdministrationGroupName { get; set; }
+		/// <summary>
+		/// Obtém ou define o grupo de administração ao qual o usuário pertence.
+		/// </summary>
+		public string AdministrationGroupName { get; set; }
 
-        /// <summary>
-        /// Obtém ou define o id da Organização dona da Aplicação
-        /// </summary>
-        public Nullable<int> OrganizationId { get; set; }
-    }
+		/// <summary>
+		/// Obtém ou define o id da Organização dona da Aplicação
+		/// </summary>
+		public Nullable<int> OrganizationId { get; set; }
+	}
 
 	public sealed class AccountActivationEntity {
 
-        public AccountActivationEntity() { }
+		public AccountActivationEntity() { }
 
-        /// <summary>
-        /// Obtém ou define a data de criação do registro.
-        /// </summary>
-        public DateTime CreateDate { get; set; }
+		/// <summary>
+		/// Obtém ou define a data de criação do registro.
+		/// </summary>
+		public DateTime CreateDate { get; set; }
 
-        /// <summary>
-        ///  Obtém ou define a data de ativação da account.
-        /// </summary>
-        public Nullable<DateTime> ActivationDate { get; set; }
-    }
+		/// <summary>
+		///  Obtém ou define a data de ativação da account.
+		/// </summary>
+		public Nullable<DateTime> ActivationDate { get; set; }
+	}
 
 	public sealed class MembershipEntity {
 
-        public MembershipEntity() { }
+		public MembershipEntity() { }
 
 		/// <summary>
 		/// Obtém ou define o id do membership.
 		/// </summary>
 		public long MembershipId { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a data em que o usuário foi registrado na aplicação.
-        /// </summary>
-        public DateTime CreateDate { get; set; }
+		/// <summary>
+		/// Obtém ou define a data em que o usuário foi registrado na aplicação.
+		/// </summary>
+		public DateTime CreateDate { get; set; }
 
-        /// <summary>
-        /// Obtém ou define a data da ativação do membership.
-        /// </summary>
-        public Nullable<DateTime> ActivationDate { get; set; }
-        
-        /// <summary>
-        /// Obtém ou dedine a flag que indica se a conta esta liberada para uso.
-        /// </summary>
-        public bool IsApproved { get; set; }
+		/// <summary>
+		/// Obtém ou define a data da ativação do membership.
+		/// </summary>
+		public Nullable<DateTime> ActivationDate { get; set; }
 
-        /// <summary>
-        /// Obtém ou define os comentário sobre a conta do usuário.
-        /// </summary>
-        public string Comment { get; set; }
+		/// <summary>
+		/// Obtém ou dedine a flag que indica se a conta esta liberada para uso.
+		/// </summary>
+		public bool IsApproved { get; set; }
 
-        /// <summary>
-        /// Obtém ou define o nome do usuário a ser utilizado pela aplicação
-        /// </summary>
-        public string FirstName { get; set; }
-        
-        /// <summary>
-        /// Obtém ou define o último nome do usuário a ser utilizado pela aplicação
-        /// </summary>
-        public string LastName { get; set; }
-               
-        /// <summary>
-        /// Obtém ou define os dados do usuário associado a esta conta.
-        /// </summary>
-        public UserEntity Users { get; set; }
+		/// <summary>
+		/// Obtém ou define os comentário sobre a conta do usuário.
+		/// </summary>
+		public string Comment { get; set; }
 
-        /// <summary>
-        /// Obtém ou define os dados da aplicação associada a esta conta.
-        /// </summary>
-        public ApplicationEntity Applications { get; set; }
+		/// <summary>
+		/// Obtém ou define o nome do usuário a ser utilizado pela aplicação
+		/// </summary>
+		public string FirstName { get; set; }
 
-        /// <summary>
-        /// Obtém ou define os dados sobre a ativação da Account.
-        /// </summary>
-        public AccountActivationEntity AccountActivation { get; set; }
-    }
+		/// <summary>
+		/// Obtém ou define o último nome do usuário a ser utilizado pela aplicação
+		/// </summary>
+		public string LastName { get; set; }
+
+		/// <summary>
+		/// Obtém ou define os dados do usuário associado a esta conta.
+		/// </summary>
+		public UserEntity Users { get; set; }
+
+		/// <summary>
+		/// Obtém ou define os dados da aplicação associada a esta conta.
+		/// </summary>
+		public ApplicationEntity Applications { get; set; }
+
+		/// <summary>
+		/// Obtém ou define os dados sobre a ativação da Account.
+		/// </summary>
+		public AccountActivationEntity AccountActivation { get; set; }
+	}
 }

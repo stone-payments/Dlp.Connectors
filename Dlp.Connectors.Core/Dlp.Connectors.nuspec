@@ -1,0 +1,26 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Dlp.Connectors</id>
+		<title>DLP Connectors</title>
+		<iconUrl>http://www.stone.com.br/img/stone32x32.png</iconUrl>
+    <version>1.0.1-rc1</version>
+    <authors>Stone Pagamentos S/A</authors>
+    <owners>Stone Pagamentos S/A</owners>
+    <projectUrl>http://stone-payments.github.io/Dlp.Connectors</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>DotNet.Core database connector for MSSQL with ADO.</description>
+    <releaseNotes>Ported from dotnet.Framework to dotnet.Core.</releaseNotes>
+    <copyright>Stone Pagamentos S/A - Copyright 2015</copyright>
+    <tags>Database ADO</tags>
+    <dependencies>
+      <dependency id="Microsoft.CSharp" version="4.0.1-rc2-24027" />
+      <dependency id="NETStandard.Library" version="1.5.0-rc2-24027" />
+      <dependency id="System.Data.SqlClient" version="4.0.1-rc2-24027" />
+      <dependency id="System.Reflection.TypeExtensions" version="4.0.1-rc2-24027" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\netstandard1.5\Dlp.Connectors.Core.*" target="lib\dotnet" />
+  </files>
+</package>
