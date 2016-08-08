@@ -850,6 +850,32 @@
             </summary>
             <param name="disposing">Flag indicating the dispose process.</param>
         </member>
+        <member name="T:Dlp.Connectors.PagedResult`1">
+            <summary>
+            Result for a paged query.
+            </summary>
+            <typeparam name="T">Type of the objects to be returned.</typeparam>
+        </member>
+        <member name="P:Dlp.Connectors.PagedResult`1.TotalRecords">
+            <summary>
+            Gets the total number of records available for current query.
+            </summary>
+        </member>
+        <member name="P:Dlp.Connectors.PagedResult`1.CurrentPage">
+            <summary>
+            Gets the page number for the returned data.
+            </summary>
+        </member>
+        <member name="P:Dlp.Connectors.PagedResult`1.TotalPages">
+            <summary>
+            Gets the number of pages for current query.
+            </summary>
+        </member>
+        <member name="P:Dlp.Connectors.PagedResult`1.Data">
+            <summary>
+            Gets the returned records for current page.
+            </summary>
+        </member>
         <member name="T:Dlp.Connectors.SortDirection">
             <summary>
             Enumerates all the available options for sorting queries result.

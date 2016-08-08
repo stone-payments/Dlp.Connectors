@@ -4,100 +4,6 @@
         <name>Dlp.Connectors</name>
     </assembly>
     <members>
-        <member name="F:Dlp.Connectors.CacheConnector._callingAssembly">
-            <summary>
-            Armazena o nome da aplicação que esta chamando o serviço de cache.
-            </summary>
-        </member>
-        <member name="F:Dlp.Connectors.CacheConnector._bufferSize">
-            <summary>
-            Obtém ou define o tamanho do buffer a ser utilizado na comunicação com o serviço de cache.
-            </summary>
-        </member>
-        <member name="P:Dlp.Connectors.CacheConnector.ServerAddress">
-            <summary>
-            Obtém o endereço do servidor de cache.
-            </summary>
-        </member>
-        <member name="P:Dlp.Connectors.CacheConnector.Port">
-            <summary>
-            Obtém a porta de conexão na qual o cache será disponibilizado.
-            </summary>
-        </member>
-        <member name="P:Dlp.Connectors.CacheConnector.AccessKey">
-            <summary>
-            Obtém a chave de acesso ao serviço de cache.
-            </summary>
-        </member>
-        <member name="F:Dlp.Connectors.CacheConnector.Handler">
-            <summary>
-            Obtém o socket utilizado para se comunicar com o serviço de cache.
-            </summary>
-        </member>
-        <member name="M:Dlp.Connectors.CacheConnector.Connect">
-            <summary>
-            Connects to the cache service.
-            </summary>
-        </member>
-        <member name="M:Dlp.Connectors.CacheConnector.IsConnected">
-            <summary>
-            Checks if the cache service is connected.
-            </summary>
-            <returns>Returns true if we are connected to the cache service.</returns>
-        </member>
-        <member name="M:Dlp.Connectors.CacheConnector.Disconnect">
-            <summary>
-            Disconnects from the cache service.
-            </summary>
-        </member>
-        <member name="M:Dlp.Connectors.CacheConnector.Set``1(System.String,``0,System.Int32)">
-            <summary>
-            Adiciona um atualiza um item existente no cache.
-            </summary>
-            <typeparam name="T">Tipo do item a ser inserido/atualziado.</typeparam>
-            <param name="key">Nome único no cache.</param>
-            <param name="item">Objeto a ser inserido/atualizado.</param>
-            <param name="itemExpirationInMinutes">Quanto tempo o item deverá permanecer no cache.</param>
-            <returns>Retorna true caso a operação seja realizada com sucesso.</returns>
-        </member>
-        <member name="M:Dlp.Connectors.CacheConnector.GetByKey``1(System.String)">
-            <summary>
-            Obtém um item do cache a partir do nome.
-            </summary>
-            <typeparam name="T">Tipo do objeto a ser retornado.</typeparam>
-            <param name="key">Nome do objeto no cache.</param>
-            <returns>Retorna um objeto do tipo T, encontrado no cache, ou default(T), caso o item não exista.</returns>
-        </member>
-        <member name="M:Dlp.Connectors.CacheConnector.CreateBinaryRequest``1(Dlp.Connectors.CacheConnector.CacheOperationType,System.String,System.Object,System.Int32)">
-            <summary>
-            Prepara o CacheItem para ser enviado para o serviço de cache.
-            </summary>
-            <param name="cacheOperationType">Objeto a ser preparado.</param>
-            <param name="key"></param>
-            <param name="item"></param>
-            <param name="itemExpirationInMinutes"></param>
-            <returns></returns>
-        </member>
-        <member name="F:Dlp.Connectors.CacheConnector.CacheOperationType.Set">
-            <summary>
-            Operação de inserção ou atualização de um item no cache.
-            </summary>
-        </member>
-        <member name="F:Dlp.Connectors.CacheConnector.CacheOperationType.GetByKey">
-            <summary>
-            Operação de leitura de um item do cache.
-            </summary>
-        </member>
-        <member name="F:Dlp.Connectors.CacheConnector.CacheOperationType.GetByType">
-            <summary>
-            Operação de leitura de todos os itens de um tipo específico.
-            </summary>
-        </member>
-        <member name="F:Dlp.Connectors.CacheConnector.CacheOperationType.Delete">
-            <summary>
-            Operação de exclusão de um item do cache.
-            </summary>
-        </member>
         <member name="T:Dlp.Connectors.ColumnMapperAttribute">
             <summary>
             This class specifies wich column from a table must be mapped to the specified Property. Supported the BulkInsert method only.
@@ -849,6 +755,41 @@
             Disposes the DatabaseConnector instance.
             </summary>
             <param name="disposing">Flag indicating the dispose process.</param>
+        </member>
+        <member name="M:Dlp.Connectors.DatabaseConnector.CollectionToString(System.Collections.IEnumerable,System.Char,System.String)">
+            <summary>
+            Converts a collection into a string, where each element is separated with a comma, by default.
+            </summary>
+            <param name="source">Collection to be converted.</param>
+            <param name="separator">Char separator. The defalt separator is comma.</param>
+            <param name="surroundWith">Specify the surrounding chars for the elements. For example.: single quotation mark "'": 'element1','element2',...</param>
+            <returns>Returns a new string containing all the elements received, or null, if the source collection is null.</returns>
+        </member>
+        <member name="T:Dlp.Connectors.PagedResult`1">
+            <summary>
+            Result for a paged query.
+            </summary>
+            <typeparam name="T">Type of the objects to be returned.</typeparam>
+        </member>
+        <member name="P:Dlp.Connectors.PagedResult`1.TotalRecords">
+            <summary>
+            Gets the total number of records available for current query.
+            </summary>
+        </member>
+        <member name="P:Dlp.Connectors.PagedResult`1.CurrentPage">
+            <summary>
+            Gets the page number for the returned data.
+            </summary>
+        </member>
+        <member name="P:Dlp.Connectors.PagedResult`1.TotalPages">
+            <summary>
+            Gets the number of pages for current query.
+            </summary>
+        </member>
+        <member name="P:Dlp.Connectors.PagedResult`1.Data">
+            <summary>
+            Gets the data for current page.
+            </summary>
         </member>
         <member name="T:Dlp.Connectors.SortDirection">
             <summary>

@@ -996,19 +996,19 @@ namespace Dlp.Connectors.Test {
 
 			string query = @"SELECT Merchant.Name, Merchant.MerchantId, Merchant.MerchantKey FROM Merchant;";
 
-			KeyValuePair<int, IEnumerable<MerchantData>> actual;
+            PagedResult<MerchantData> actual;
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
 				actual = databaseConnector.ExecuteReader<MerchantData>(query, 1, 2, "MerchantId", SortDirection.DESC);
 			}
 
-			Assert.AreEqual(3, actual.Key);
-			Assert.IsNotNull(actual.Value);
-			Assert.AreEqual(2, actual.Value.Count());
+			Assert.AreEqual(3, actual.TotalRecords);
+			Assert.IsNotNull(actual.Data);
+			Assert.AreEqual(2, actual.Data.Count());
 
-			Assert.AreEqual(3, actual.Value.ElementAt(0).MerchantId);
-			Assert.AreEqual(2, actual.Value.ElementAt(1).MerchantId);
+			Assert.AreEqual(3, actual.Data.ElementAt(0).MerchantId);
+			Assert.AreEqual(2, actual.Data.ElementAt(1).MerchantId);
 		}
 
 		[TestMethod]
@@ -1016,9 +1016,9 @@ namespace Dlp.Connectors.Test {
 
 			string query = @"SELECT Name, MerchantId, MerchantKey FROM Merchant WHERE Merchant.Status = @Status;";
 
-			KeyValuePair<int, IEnumerable<MerchantData>> actual;
+            PagedResult<MerchantData> actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
 				databaseConnector.OnOutput += databaseConnector_OnOutput;
 
@@ -1027,11 +1027,11 @@ namespace Dlp.Connectors.Test {
 
 			string output = this.ConnectorOutput.ToString();
 
-			Assert.AreEqual(1, actual.Key);
-			Assert.IsNotNull(actual.Value);
-			Assert.AreEqual(1, actual.Value.Count());
+			Assert.AreEqual(1, actual.TotalRecords);
+			Assert.IsNotNull(actual.Data);
+			Assert.AreEqual(1, actual.Data.Count());
 
-			Assert.AreEqual(2, actual.Value.ElementAt(0).MerchantId);
+			Assert.AreEqual(2, actual.Data.ElementAt(0).MerchantId);
 		}
 
 		[TestMethod]
@@ -1039,16 +1039,16 @@ namespace Dlp.Connectors.Test {
 
 			string query = @"SELECT Name, MerchantId, MerchantKey FROM Merchant;";
 
-			KeyValuePair<int, IEnumerable<MerchantData>> actual;
+            PagedResult<MerchantData> actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
 				actual = databaseConnector.ExecuteReader<MerchantData>(query, 0, 0, "MerchantId", SortDirection.DESC);
 			}
 
-			Assert.AreEqual(3, actual.Key);
-			Assert.IsNotNull(actual.Value);
-			Assert.AreEqual(1, actual.Value.Count());
+			Assert.AreEqual(3, actual.TotalRecords);
+			Assert.IsNotNull(actual.Data);
+			Assert.AreEqual(1, actual.Data.Count());
 		}
 
 		[TestMethod]
@@ -1067,9 +1067,9 @@ namespace Dlp.Connectors.Test {
 
 			string query = @"SELECT Name, MerchantId, MerchantKey FROM Merchant;";
 
-			KeyValuePair<int, IEnumerable<MerchantData>> actual;
+            PagedResult<MerchantData> actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
 				actual = databaseConnector.ExecuteReader<MerchantData>(query, 0, 0, null, SortDirection.DESC);
 			}
@@ -1080,18 +1080,18 @@ namespace Dlp.Connectors.Test {
 
 			string query = @"SELECT Name, MerchantId, MerchantKey FROM Merchant WHERE MerchantId IN (SELECT MerchantId FROM MerchantConfiguration WHERE IsEnabled = 1);";
 
-			KeyValuePair<int, IEnumerable<MerchantData>> actual;
+            PagedResult<MerchantData> actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
 				actual = databaseConnector.ExecuteReader<MerchantData>(query, 1, 2, "MerchantId", SortDirection.DESC);
 			}
 
-			Assert.AreEqual(2, actual.Key);
-			Assert.IsNotNull(actual.Value);
+			Assert.AreEqual(2, actual.TotalRecords);
+			Assert.IsNotNull(actual.Data);
 
-			Assert.AreEqual(3, actual.Value.ElementAt(0).MerchantId);
-			Assert.AreEqual(1, actual.Value.ElementAt(1).MerchantId);
+			Assert.AreEqual(3, actual.Data.ElementAt(0).MerchantId);
+			Assert.AreEqual(1, actual.Data.ElementAt(1).MerchantId);
 		}
 
 		[TestMethod]
@@ -1101,25 +1101,175 @@ namespace Dlp.Connectors.Test {
                              FROM Merchant
                              INNER JOIN MerchantConfiguration ON MerchantConfiguration.MerchantId = Merchant.MerchantId;";
 
-			KeyValuePair<int, IEnumerable<MerchantEntity>> actual;
+            PagedResult<MerchantEntity> actual;
 
-			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
 				actual = databaseConnector.ExecuteReader<MerchantEntity>(query, 1, 2, "Merchant.MerchantId", SortDirection.ASC);
 			}
 
-			Assert.AreEqual(3, actual.Key);
-			Assert.IsNotNull(actual.Value);
+			Assert.AreEqual(3, actual.TotalRecords);
+			Assert.IsNotNull(actual.Data);
 
-			Assert.AreEqual(1, actual.Value.ElementAt(0).MerchantId);
-			Assert.AreEqual(2, actual.Value.ElementAt(1).MerchantId);
+			Assert.AreEqual(1, actual.Data.ElementAt(0).MerchantId);
+			Assert.AreEqual(2, actual.Data.ElementAt(1).MerchantId);
 
-			Assert.IsNotNull(actual.Value.ElementAt(0).MerchantConfiguration);
-			Assert.IsNotNull(actual.Value.ElementAt(1).MerchantConfiguration);
+			Assert.IsNotNull(actual.Data.ElementAt(0).MerchantConfiguration);
+			Assert.IsNotNull(actual.Data.ElementAt(1).MerchantConfiguration);
 
-			Assert.IsTrue(actual.Value.ElementAt(0).MerchantConfiguration.IsEnabled);
-			Assert.IsFalse(actual.Value.ElementAt(1).MerchantConfiguration.IsEnabled);
+			Assert.IsTrue(actual.Data.ElementAt(0).MerchantConfiguration.IsEnabled);
+			Assert.IsFalse(actual.Data.ElementAt(1).MerchantConfiguration.IsEnabled);
 		}
+
+        [TestMethod]
+        public void LoadPageDataWithNestedClasses() {
+
+            string query = @"SELECT Merchant.Name, Merchant.MerchantId, MerchantConfiguration.IsEnabled, MerchantConfiguration.Url
+                             FROM Merchant
+                             INNER JOIN MerchantConfiguration ON MerchantConfiguration.MerchantId = Merchant.MerchantId
+                             WHERE Merchant.MerchantId > 0;";
+
+            PagedResult<MerchantEntity> actual;
+
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+                actual = databaseConnector.ExecuteReader<MerchantEntity>(query, 1, 2, "Name", SortDirection.ASC);
+            }
+
+            Assert.AreEqual(3, actual.TotalRecords);
+            Assert.AreEqual(1, actual.CurrentPage);
+            Assert.AreEqual(2, actual.TotalPages);
+        }
+
+        [TestMethod]
+        public void LoadPageDataWithNestedClassesAndAlias() {
+
+            string query = @"SELECT
+                             m.Name,
+                             m.MerchantId,
+                             mc.IsEnabled as 'MerchantConfiguration.IsEnabled',
+                             mc.Url as 'MerchantConfiguration.Url'
+                             FROM Merchant m (NOLOCK)
+                             INNER JOIN MerchantConfiguration mc (NOLOCK) ON mc.MerchantId = m.MerchantId
+                             WHERE IsEnabled = 1;";
+
+            PagedResult<MerchantEntity> actual;
+
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+                actual = databaseConnector.ExecuteReader<MerchantEntity>(query, 1, 2, "Name", SortDirection.ASC);
+            }
+
+            Assert.AreEqual(2, actual.TotalRecords);
+            Assert.AreEqual(1, actual.CurrentPage);
+            Assert.AreEqual(1, actual.TotalPages);
+        }
+
+        [TestMethod]
+        public void MyTestMethod() {
+
+            int pageNumber = 1;
+            int pageSize = 2;
+
+            // The dlp connector is not mapping the City when we use its pagedQuery
+            // Uncomment after the fix
+
+            //            // Sql to execute.
+            string sql = @"SELECT mc.[Id]
+                                  ,mc.[CityId]
+                                  ,mc.[CountryStateIsoCode]
+                                  ,mc.[Apn]
+                                  ,mc.[MobileCarrierOperator]
+                                  ,mc.[Description]
+                                  ,mc.[GenerateDataInterval]
+                                  ,mc.[AlertThreshold]
+                                  ,mc.[IsActive]
+                                  ,c.[Id] as 'City.Id'
+                                  ,c.[Name] as 'City.Name'
+                                  ,cs.[Id] as 'City.CountryState.Id'
+                                  ,cs.[Name] as 'City.CountryState.Name'
+                                  ,cs.[IsoCode] as 'City.CountryState.IsoCode'
+                           FROM [PoiReportMonitoring].[MonitoringConfiguration] mc (NOLOCK)
+                           INNER JOIN [dbo].[City] c (NOLOCK) ON c.Id = mc.[CityId] 
+                           INNER JOIN [dbo].[CountryState] cs (NOLOCK) ON cs.Id = c.[StateId]
+                           WHERE IsActive = 1 ";
+
+            // Execute sql.            
+            //KeyValuePair<int, IEnumerable<MonitoringConfiguration>> monitoringConfigurations = databaseConnector
+            //    .ExecuteReader<MonitoringConfiguration>(sql.ToString(), pageNumber, pageSize, "mc.Id", SortDirection.ASC);
+
+            //PagedResult<MonitoringConfiguration> pagedResult = new PagedResult<MonitoringConfiguration>();
+
+            //pagedResult.TotalRows = monitoringConfigurations.Key;
+            //pagedResult.Data = monitoringConfigurations.Value.ToList();
+
+            //return pagedResult;
+            //-----------------------------
+            //            #region Exclude after DLP Connector fix
+
+            //            // Query to be executed.
+            //            StringBuilder pagedQuery = new StringBuilder(
+            //                @"SELECT * FROM 
+            //                (               
+            //                    @Query
+            //                ) AS TBL
+            //                WHERE RowNumber BETWEEN ((@PageNumber - 1)  @RowsPerPage + 1) AND (@PageNumber  @RowsPerPage)
+            //                ORDER BY Id "
+            //            );
+
+            //            StringBuilder columns = new StringBuilder(
+            //                                  @" ROW_NUMBER() OVER(ORDER BY mc.[Id]) AS RowNumber 
+            //                                  ,mc.[Id]
+            //                                  ,mc.[CityId]
+            //                                  ,mc.[CountryStateIsoCode]
+            //                                  ,mc.[Apn]
+            //                                  ,mc.[MobileCarrierOperator]
+            //                                  ,mc.[Description]
+            //                                  ,mc.[GenerateDataInterval]
+            //                                  ,mc.[AlertThreshold]
+            //                                  ,mc.[IsActive]
+            //                                  ,c.[Id] as 'City.Id'
+            //                                  ,c.[Name] as 'City.Name'
+            //                                  ,cs.[Id] as 'City.CountryState.Id'
+            //                                  ,cs.[Name] as 'City.CountryState.Name'
+            //                                  ,cs.[IsoCode] as 'City.CountryState.IsoCode'
+            //                                  "
+            //                                  );
+
+            //            // Sql to execute.
+            //            StringBuilder query = new StringBuilder(
+            //                           @"SELECT @Columns
+            //                           FROM [PoiReportMonitoring].[MonitoringConfiguration] mc (NOLOCK)
+            //                           INNER JOIN City c (NOLOCK) on c.Id = mc.CityId
+            //                           INNER JOIN CountryState cs (NOLOCK) on cs.Id = c.StateId
+            //                           WHERE mc.IsActive = 1"
+            //                           );
+
+            //            //do all replaces
+            //            query.Replace("@Columns", columns.ToString());
+            //            pagedQuery.Replace("@Query", query.ToString());
+
+            //            // Execute sql.
+            //            IEnumerable<MonitoringConfiguration> result = databaseConnector
+            //                .ExecuteReader<MonitoringConfiguration>(pagedQuery.ToString(), new {
+            //                    PageNumber = pagingInformation.PageNumber,
+            //                    RowsPerPage = pagingInformation.RowsPerPage,
+            //                });
+
+            //            PagedResult<MonitoringConfiguration> response = new PagedResult<MonitoringConfiguration>();
+            //            response.Data = result.ToList();
+            //            response.PageNumber = pagingInformation.PageNumber;
+            //            response.RowsPerPage = pagingInformation.RowsPerPage;
+
+            //            // Get the total rows returned by the query.
+            //            query.Replace(columns.ToString(), "COUNT(1) as 'COUNT'");
+            //            response.TotalRows = databaseConnector.ExecuteScalar<long>(query.ToString());
+
+            //            return response;
+
+            //            #endregion
+
+        
+
+    }
 
 		[TestMethod]
 		public void LoadSingleRowWithColumnAlias() {

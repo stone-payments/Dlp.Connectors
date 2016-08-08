@@ -40,10 +40,6 @@
     <DocumentationFile>bin\Release\Dlp.Connectors.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dlp.Framework, Version=0.1.5736.32044, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dlp.Framework.dll.0.8.4\lib\net45\Dlp.Framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -54,7 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CacheConnector.cs" />
     <Compile Include="ColumnMapperAttribute.cs" />
     <Compile Include="DatabaseConnector.cs" />
     <Compile Include="ICacheConnector.cs" />
@@ -67,7 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Dlp.Connectors.nuspec" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

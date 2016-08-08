@@ -4,17 +4,16 @@
     <id>Dlp.Connectors.dll</id>
 		<title>DLP Connectors</title>
 		<iconUrl>http://www.stone.com.br/img/stone32x32.png</iconUrl>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
     <authors>Stone Pagamentos S/A</authors>
     <owners>Stone Pagamentos S/A</owners>
     <projectUrl>http://stone-payments.github.io/Dlp.Connectors</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Database connector for MSSQL with ADO.</description>
-    <releaseNotes>Optimized the entities mapping.</releaseNotes>
+    <releaseNotes>Changed the return type for paged queries with the ExecuteReader method.</releaseNotes>
     <copyright>Stone Pagamentos S/A - Copyright 2015</copyright>
     <tags>Database ADO</tags>
     <dependencies>
-      <dependency id="Dlp.Framework.dll" version="0.8.4" />
     </dependencies>
   </metadata>
   <files />

@@ -231,19 +231,19 @@ namespace Dlp.Connectors.Core {
         }
 
         /// <summary>
-		/// Sends the query to be executed by the database and return a KeyValuePair with the number of available rows and the retrieved data for the specified page.
-		/// </summary>
-		/// <typeparam name="T">Type of the object instance to be returned.</typeparam>
-		/// <param name="query">Query to be executed. The parameter is mandatory.</param>
-		/// <param name="pageNumber">Page to be returned.</param>
-		/// <param name="pageSize">Number of rows per page.</param>
-		/// <param name="orderByColumnName">Column name to ot used to order the retrieved data.</param>
-		/// <param name="sortDirection">Sorting direction.</param>
-		/// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
-		/// <returns>Returns a KeyValuePair where Key = Number of rows available in database and Value = Data of type T returned for current page number.</returns>
-		/// <exception cref="ArgumentNullException">Missing the query or the orderByColumnName parameter.</exception>
-		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReaderPaged"]/*'/>
-		public KeyValuePair<int, IEnumerable<T>> ExecuteReader<T>(string query, int pageNumber, int pageSize, string orderByColumnName, SortDirection sortDirection, dynamic parameters = null) where T : new() {
+        /// Sends the query to be executed by the database and return a KeyValuePair with the number of available rows and the retrieved data for the specified page.
+        /// </summary>
+        /// <typeparam name="T">Type of the object instance to be returned.</typeparam>
+        /// <param name="query">Query to be executed. The parameter is mandatory.</param>
+        /// <param name="pageNumber">Page to be returned.</param>
+        /// <param name="pageSize">Number of rows per page.</param>
+        /// <param name="orderByColumnName">Column name to ot used to order the retrieved data.</param>
+        /// <param name="sortDirection">Sorting direction.</param>
+        /// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
+        /// <returns>Returns a KeyValuePair where Key = Number of rows available in database and Value = Data of type T returned for current page number.</returns>
+        /// <exception cref="ArgumentNullException">Missing the query or the orderByColumnName parameter.</exception>
+        /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReaderPaged"]/*'/>
+        public PagedResult<T> ExecuteReader<T>(string query, int pageNumber, int pageSize, string orderByColumnName, SortDirection sortDirection, dynamic parameters = null) where T : new() {
 
             // Verifica se a query foi especificada.
             if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
@@ -272,8 +272,6 @@ namespace Dlp.Connectors.Core {
             // Obtém uma coleção com o nome da cada coluna a ser pesquisada.
             string[] fields = queryParts[1].Split(new[] { "," }, StringSplitOptions.None);
 
-            string rawFields = string.Empty;
-
             // Extrai o nome de cada coluna, sem o nome da tabela a qual pertence.
             for (int i = 0; i < fields.Length; i++) {
 
@@ -290,30 +288,27 @@ namespace Dlp.Connectors.Core {
 
                     columnName = fieldData.Last();
                 }
-
-                // Concatena a string com o nome das colunas sem nomes de tabelas.
-                rawFields = string.Format("{0}, {1}", rawFields, columnName);
             }
 
-            // Remove qualquer vírgula extra.
-            rawFields = rawFields.Trim(',');
-
             // Monta a query que retornará apenas os dados da página solicitada.
-            string paginationQuery = string.Format("{0} WITH SourceTable AS (SELECT TOP {1} ROW_NUMBER() OVER(ORDER BY {2} {3}) AS RowNumber, {4} FROM {5}) SELECT {6} FROM SourceTable WHERE RowNumber BETWEEN {7} AND {8};",
+            string paginationQuery = string.Format("{0} WITH SourceTable AS (SELECT TOP {1} ROW_NUMBER() OVER(ORDER BY {2} {3}) AS RowNumber, {4} FROM {5}) SELECT * FROM SourceTable WHERE RowNumber BETWEEN {6} AND {7};",
                 queryParts[0],
                 pageNumber * pageSize,
                 orderByColumnName,
                 sortDirection.ToString(),
                 queryParts[1],
                 queryParts[2].TrimEnd(';'),
-                rawFields,
                 (pageNumber - 1) * pageSize + 1,
                 pageNumber * pageSize).Trim();
 
             // Obtém os dados da página solicitada.
             object paginationResult = this.ExecuteReaderFetchAll<T>(paginationQuery, parameters);
 
-            return new KeyValuePair<int, IEnumerable<T>>(countResult, paginationResult as IEnumerable<T>);
+            // Calcula a quantidade de páginas para a consulta realizada.
+            int totalPages = (countResult / pageSize);
+            if ((countResult % pageSize) > 0) { totalPages += 1; }
+
+            return PagedResult<T>.Create(pageNumber, totalPages, countResult, paginationResult as IEnumerable<T>);
         }
 
         /// <summary>
@@ -1059,7 +1054,6 @@ namespace Dlp.Connectors.Core {
         /// <param name="separator">Char separator. The defalt separator is comma.</param>
         /// <param name="surroundWith">Specify the surrounding chars for the elements. For example.: single quotation mark "'": 'element1','element2',...</param>
         /// <returns>Returns a new string containing all the elements received, or null, if the source collection is null.</returns>
-        /// <include file='Samples/CollectionExtensions.xml' path='Docs/Members[@name="AsString"]/*'/>
         private static string CollectionToString(IEnumerable source, char separator = ',', string surroundWith = null) {
 
             // Verifica se a coleção foi especificada.
@@ -1073,6 +1067,47 @@ namespace Dlp.Connectors.Core {
             // Retorna a string, removendo o separador extra no final.
             return stringBuilder.ToString().TrimEnd(separator);
         }
+    }
+
+    /// <summary>
+    /// Result for a paged query.
+    /// </summary>
+    /// <typeparam name="T">Type of the objects to be returned.</typeparam>
+    public class PagedResult<T> {
+
+        private PagedResult() { }
+
+        internal static PagedResult<T> Create(int currentPage, int totalPages, int totalRecords, IEnumerable<T> data) {
+
+            PagedResult<T> result = new PagedResult<T>();
+
+            result.TotalRecords = totalRecords;
+            result.CurrentPage = currentPage;
+            result.TotalPages = totalPages;
+            result.Data = data;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the total number of records available for current query.
+        /// </summary>
+        public int TotalRecords { get; private set; }
+
+        /// <summary>
+        /// Gets the page number for the returned data.
+        /// </summary>
+        public int CurrentPage { get; private set; }
+
+        /// <summary>
+        /// Gets the number of pages for current query.
+        /// </summary>
+        public int TotalPages { get; private set; }
+
+        /// <summary>
+        /// Gets the data for current page.
+        /// </summary>
+        public IEnumerable<T> Data { get; set; }
     }
 
     /// <summary>

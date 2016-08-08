@@ -1,1244 +1,1301 @@
-﻿using Dlp.Framework;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Dlp.Connectors {
 
-	public delegate void OutputEventHandler(object sender, OutputEventArgs e);
+    public delegate void OutputEventHandler(object sender, OutputEventArgs e);
 
-	/// <summary>
-	/// Connector for database operations.
-	/// </summary>
-	public class DatabaseConnector : IDisposable {
+    /// <summary>
+    /// Connector for database operations.
+    /// </summary>
+    public class DatabaseConnector : IDisposable {
 
-		/// <summary>
-		/// Initializes an instance of the DatabaseConnector. A SqlTransaction must be running.
-		/// </summary>
-		/// <param name="commandTimeoutInSeconds">Limit time, in seconds, that an operation may take to be completed.</param>
-		/// <exception cref="System.InvalidOperationException">Start a database transaction with DatabaseConnector.BeginTransaction, prior using this constructor.</exception>
-		public DatabaseConnector(int commandTimeoutInSeconds = 90) {
+        /// <summary>
+        /// Initializes an instance of the DatabaseConnector. A SqlTransaction must be running.
+        /// </summary>
+        /// <param name="commandTimeoutInSeconds">Limit time, in seconds, that an operation may take to be completed.</param>
+        /// <exception cref="System.InvalidOperationException">Start a database transaction with DatabaseConnector.BeginTransaction, prior using this constructor.</exception>
+        public DatabaseConnector(int commandTimeoutInSeconds = 90) {
 
-			// Verifica se existe uma transação de banco de dados em andamento.
-			if (_sqlTransaction == null || _sqlTransaction.Connection == null) { throw new InvalidOperationException("This constructor requires a sqlTransaction to be running. Start one with DatabaseConnector.BeginTransaction() method."); }
+            // Verifica se existe uma transação de banco de dados em andamento.
+            if (_sqlTransaction == null || _sqlTransaction.Connection == null) { throw new InvalidOperationException("This constructor requires a sqlTransaction to be running. Start one with DatabaseConnector.BeginTransaction() method."); }
 
-			// Utiliza a conexão da transação em andamento.
-			this.Connection = _sqlTransaction.Connection;
+            // Utiliza a conexão da transação em andamento.
+            this.Connection = _sqlTransaction.Connection;
 
-			// Utiliza a transação de banco global.
-			this.Transaction = _sqlTransaction;
+            // Utiliza a transação de banco global.
+            this.Transaction = _sqlTransaction;
 
-			// Define o timeout da operação.
-			this.CommandTimeoutInSeconds = commandTimeoutInSeconds;
-		}
+            // Define o timeout da operação.
+            this.CommandTimeoutInSeconds = commandTimeoutInSeconds;
+        }
 
-		/// <summary>
-		/// Initializes an instance of the DatabaseConnector.
-		/// </summary>
-		/// <param name="connectionString">Database ConnectionString to be used by the connector. Ignored if a DatabaseTransaction is already running.</param>
-		/// <param name="commandTimeoutInSeconds">Limit time, in seconds, that an operation may take to be completed.</param>
-		/// <exception cref="System.ArgumentNullException">The connectionString parameter must have a value.</exception>
-		public DatabaseConnector(string connectionString, int commandTimeoutInSeconds = 90) {
+        /// <summary>
+        /// Initializes an instance of the DatabaseConnector.
+        /// </summary>
+        /// <param name="connectionString">Database ConnectionString to be used by the connector. Ignored if a DatabaseTransaction is already running.</param>
+        /// <param name="commandTimeoutInSeconds">Limit time, in seconds, that an operation may take to be completed.</param>
+        /// <exception cref="System.ArgumentNullException">The connectionString parameter must have a value.</exception>
+        public DatabaseConnector(string connectionString, int commandTimeoutInSeconds = 90) {
 
-			// Só inicializa os dados caso não exista uma transação global em andamento.
-			if (_sqlTransaction == null || _sqlTransaction.Connection == null) {
+            // Só inicializa os dados caso não exista uma transação global em andamento.
+            if (_sqlTransaction == null || _sqlTransaction.Connection == null) {
 
-				// Dispara uma exceção caso a connection string não tenha sido especificada.
-				if (string.IsNullOrEmpty(connectionString) == true) { throw new ArgumentNullException("connectionString"); }
+                // Dispara uma exceção caso a connection string não tenha sido especificada.
+                if (string.IsNullOrEmpty(connectionString) == true) { throw new ArgumentNullException("connectionString"); }
 
-				// Cria o objeto de conexão com o banco de dados.
-				this.Connection = new SqlConnection(connectionString);
-			}
-			else {
-				// Utiliza a conexão da transação em andamento.
-				this.Connection = _sqlTransaction.Connection;
+                // Cria o objeto de conexão com o banco de dados.
+                this.Connection = new SqlConnection(connectionString);
+            }
+            else {
+                // Utiliza a conexão da transação em andamento.
+                this.Connection = _sqlTransaction.Connection;
 
-				// Utiliza a transação de banco global.
-				this.Transaction = _sqlTransaction;
-			}
+                // Utiliza a transação de banco global.
+                this.Transaction = _sqlTransaction;
+            }
 
-			// Define o timeout da operação.
-			this.CommandTimeoutInSeconds = commandTimeoutInSeconds;
-		}
+            // Define o timeout da operação.
+            this.CommandTimeoutInSeconds = commandTimeoutInSeconds;
+        }
 
-		/// <summary>
-		/// Destrutor que fechará os recursos utilizados, caso o usuário não tenha fechado explicitamente.
-		/// </summary>
-		~DatabaseConnector() { this.Dispose(false); }
+        /// <summary>
+        /// Destrutor que fechará os recursos utilizados, caso o usuário não tenha fechado explicitamente.
+        /// </summary>
+        ~DatabaseConnector() { this.Dispose(false); }
 
-		public event OutputEventHandler OnOutput;
+        public event OutputEventHandler OnOutput;
 
-		/// <summary>
-		/// Gets the database connection used by this instance.
-		/// </summary>
-		public SqlConnection Connection { get; private set; }
+        /// <summary>
+        /// Gets the database connection used by this instance.
+        /// </summary>
+        public SqlConnection Connection { get; private set; }
 
-		/// <summary>
-		/// Gets or sets the current database transaction.
-		/// </summary>
-		private SqlTransaction Transaction { get; set; }
+        /// <summary>
+        /// Gets or sets the current database transaction.
+        /// </summary>
+        private SqlTransaction Transaction { get; set; }
 
-		[ThreadStatic]
-		private static SqlTransaction _sqlTransaction;
+        [ThreadStatic]
+        private static SqlTransaction _sqlTransaction;
 
-		/// <summary>
-		/// Gets the database operation timeout. Default: 90 seconds.
-		/// </summary>
-		public int CommandTimeoutInSeconds { get; private set; }
+        /// <summary>
+        /// Gets the database operation timeout. Default: 90 seconds.
+        /// </summary>
+        public int CommandTimeoutInSeconds { get; private set; }
 
-		/// <summary>
-		/// Abre a conexão com o banco de dados.
-		/// </summary>
-		private void OpenConnection() {
+        /// <summary>
+        /// Abre a conexão com o banco de dados.
+        /// </summary>
+        private void OpenConnection() {
 
-			this.WriteOutput("OpenConnection", string.Format("Estado atual da conexão: {0}.", this.Connection.State));
+            this.WriteOutput("OpenConnection", string.Format("Estado atual da conexão: {0}.", this.Connection.State));
 
-			// Abre a conexão com o banco de dados, caso esteja fechada.
-			if (this.Connection.State == ConnectionState.Closed) {
+            // Abre a conexão com o banco de dados, caso esteja fechada.
+            if (this.Connection.State == ConnectionState.Closed) {
 
-				this.WriteOutput("OpenConnection", "Abrindo conexão com o servidor de banco de dados.");
-				this.Connection.Open();
-			}
+                this.WriteOutput("OpenConnection", "Abrindo conexão com o servidor de banco de dados.");
+                this.Connection.Open();
+            }
 
-			this.WriteOutput("OpenConnection", string.Format("ConnectionId: {0}", this.Connection.ClientConnectionId));
-			this.WriteOutput("OpenConnection", string.Format("ConnectionString: {0}", this.Connection.ConnectionString));
-			this.WriteOutput("OpenConnection", string.Format("ConnectionTimeout: {0}", this.Connection.ConnectionTimeout));
-			this.WriteOutput("OpenConnection", string.Format("CommandTimeout: {0}", this.CommandTimeoutInSeconds));
-		}
+            this.WriteOutput("OpenConnection", string.Format("ConnectionId: {0}", this.Connection.ClientConnectionId));
+            this.WriteOutput("OpenConnection", string.Format("ConnectionString: {0}", this.Connection.ConnectionString));
+            this.WriteOutput("OpenConnection", string.Format("ConnectionTimeout: {0}", this.Connection.ConnectionTimeout));
+            this.WriteOutput("OpenConnection", string.Format("CommandTimeout: {0}", this.CommandTimeoutInSeconds));
+        }
 
-		/// <summary>
-		/// Cria um objeto IDbCommand apropriado para o tipo de conexão especificada.
-		/// </summary>
-		/// <param name="query">Query a ser executada no banco de dados.</param>
-		/// <param name="connection">Objeto de conexão com o banco de dados.</param>
-		/// <param name="transaction">Transação de banco de dados.</param>
-		/// <param name="commandTimeoutInSeconds">Timeout da operação do banco de dados.</param>
-		/// <returns>Retorna um objeto IDbCommand apropriado para o tipo de conexão especificada.</returns>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-		private static SqlCommand SqlCommandFactory(string query, SqlConnection connection, SqlTransaction transaction, int commandTimeoutInSeconds) {
+        /// <summary>
+        /// Cria um objeto IDbCommand apropriado para o tipo de conexão especificada.
+        /// </summary>
+        /// <param name="query">Query a ser executada no banco de dados.</param>
+        /// <param name="connection">Objeto de conexão com o banco de dados.</param>
+        /// <param name="transaction">Transação de banco de dados.</param>
+        /// <param name="commandTimeoutInSeconds">Timeout da operação do banco de dados.</param>
+        /// <returns>Retorna um objeto IDbCommand apropriado para o tipo de conexão especificada.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
+        private static SqlCommand SqlCommandFactory(string query, SqlConnection connection, SqlTransaction transaction, int commandTimeoutInSeconds) {
 
-			// Cria o objeto SqlCommand.
-			SqlCommand command = new SqlCommand(query, connection, transaction);
+            // Cria o objeto SqlCommand.
+            SqlCommand command = new SqlCommand(query, connection, transaction);
 
-			// Define o timeout da operação.
-			command.CommandTimeout = commandTimeoutInSeconds;
+            // Define o timeout da operação.
+            command.CommandTimeout = commandTimeoutInSeconds;
 
-			return command;
-		}
+            return command;
+        }
 
-		/// <summary>
-		/// Remove dados desnecessários da query, para que a quantidade de informações enviadas para o servidor seja reduzida.
-		/// </summary>
-		/// <param name="query">Query a ser tratada.</param>
-		/// <returns>Retorna a query tratada.</returns>
-		private string CleanQuery(string query) {
+        /// <summary>
+        /// Remove dados desnecessários da query, para que a quantidade de informações enviadas para o servidor seja reduzida.
+        /// </summary>
+        /// <param name="query">Query a ser tratada.</param>
+        /// <returns>Retorna a query tratada.</returns>
+        private string CleanQuery(string query) {
 
-			this.WriteOutput("CleanQuery", "Removendo espaços em branco e comentários da query.");
+            this.WriteOutput("CleanQuery", "Removendo espaços em branco e comentários da query.");
 
-			// Remove os comentários da query.
-			query = Regex.Replace(query, @"--(.*)", "", RegexOptions.Multiline);
+            // Remove os comentários da query.
+            query = Regex.Replace(query, @"--(.*)", "", RegexOptions.Multiline);
 
             query = Regex.Replace(query, @"(?<=^([^']| '[^']*')*)\s+", " ");
 
             return query;
-		}
-
-		/// <summary>
-		/// Executes the query and returns the first column from the first row returned by the query. Additional columns or rows are ignored.
-		/// </summary>
-		/// <typeparam name="T">Type of the object instance to be returned.</typeparam>
-		/// <param name="query">Query to be executed. The parameter is mandatory.</param>
-		/// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
-		/// <returns>Returns a typed object with the found value. If no data is found, default(T) is returned.</returns>
-		/// <exception cref="System.ArgumentNullException">Missing the query parameter.</exception>
-		/// <exception cref="System.InvalidCastException"></exception>
-		/// <exception cref="System.Data.SqlClient.SqlException"></exception>
-		/// <exception cref="System.IO.IOException"></exception>
-		/// <exception cref="System.InvalidOperationException"></exception>
-		/// <exception cref="System.ObjectDisposedException"></exception>
-		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteScalar"]/*'/>
-		public T ExecuteScalar<T>(string query, dynamic parameters = null) {
-
-			this.WriteOutput("ExecuteScalar", "Iniciando ExecuteScalar.");
-
-			// Verifica se a query foi especificada.
-			if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
-
-			// Limpa a query, removendo espaços e informações desnecessárias.
-			query = this.CleanQuery(query);
-
-			try {
-				// Abre a conexão com o banco de dados.
-				this.OpenConnection();
-
-				// Instancia o objeto command que será executado no banco de dados.
-				using (SqlCommand command = SqlCommandFactory(query, this.Connection, this.Transaction, this.CommandTimeoutInSeconds)) {
-
-					// Adiciona os parâmetros.
-					this.AddParameters(query, command, parameters as object);
-
-					// Execura a query e retorna o objeto.
-					object result = command.ExecuteScalar();
-
-					// Verifica se algum valor foi encontrado.
-					if (result == null) { return default(T); }
-
-					// Obtém o tipo a ser retornado.
-					Type returnType = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
-
-					// Retorna o objeto no formato específicado.
-					return (T)Convert.ChangeType(result, returnType);
-				}
-			}
-			catch (Exception) {
-
-				this.Close();
-
-				throw;
-			}
-		}
+        }
+
+        /// <summary>
+        /// Executes the query and returns the first column from the first row returned by the query. Additional columns or rows are ignored.
+        /// </summary>
+        /// <typeparam name="T">Type of the object instance to be returned.</typeparam>
+        /// <param name="query">Query to be executed. The parameter is mandatory.</param>
+        /// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
+        /// <returns>Returns a typed object with the found value. If no data is found, default(T) is returned.</returns>
+        /// <exception cref="System.ArgumentNullException">Missing the query parameter.</exception>
+        /// <exception cref="System.InvalidCastException"></exception>
+        /// <exception cref="System.Data.SqlClient.SqlException"></exception>
+        /// <exception cref="System.IO.IOException"></exception>
+        /// <exception cref="System.InvalidOperationException"></exception>
+        /// <exception cref="System.ObjectDisposedException"></exception>
+        /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteScalar"]/*'/>
+        public T ExecuteScalar<T>(string query, dynamic parameters = null) {
+
+            this.WriteOutput("ExecuteScalar", "Iniciando ExecuteScalar.");
+
+            // Verifica se a query foi especificada.
+            if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
+
+            // Limpa a query, removendo espaços e informações desnecessárias.
+            query = this.CleanQuery(query);
+
+            try {
+                // Abre a conexão com o banco de dados.
+                this.OpenConnection();
+
+                // Instancia o objeto command que será executado no banco de dados.
+                using (SqlCommand command = SqlCommandFactory(query, this.Connection, this.Transaction, this.CommandTimeoutInSeconds)) {
+
+                    // Adiciona os parâmetros.
+                    this.AddParameters(query, command, parameters as object);
+
+                    // Execura a query e retorna o objeto.
+                    object result = command.ExecuteScalar();
+
+                    // Verifica se algum valor foi encontrado.
+                    if (result == null) { return default(T); }
+
+                    // Obtém o tipo a ser retornado.
+                    Type returnType = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+
+                    // Retorna o objeto no formato específicado.
+                    return (T)Convert.ChangeType(result, returnType);
+                }
+            }
+            catch (Exception) {
+
+                this.Close();
+
+                throw;
+            }
+        }
 
-		/// <summary>
-		/// Executes the specified query and returns the number of rows affected.
-		/// </summary>
-		/// <param name="query">Query to be executed. The parameter is mandatory.</param>
-		/// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
-		/// <returns>Returns the number of rows affected.</returns>
-		/// <exception cref="System.ArgumentNullException">Missing the query parameter.</exception>
-		/// <exception cref="System.InvalidCastException"></exception>
-		/// <exception cref="System.Data.SqlClient.SqlException"></exception>
-		/// <exception cref="System.IO.IOException"></exception>
-		/// <exception cref="System.InvalidOperationException"></exception>
-		/// <exception cref="System.ObjectDisposedException"></exception>
-		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteNonQuery"]/*'/>
-		public int ExecuteNonQuery(string query, dynamic parameters = null) {
+        /// <summary>
+        /// Executes the specified query and returns the number of rows affected.
+        /// </summary>
+        /// <param name="query">Query to be executed. The parameter is mandatory.</param>
+        /// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
+        /// <returns>Returns the number of rows affected.</returns>
+        /// <exception cref="System.ArgumentNullException">Missing the query parameter.</exception>
+        /// <exception cref="System.InvalidCastException"></exception>
+        /// <exception cref="System.Data.SqlClient.SqlException"></exception>
+        /// <exception cref="System.IO.IOException"></exception>
+        /// <exception cref="System.InvalidOperationException"></exception>
+        /// <exception cref="System.ObjectDisposedException"></exception>
+        /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteNonQuery"]/*'/>
+        public int ExecuteNonQuery(string query, dynamic parameters = null) {
+
+            this.WriteOutput("ExecuteNonQuery", "Iniciando ExecuteNonQuery.");
+
+            // Verifica se a query foi especificada.
+            if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
+
+            // Limpa a query, removendo espaços e informações desnecessárias.
+            query = this.CleanQuery(query);
+
+            try {
+                // Abre a conexão com o banco de dados.
+                this.OpenConnection();
+
+                // Instancia o objeto command que será executado no banco de dados.
+                using (SqlCommand command = SqlCommandFactory(query, this.Connection, this.Transaction, this.CommandTimeoutInSeconds)) {
+
+                    // Adiciona os parâmetros.
+                    this.AddParameters(query, command, parameters as object);
+
+                    // Execura a query e retorna a quantidade de linhas afetadas.
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception) {
+
+                this.Close();
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Sends the query to be executed by the database and return a KeyValuePair with the number of available rows and the retrieved data for the specified page.
+        /// </summary>
+        /// <typeparam name="T">Type of the object instance to be returned.</typeparam>
+        /// <param name="query">Query to be executed. The parameter is mandatory.</param>
+        /// <param name="pageNumber">Page to be returned.</param>
+        /// <param name="pageSize">Number of rows per page.</param>
+        /// <param name="orderByColumnName">Column name to ot used to order the retrieved data.</param>
+        /// <param name="sortDirection">Sorting direction.</param>
+        /// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
+        /// <returns>Returns a KeyValuePair where Key = Number of rows available in database and Value = Data of type T returned for current page number.</returns>
+        /// <exception cref="ArgumentNullException">Missing the query or the orderByColumnName parameter.</exception>
+        /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReaderPaged"]/*'/>
+        public PagedResult<T> ExecuteReader<T>(string query, int pageNumber, int pageSize, string orderByColumnName, SortDirection sortDirection, dynamic parameters = null) where T : new() {
+
+            this.WriteOutput("ExecuteReader", "Iniciando ExecuteReader.");
+
+            // Verifica se a query foi especificada.
+            if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
+
+            // Verifica se a coluna pela qual os dados serão ordenados foi especificada.
+            if (string.IsNullOrWhiteSpace(orderByColumnName) == true) { throw new ArgumentNullException("orderByColumnName"); }
+
+            // Limpa a query, removendo espaços e informações desnecessárias.
+            query = this.CleanQuery(query);
+
+            // Verifica se o número da página é válido.
+            if (pageNumber < 1) { pageNumber = 1; }
+
+            // Verifica se o tamanho da página é válido.
+            if (pageSize < 1) { pageSize = 1; }
+
+            this.WriteOutput("ExecuteReader", "Preparando query para paginação.");
+
+            // Separa a query em colunas a serem retornadas e em filtros a serem aplicados.
+            string[] queryParts = query.Split(new[] { "SELECT", "FROM" }, 3, StringSplitOptions.None);
+
+            // Monta a query para obter a quantidade total de registros, utilizando o filtro de busca original.
+            string countQuery = string.Format("{0} SELECT COUNT(1) AS TotalRows FROM {1}", queryParts[0], queryParts[2]);
+
+            // Obtém o número de linhas disponíveis no banco de dados.
+            int countResult = this.ExecuteScalar<int>(countQuery, parameters);
+
+            // Obtém uma coleção com o nome da cada coluna a ser pesquisada.
+            string[] fields = queryParts[1].Split(new[] { "," }, StringSplitOptions.None);
+
+            // Extrai o nome de cada coluna, sem o nome da tabela a qual pertence.
+            for (int i = 0; i < fields.Length; i++) {
+
+                string[] partsByAlias = fields[i].Split(new[] { " AS ", " as " }, StringSplitOptions.None);
+
+                string columnName = string.Empty;
+
+                // Caso exista um alias, utiliza-o como nome da coluna.
+                if (partsByAlias.Length >= 2) { columnName = partsByAlias.Last(); }
+                else {
+
+                    // Separa o nome da tabela do nome da coluna.
+                    string[] fieldData = fields[i].Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+
+                    columnName = fieldData.Last();
+                }
+            }
+
+            // Monta a query que retornará apenas os dados da página solicitada.
+            string paginationQuery = string.Format("{0} WITH SourceTable AS (SELECT TOP {1} ROW_NUMBER() OVER(ORDER BY {2} {3}) AS RowNumber, {4} FROM {5}) SELECT * FROM SourceTable WHERE RowNumber BETWEEN {6} AND {7};",
+                queryParts[0],
+                pageNumber * pageSize,
+                orderByColumnName,
+                sortDirection.ToString(),
+                queryParts[1],
+                queryParts[2].TrimEnd(';'),
+                (pageNumber - 1) * pageSize + 1,
+                pageNumber * pageSize).Trim();
+
+            // Obtém os dados da página solicitada.
+            object paginationResult = this.ExecuteReaderFetchAll<T>(paginationQuery, parameters);
+
+            // Calcula a quantidade de páginas para a consulta realizada.
+            int totalPages = (countResult / pageSize);
+            if ((countResult % pageSize) > 0) { totalPages += 1; }
+
+            return PagedResult<T>.Create(pageNumber, totalPages, countResult, paginationResult as IEnumerable<T>);
+        }
+
+        /// <summary>
+        /// Sends the query to be executed by the database and return a collection of type T containing all records. Has the same effect as ExecuteReaderFetchAll.
+        /// </summary>
+        /// <typeparam name="T">Type of the object instance to be returned.</typeparam>
+        /// <param name="query">Query to be executed. The parameter is mandatory.</param>
+        /// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
+        /// <returns>Returns a list of type T with the retrieved data.</returns>
+        /// <exception cref="System.ArgumentNullException">Missing the query parameter.</exception>
+        /// <exception cref="System.InvalidCastException"></exception>
+        /// <exception cref="System.Data.SqlClient.SqlException"></exception>
+        /// <exception cref="System.IO.IOException"></exception>
+        /// <exception cref="System.InvalidOperationException"></exception>
+        /// <exception cref="System.ObjectDisposedException"></exception>
+        /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReader"]/*'/>
+        public IEnumerable<T> ExecuteReader<T>(string query, dynamic parameters = null) {
+
+            // Não remover este cast.
+            return ExecuteReaderFetchAll<T>(query, parameters) as IEnumerable<T>;
+        }
+
+        /// <summary>
+        /// Sends the query to be executed by the database and return a collection of type T containing all records
+        /// </summary>
+        /// <typeparam name="T">Type of the object instance to be returned.</typeparam>
+        /// <param name="query">Query to be executed. The parameter is mandatory.</param>
+        /// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
+        /// <returns>Returns a list of type T with the retrieved data.</returns>
+        /// <exception cref="System.ArgumentNullException">Missing the query parameter.</exception>
+        /// <exception cref="System.InvalidCastException"></exception>
+        /// <exception cref="System.Data.SqlClient.SqlException"></exception>
+        /// <exception cref="System.IO.IOException"></exception>
+        /// <exception cref="System.InvalidOperationException"></exception>
+        /// <exception cref="System.ObjectDisposedException"></exception>
+        /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReader"]/*'/>
+        public IEnumerable<T> ExecuteReaderFetchAll<T>(string query, dynamic parameters = null) {
+
+            this.WriteOutput("ExecuteReader", "Iniciando ExecuteReader.");
+
+            // Verifica se a query foi especificada.
+            if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
+
+            // Limpa a query, removendo espaços e informações desnecessárias.
+            query = this.CleanQuery(query);
+
+            try {
+                // Abre a conexão com o banco de dados.
+                this.OpenConnection();
+
+                this.WriteOutput("ExecuteReader", "Criando o objeto SqlCommand.");
+
+                // Instancia o objeto command que será executado no banco de dados.
+                using (SqlCommand command = SqlCommandFactory(query, this.Connection, this.Transaction, this.CommandTimeoutInSeconds)) {
+
+                    // Adiciona os parâmetros.
+                    this.AddParameters(query, command, parameters as object);
+
+                    this.WriteOutput("ExecuteReader", "Executando o comando ExecuteReader.");
+
+                    // Instancia o reader responsável pela leitura dos dados.
+                    using (SqlDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo)) {
+
+                        // Mapeia e armazena todos os registros encontrados.
+                        IEnumerable<T> result = this.InternalReaderFetchAll<T>(reader);
+
+                        this.WriteOutput("ExecuteReader", "Operação concluída.");
+
+                        return result;
+                    }
+                }
+            }
+            catch (Exception ex) {
+
+                this.Close();
+
+                this.WriteOutput("ExecuteReader", string.Format("Exceção no processamento: {0}.", ex));
+
+                throw;
+            }
+        }
+
+        private sealed class SqlEnumerableHelper<T> : IDisposableEnumerable<T> {
+
+            private readonly SqlDataReader reader;
+            private readonly IEnumerable<T> enumerable;
+            private readonly IDisposable[] disposables;
+
+            public SqlEnumerableHelper(IEnumerable<T> enumerable, SqlDataReader reader, IDisposable[] disposables) {
+                this.enumerable = enumerable;
+                this.reader = reader;
+                this.disposables = disposables;
+            }
+
+            ~SqlEnumerableHelper() { this.Dispose(); }
+
+            public void Dispose() {
+                ((IDisposable)this.reader).Dispose();
+                foreach (var disposable in this.disposables) {
+                    disposable.Dispose();
+                }
+            }
 
-			this.WriteOutput("ExecuteNonQuery", "Iniciando ExecuteNonQuery.");
+            public IEnumerator<T> GetEnumerator() {
+                return this.enumerable.GetEnumerator();
+            }
 
-			// Verifica se a query foi especificada.
-			if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
+            IEnumerator IEnumerable.GetEnumerator() {
+                return this.enumerable.GetEnumerator();
+            }
+        }
 
-			// Limpa a query, removendo espaços e informações desnecessárias.
-			query = this.CleanQuery(query);
+        /// <summary>
+        /// Sends the query to be executed by the database and return a disposable enumerable of type T
+        /// </summary>
+        /// <typeparam name="T">Type of the object instance to be returned.</typeparam>
+        /// <param name="query">Query to be executed. The parameter is mandatory.</param>
+        /// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
+        /// <returns>Returns a list of type T with the retrieved data.</returns>
+        /// <exception cref="System.ArgumentNullException">Missing the query parameter.</exception>
+        /// <exception cref="System.InvalidCastException"></exception>
+        /// <exception cref="System.Data.SqlClient.SqlException"></exception>
+        /// <exception cref="System.IO.IOException"></exception>
+        /// <exception cref="System.InvalidOperationException"></exception>
+        /// <exception cref="System.ObjectDisposedException"></exception>
+        /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReader"]/*'/>
+        public IDisposableEnumerable<T> ExecuteReaderAsEnumerable<T>(string query, dynamic parameters = null, bool closeOnDispose = true) {
 
-			try {
-				// Abre a conexão com o banco de dados.
-				this.OpenConnection();
-
-				// Instancia o objeto command que será executado no banco de dados.
-				using (SqlCommand command = SqlCommandFactory(query, this.Connection, this.Transaction, this.CommandTimeoutInSeconds)) {
-
-					// Adiciona os parâmetros.
-					this.AddParameters(query, command, parameters as object);
-
-					// Execura a query e retorna a quantidade de linhas afetadas.
-					return command.ExecuteNonQuery();
-				}
-			}
-			catch (Exception) {
-
-				this.Close();
-
-				throw;
-			}
-		}
-
-		/// <summary>
-		/// Sends the query to be executed by the database and return a KeyValuePair with the number of available rows and the retrieved data for the specified page.
-		/// </summary>
-		/// <typeparam name="T">Type of the object instance to be returned.</typeparam>
-		/// <param name="query">Query to be executed. The parameter is mandatory.</param>
-		/// <param name="pageNumber">Page to be returned.</param>
-		/// <param name="pageSize">Number of rows per page.</param>
-		/// <param name="orderByColumnName">Column name to ot used to order the retrieved data.</param>
-		/// <param name="sortDirection">Sorting direction.</param>
-		/// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
-		/// <returns>Returns a KeyValuePair where Key = Number of rows available in database and Value = Data of type T returned for current page number.</returns>
-		/// <exception cref="ArgumentNullException">Missing the query or the orderByColumnName parameter.</exception>
-		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReaderPaged"]/*'/>
-		public KeyValuePair<int, IEnumerable<T>> ExecuteReader<T>(string query, int pageNumber, int pageSize, string orderByColumnName, SortDirection sortDirection, dynamic parameters = null) where T : new() {
-
-			this.WriteOutput("ExecuteReader", "Iniciando ExecuteReader.");
-
-			// Verifica se a query foi especificada.
-			if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
-
-			// Verifica se a coluna pela qual os dados serão ordenados foi especificada.
-			if (string.IsNullOrWhiteSpace(orderByColumnName) == true) { throw new ArgumentNullException("orderByColumnName"); }
-
-			// Limpa a query, removendo espaços e informações desnecessárias.
-			query = this.CleanQuery(query);
-
-			// Verifica se o número da página é válido.
-			if (pageNumber < 1) { pageNumber = 1; }
-
-			// Verifica se o tamanho da página é válido.
-			if (pageSize < 1) { pageSize = 1; }
-
-			this.WriteOutput("ExecuteReader", "Preparando query para paginação.");
-
-			// Separa a query em colunas a serem retornadas e em filtros a serem aplicados.
-			string[] queryParts = query.Split(new[] { "SELECT", "FROM" }, 3, StringSplitOptions.None);
-
-			// Monta a query para obter a quantidade total de registros, utilizando o filtro de busca original.
-			string countQuery = string.Format("{0} SELECT COUNT(1) AS TotalRows FROM {1}", queryParts[0], queryParts[2]);
-
-			// Obtém o número de linhas disponíveis no banco de dados.
-			int countResult = this.ExecuteScalar<int>(countQuery, parameters);
-
-			// Obtém uma coleção com o nome da cada coluna a ser pesquisada.
-			string[] fields = queryParts[1].Split(new[] { "," }, StringSplitOptions.None);
-
-			string rawFields = string.Empty;
-
-			// Extrai o nome de cada coluna, sem o nome da tabela a qual pertence.
-			for (int i = 0; i < fields.Length; i++) {
-
-				string[] partsByAlias = fields[i].Split(new[] { " AS ", " as " }, StringSplitOptions.None);
-
-				string columnName = string.Empty;
-
-				// Caso exista um alias, utiliza-o como nome da coluna.
-				if (partsByAlias.Length >= 2) { columnName = partsByAlias.Last(); }
-				else {
-
-					// Separa o nome da tabela do nome da coluna.
-					string[] fieldData = fields[i].Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
-
-					columnName = fieldData.Last();
-				}
-
-				// Concatena a string com o nome das colunas sem nomes de tabelas.
-				rawFields = string.Format("{0}, {1}", rawFields, columnName);
-			}
-
-			// Remove qualquer vírgula extra.
-			rawFields = rawFields.Trim(',');
-
-			// Monta a query que retornará apenas os dados da página solicitada.
-			string paginationQuery = string.Format("{0} WITH SourceTable AS (SELECT TOP {1} ROW_NUMBER() OVER(ORDER BY {2} {3}) AS RowNumber, {4} FROM {5}) SELECT {6} FROM SourceTable WHERE RowNumber BETWEEN {7} AND {8};",
-				queryParts[0],
-				pageNumber * pageSize,
-				orderByColumnName,
-				sortDirection.ToString(),
-				queryParts[1],
-				queryParts[2].TrimEnd(';'),
-				rawFields,
-				(pageNumber - 1) * pageSize + 1,
-				pageNumber * pageSize).Trim();
-
-			// Obtém os dados da página solicitada.
-			object paginationResult = this.ExecuteReaderFetchAll<T>(paginationQuery, parameters);
+            this.WriteOutput("ExecuteReader", "Iniciando ExecuteReader.");
 
-			return new KeyValuePair<int, IEnumerable<T>>(countResult, paginationResult as IEnumerable<T>);
-		}
-
-		/// <summary>
-		/// Sends the query to be executed by the database and return a collection of type T containing all records. Has the same effect as ExecuteReaderFetchAll.
-		/// </summary>
-		/// <typeparam name="T">Type of the object instance to be returned.</typeparam>
-		/// <param name="query">Query to be executed. The parameter is mandatory.</param>
-		/// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
-		/// <returns>Returns a list of type T with the retrieved data.</returns>
-		/// <exception cref="System.ArgumentNullException">Missing the query parameter.</exception>
-		/// <exception cref="System.InvalidCastException"></exception>
-		/// <exception cref="System.Data.SqlClient.SqlException"></exception>
-		/// <exception cref="System.IO.IOException"></exception>
-		/// <exception cref="System.InvalidOperationException"></exception>
-		/// <exception cref="System.ObjectDisposedException"></exception>
-		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReader"]/*'/>
-		public IEnumerable<T> ExecuteReader<T>(string query, dynamic parameters = null) {
-
-			// Não remover este cast.
-			return ExecuteReaderFetchAll<T>(query, parameters) as IEnumerable<T>;
-		}
-
-		/// <summary>
-		/// Sends the query to be executed by the database and return a collection of type T containing all records
-		/// </summary>
-		/// <typeparam name="T">Type of the object instance to be returned.</typeparam>
-		/// <param name="query">Query to be executed. The parameter is mandatory.</param>
-		/// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
-		/// <returns>Returns a list of type T with the retrieved data.</returns>
-		/// <exception cref="System.ArgumentNullException">Missing the query parameter.</exception>
-		/// <exception cref="System.InvalidCastException"></exception>
-		/// <exception cref="System.Data.SqlClient.SqlException"></exception>
-		/// <exception cref="System.IO.IOException"></exception>
-		/// <exception cref="System.InvalidOperationException"></exception>
-		/// <exception cref="System.ObjectDisposedException"></exception>
-		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReader"]/*'/>
-		public IEnumerable<T> ExecuteReaderFetchAll<T>(string query, dynamic parameters = null) {
-
-			this.WriteOutput("ExecuteReader", "Iniciando ExecuteReader.");
-
-			// Verifica se a query foi especificada.
-			if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
-
-			// Limpa a query, removendo espaços e informações desnecessárias.
-			query = this.CleanQuery(query);
-
-			try {
-				// Abre a conexão com o banco de dados.
-				this.OpenConnection();
-
-				this.WriteOutput("ExecuteReader", "Criando o objeto SqlCommand.");
-
-				// Instancia o objeto command que será executado no banco de dados.
-				using (SqlCommand command = SqlCommandFactory(query, this.Connection, this.Transaction, this.CommandTimeoutInSeconds)) {
-
-					// Adiciona os parâmetros.
-					this.AddParameters(query, command, parameters as object);
-
-					this.WriteOutput("ExecuteReader", "Executando o comando ExecuteReader.");
-
-					// Instancia o reader responsável pela leitura dos dados.
-					using (SqlDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo)) {
-
-						// Mapeia e armazena todos os registros encontrados.
-						IEnumerable<T> result = this.InternalReaderFetchAll<T>(reader);
-
-						this.WriteOutput("ExecuteReader", "Operação concluída.");
-
-						return result;
-					}
-				}
-			}
-			catch (Exception ex) {
-
-				this.Close();
-
-				this.WriteOutput("ExecuteReader", string.Format("Exceção no processamento: {0}.", ex));
-
-				throw;
-			}
-		}
-
-		private sealed class SqlEnumerableHelper<T> : IDisposableEnumerable<T> {
-
-			private readonly SqlDataReader reader;
-			private readonly IEnumerable<T> enumerable;
-			private readonly IDisposable[] disposables;
-
-			public SqlEnumerableHelper(IEnumerable<T> enumerable, SqlDataReader reader, IDisposable[] disposables) {
-				this.enumerable = enumerable;
-				this.reader = reader;
-				this.disposables = disposables;
-			}
+            // Verifica se a query foi especificada.
+            if (string.IsNullOrWhiteSpace(query)) {
+                throw new ArgumentNullException("query");
+            }
 
-			~SqlEnumerableHelper() { this.Dispose(); }
-
-			public void Dispose() {
-				((IDisposable)this.reader).Dispose();
-				foreach (var disposable in this.disposables) {
-					disposable.Dispose();
-				}
-			}
+            // Limpa a query, removendo espaços e informações desnecessárias.
+            query = this.CleanQuery(query);
 
-			public IEnumerator<T> GetEnumerator() {
-				return this.enumerable.GetEnumerator();
-			}
+            try {
+                // Abre a conexão com o banco de dados.
+                this.OpenConnection();
 
-			IEnumerator IEnumerable.GetEnumerator() {
-				return this.enumerable.GetEnumerator();
-			}
-		}
+                this.WriteOutput("ExecuteReader", "Criando o objeto SqlCommand.");
 
-		/// <summary>
-		/// Sends the query to be executed by the database and return a disposable enumerable of type T
-		/// </summary>
-		/// <typeparam name="T">Type of the object instance to be returned.</typeparam>
-		/// <param name="query">Query to be executed. The parameter is mandatory.</param>
-		/// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
-		/// <returns>Returns a list of type T with the retrieved data.</returns>
-		/// <exception cref="System.ArgumentNullException">Missing the query parameter.</exception>
-		/// <exception cref="System.InvalidCastException"></exception>
-		/// <exception cref="System.Data.SqlClient.SqlException"></exception>
-		/// <exception cref="System.IO.IOException"></exception>
-		/// <exception cref="System.InvalidOperationException"></exception>
-		/// <exception cref="System.ObjectDisposedException"></exception>
-		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReader"]/*'/>
-		public IDisposableEnumerable<T> ExecuteReaderAsEnumerable<T>(string query, dynamic parameters = null, bool closeOnDispose = true) {
+                // Instancia o objeto command que será executado no banco de dados.
+                SqlCommand command = SqlCommandFactory(query, this.Connection, this.Transaction, this.CommandTimeoutInSeconds);
 
-			this.WriteOutput("ExecuteReader", "Iniciando ExecuteReader.");
+                // Adiciona os parâmetros.
+                this.AddParameters(query, command, parameters as object);
 
-			// Verifica se a query foi especificada.
-			if (string.IsNullOrWhiteSpace(query)) {
-				throw new ArgumentNullException("query");
-			}
+                this.WriteOutput("ExecuteReader", "Executando o comando ExecuteReader.");
 
-			// Limpa a query, removendo espaços e informações desnecessárias.
-			query = this.CleanQuery(query);
+                // Instancia o reader responsável pela leitura dos dados.
+                SqlDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo);
+                return new SqlEnumerableHelper<T>(this.InternalReader<T>(reader), reader,
+                    closeOnDispose ? new IDisposable[] { command, this } : new IDisposable[] { command });
 
-			try {
-				// Abre a conexão com o banco de dados.
-				this.OpenConnection();
+            }
+            catch (Exception ex) {
 
-				this.WriteOutput("ExecuteReader", "Criando o objeto SqlCommand.");
+                this.Close();
 
-				// Instancia o objeto command que será executado no banco de dados.
-				SqlCommand command = SqlCommandFactory(query, this.Connection, this.Transaction, this.CommandTimeoutInSeconds);
+                this.WriteOutput("ExecuteReader", string.Format("Exceção no processamento: {0}.", ex));
 
-				// Adiciona os parâmetros.
-				this.AddParameters(query, command, parameters as object);
+                throw;
+            }
+        }
 
-				this.WriteOutput("ExecuteReader", "Executando o comando ExecuteReader.");
+        /// <summary>
+        /// Copys all elements of a collection to a destination table.
+        /// </summary>
+        /// <param name="tableName">Target table name.</param>
+        /// <param name="collection">Collection containing the data to be pushed to the database. The elements properties must have the same name as the destination columns.</param>
+        /// <param name="sqlBulkCopyOptions">Rule to be used by Sql Server before insert the data.</param>
+        /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="BulkInsert"]/*'/>
+        public void BulkInsert(string tableName, IEnumerable collection, SqlBulkCopyOptions sqlBulkCopyOptions = SqlBulkCopyOptions.Default) {
 
-				// Instancia o reader responsável pela leitura dos dados.
-				SqlDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo);
-				return new SqlEnumerableHelper<T>(this.InternalReader<T>(reader), reader,
-					closeOnDispose ? new IDisposable[] { command, this } : new IDisposable[] { command });
+            this.WriteOutput("BulkInsert", "Iniciando BulkInsert.");
 
-			}
-			catch (Exception ex) {
+            // O método não pode prosseguir caso não tenha sido definido o nome da tabela.
+            if (string.IsNullOrEmpty(tableName) == true) { throw new ArgumentNullException("tableName"); }
 
-				this.Close();
+            // Sai do método caso não existam dados a serem inseridos.
+            if (collection == null) { return; }
 
-				this.WriteOutput("ExecuteReader", string.Format("Exceção no processamento: {0}.", ex));
+            // Obtém um enumerador para a coleção recebida.
+            IEnumerator enumerator = collection.GetEnumerator();
 
-				throw;
-			}
-		}
+            // Acessa o primeiro item da coleção.
+            enumerator.MoveNext();
 
-		/// <summary>
-		/// Copys all elements of a collection to a destination table.
-		/// </summary>
-		/// <param name="tableName">Target table name.</param>
-		/// <param name="collection">Collection containing the data to be pushed to the database. The elements properties must have the same name as the destination columns.</param>
-		/// <param name="sqlBulkCopyOptions">Rule to be used by Sql Server before insert the data.</param>
-		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="BulkInsert"]/*'/>
-		public void BulkInsert(string tableName, IEnumerable collection, SqlBulkCopyOptions sqlBulkCopyOptions = SqlBulkCopyOptions.Default) {
+            this.WriteOutput("BulkInsert", "Obtendo as propriedades públicas do objeto a ser inserido.");
 
-			this.WriteOutput("BulkInsert", "Iniciando BulkInsert.");
+            // Obtém as informações sobre as propriedades de cada item da coleção.
+            PropertyInfo[] propertyInfoCollection = enumerator.Current.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-			// O método não pode prosseguir caso não tenha sido definido o nome da tabela.
-			if (string.IsNullOrEmpty(tableName) == true) { throw new ArgumentNullException("tableName"); }
+            this.WriteOutput("BulkInsert", string.Format("Criando o DataTable para a tabela '{0}'.", tableName));
 
-			// Sai do método caso não existam dados a serem inseridos.
-			if (collection == null) { return; }
+            // Cria o DataTable que será usado para copiar as informações para o banco de dados.
+            DataTable dataTable = new DataTable(tableName);
 
-			// Obtém um enumerador para a coleção recebida.
-			IEnumerator enumerator = collection.GetEnumerator();
+            this.WriteOutput("BulkInsert", "Iniciando o mapeando das propriedades dos objetos a serem inseridos.");
 
-			// Acessa o primeiro item da coleção.
-			enumerator.MoveNext();
+            // Dicionário que conterá o nome das colunas no banco de dados e a propriedade que será salva nesta coluna.
+            Dictionary<string, PropertyInfo> propertyTableDictionary = new Dictionary<string, PropertyInfo>(propertyInfoCollection.Length);
 
-			this.WriteOutput("BulkInsert", "Obtendo as propriedades públicas do objeto a ser inserido.");
+            // Mapeia cada propriedade da coleção, para criar as colunas do DataTable.
+            foreach (PropertyInfo propertyInfo in propertyInfoCollection) {
 
-			// Obtém as informações sobre as propriedades de cada item da coleção.
-			PropertyInfo[] propertyInfoCollection = enumerator.Current.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                Type propertyType = propertyInfo.PropertyType;
 
-			this.WriteOutput("BulkInsert", string.Format("Criando o DataTable para a tabela '{0}'.", tableName));
+                // Verifica se a propriedade é Nullable. Caso seja, obtém o tipo genérico.
+                if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>)) { propertyType = propertyType.GetGenericArguments()[0]; }
 
-			// Cria o DataTable que será usado para copiar as informações para o banco de dados.
-			DataTable dataTable = new DataTable(tableName);
+                this.WriteOutput("BulkInsert", string.Format("Mapeando a coluna '{0}' para o tipo '{1}'.", propertyInfo.Name, propertyType.Name));
 
-			this.WriteOutput("BulkInsert", "Iniciando o mapeando das propriedades dos objetos a serem inseridos.");
+                // Obtém os atributos da propriedade.
+                Attribute[] attributes = Attribute.GetCustomAttributes(propertyInfo);
 
-			// Dicionário que conterá o nome das colunas no banco de dados e a propriedade que será salva nesta coluna.
-			Dictionary<string, PropertyInfo> propertyTableDictionary = new Dictionary<string, PropertyInfo>(propertyInfoCollection.Length);
+                ColumnMapperAttribute columnNameAttribute = null;
 
-			// Mapeia cada propriedade da coleção, para criar as colunas do DataTable.
-			foreach (PropertyInfo propertyInfo in propertyInfoCollection) {
+                // Obtém todos os atributos da propriedade.
+                foreach (System.Attribute attribute in attributes) {
 
-				Type propertyType = propertyInfo.PropertyType;
+                    // Verifica se o atributo é do tipo ColumnNameAttribute.
+                    if (attribute is ColumnMapperAttribute) { columnNameAttribute = attribute as ColumnMapperAttribute; }
+                }
 
-				// Verifica se a propriedade é Nullable. Caso seja, obtém o tipo genérico.
-				if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>)) { propertyType = propertyType.GetGenericArguments()[0]; }
+                string columnName = null;
 
-				this.WriteOutput("BulkInsert", string.Format("Mapeando a coluna '{0}' para o tipo '{1}'.", propertyInfo.Name, propertyType.Name));
+                // Caso o atributo exista e possua um valor definido, utilizamos este valor como nome da coluna. Caso contrário, utiliza o nome da propriedade.
+                if (columnNameAttribute != null && string.IsNullOrEmpty(columnNameAttribute.ColumnName) == false) { columnName = columnNameAttribute.ColumnName; }
+                else { columnName = propertyInfo.Name; }
 
-				// Obtém os atributos da propriedade.
-				Attribute[] attributes = Attribute.GetCustomAttributes(propertyInfo);
+                // Adiciona a nova coluna no DataTable com o nome do atributo.
+                dataTable.Columns.Add(new DataColumn(columnName, propertyType));
 
-				ColumnMapperAttribute columnNameAttribute = null;
+                // Adiciona a informação da coluna e propriedade no dicionário de dados a serem inseridos na tabela.
+                propertyTableDictionary.Add(columnName, propertyInfo);
+            }
 
-				// Obtém todos os atributos da propriedade.
-				foreach (System.Attribute attribute in attributes) {
+            this.WriteOutput("BulkInsert", "Iniciando o preenchimento DataTable com os dados recebidos.");
 
-					// Verifica se o atributo é do tipo ColumnNameAttribute.
-					if (attribute is ColumnMapperAttribute) { columnNameAttribute = attribute as ColumnMapperAttribute; }
-				}
+            do {
+                // Cria uma nova linha que será adicionada ao Datatable.
+                DataRow dataRow = dataTable.NewRow();
 
-				string columnName = null;
+                // Obtém os valores de cada propriedade do item da coleção e adiciona na coluna correspondente.
+                foreach (KeyValuePair<string, PropertyInfo> kvPair in propertyTableDictionary) {
+                    dataRow[kvPair.Key] = kvPair.Value.GetValue(enumerator.Current, null) ?? DBNull.Value;
+                }
 
-				// Caso o atributo exista e possua um valor definido, utilizamos este valor como nome da coluna. Caso contrário, utiliza o nome da propriedade.
-				if (columnNameAttribute != null && string.IsNullOrEmpty(columnNameAttribute.ColumnName) == false) { columnName = columnNameAttribute.ColumnName; }
-				else { columnName = propertyInfo.Name; }
+                // Adiciona a linha ao DataTable.
+                dataTable.Rows.Add(dataRow);
 
-				// Adiciona a nova coluna no DataTable com o nome do atributo.
-				dataTable.Columns.Add(new DataColumn(columnName, propertyType));
+            } while (enumerator.MoveNext() == true);
 
-				// Adiciona a informação da coluna e propriedade no dicionário de dados a serem inseridos na tabela.
-				propertyTableDictionary.Add(columnName, propertyInfo);
-			}
+            try {
+                // Cria um novo SqlBulkCopy que será utilizado para inserir todas as informações da coleção de uma vez.
+                using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(this.Connection, sqlBulkCopyOptions, this.Transaction)) {
 
-			this.WriteOutput("BulkInsert", "Iniciando o preenchimento DataTable com os dados recebidos.");
+                    // Define o timeout da operação.
+                    sqlBulkCopy.BulkCopyTimeout = this.CommandTimeoutInSeconds;
 
-			do {
-				// Cria uma nova linha que será adicionada ao Datatable.
-				DataRow dataRow = dataTable.NewRow();
+                    this.WriteOutput("BulkInsert", "Abrindo a conexão com o banco de dados.");
 
-				// Obtém os valores de cada propriedade do item da coleção e adiciona na coluna correspondente.
-				foreach (KeyValuePair<string, PropertyInfo> kvPair in propertyTableDictionary) {
-					dataRow[kvPair.Key] = kvPair.Value.GetValue(enumerator.Current, null) ?? DBNull.Value;
-				}
+                    // Abre a conexão com o banco de dados.
+                    this.OpenConnection();
 
-				// Adiciona a linha ao DataTable.
-				dataTable.Rows.Add(dataRow);
+                    this.WriteOutput("BulkInsert", string.Format("Transaction Isolation Level: {0}", (this.Transaction != null) ? this.Transaction.IsolationLevel.ToString() : "null"));
+                    this.WriteOutput("BulkInsert", string.Format("SqlBulkCopyOptions: {0}", sqlBulkCopyOptions));
 
-			} while (enumerator.MoveNext() == true);
+                    this.WriteOutput("BulkInsert", "Mapeando as colunas do DataTable com as colunas do banco de dados.");
 
-			try {
-				// Cria um novo SqlBulkCopy que será utilizado para inserir todas as informações da coleção de uma vez.
-				using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(this.Connection, sqlBulkCopyOptions, this.Transaction)) {
+                    // Mapeia cada coluna do DataTable com sua respectiva coluna no banco de dados. Por isso é necessário que as propriedades tenham o mesmo nome das colunas no banco de dados.
+                    for (int i = 0; i < dataTable.Columns.Count; i++) { sqlBulkCopy.ColumnMappings.Add(dataTable.Columns[i].Caption, dataTable.Columns[i].Caption); }
 
-					// Define o timeout da operação.
-					sqlBulkCopy.BulkCopyTimeout = this.CommandTimeoutInSeconds;
+                    // Define o nome da tabela que receberá os dados.
+                    sqlBulkCopy.DestinationTableName = dataTable.TableName;
 
-					this.WriteOutput("BulkInsert", "Abrindo a conexão com o banco de dados.");
+                    // Define a quantidade máxima de registros a serem enviados por vez para o servidor. Utilizar entre 5000 e 10000 para evitar timeouts.
+                    sqlBulkCopy.BatchSize = 5000;
 
-					// Abre a conexão com o banco de dados.
-					this.OpenConnection();
+                    this.WriteOutput("BulkInsert", "Enviando as instruções para serem executadas no servidor.");
 
-					this.WriteOutput("BulkInsert", string.Format("Transaction Isolation Level: {0}", (this.Transaction != null) ? this.Transaction.IsolationLevel.ToString() : "null"));
-					this.WriteOutput("BulkInsert", string.Format("SqlBulkCopyOptions: {0}", sqlBulkCopyOptions));
+                    // Insere as informações no banco de dados.
+                    sqlBulkCopy.WriteToServer(dataTable);
 
-					this.WriteOutput("BulkInsert", "Mapeando as colunas do DataTable com as colunas do banco de dados.");
+                    this.WriteOutput("BulkInsert", "Operação concluída.");
+                }
+            }
+            catch (Exception ex) {
 
-					// Mapeia cada coluna do DataTable com sua respectiva coluna no banco de dados. Por isso é necessário que as propriedades tenham o mesmo nome das colunas no banco de dados.
-					for (int i = 0; i < dataTable.Columns.Count; i++) { sqlBulkCopy.ColumnMappings.Add(dataTable.Columns[i].Caption, dataTable.Columns[i].Caption); }
+                this.Close();
 
-					// Define o nome da tabela que receberá os dados.
-					sqlBulkCopy.DestinationTableName = dataTable.TableName;
+                this.WriteOutput("BulkInsert", string.Format("Exceção no processamento: {0}.", ex));
 
-					// Define a quantidade máxima de registros a serem enviados por vez para o servidor. Utilizar entre 5000 e 10000 para evitar timeouts.
-					sqlBulkCopy.BatchSize = 5000;
+                throw;
+            }
+        }
 
-					this.WriteOutput("BulkInsert", "Enviando as instruções para serem executadas no servidor.");
+        /// <summary>
+        /// Adiciona os parâmetros para a execução da query.
+        /// </summary>
+        /// <param name="query">Query a ser enviada para execução.</param>
+        /// <param name="command">Command responsável pela execução da query.</param>
+        /// <param name="parameters">Objeto contendo as propriedades a serem mepeadas para os parâmetros.</param>
+        private void AddParameters(string query, SqlCommand command, object parameters) {
 
-					// Insere as informações no banco de dados.
-					sqlBulkCopy.WriteToServer(dataTable);
+            this.WriteOutput("AddParameters", "Adicionando os parâmetros da query.");
 
-					this.WriteOutput("BulkInsert", "Operação concluída.");
-				}
-			}
-			catch (Exception ex) {
+            // Verifica se existem parâmetros a serem adicionados.
+            if (parameters == null) { return; }
 
-				this.Close();
+            // Obtém todas as propriedades do tipo anônimo.
+            PropertyInfo[] propertyInfoCollection = parameters.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-				this.WriteOutput("BulkInsert", string.Format("Exceção no processamento: {0}.", ex));
+            // Limpa quaisquer parâmetros pré-existentes.
+            command.Parameters.Clear();
 
-				throw;
-			}
-		}
+            // Mapeia o valor de cada propriedade para um novo parâmetro com o mesmo nome da propriedade.
+            for (int i = 0; i < propertyInfoCollection.Length; i++) {
 
-		/// <summary>
-		/// Adiciona os parâmetros para a execução da query.
-		/// </summary>
-		/// <param name="query">Query a ser enviada para execução.</param>
-		/// <param name="command">Command responsável pela execução da query.</param>
-		/// <param name="parameters">Objeto contendo as propriedades a serem mepeadas para os parâmetros.</param>
-		private void AddParameters(string query, SqlCommand command, object parameters) {
+                string parameterName = "@" + propertyInfoCollection[i].Name;
 
-			this.WriteOutput("AddParameters", "Adicionando os parâmetros da query.");
+                // Verifica se o parâmetro realmente existe na query.
+                if (query.IndexOf(parameterName, StringComparison.OrdinalIgnoreCase) < 0) { continue; }
 
-			// Verifica se existem parâmetros a serem adicionados.
-			if (parameters == null) { return; }
+                // Obtém ou valor da propriedade.
+                object value = propertyInfoCollection[i].GetValue(parameters, null);
 
-			// Obtém todas as propriedades do tipo anônimo.
-			PropertyInfo[] propertyInfoCollection = parameters.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                // Verifica se existe valor para a propriedade.
+                if (value != null) {
 
-			// Limpa quaisquer parâmetros pré-existentes.
-			command.Parameters.Clear();
+                    // Obtém o tipo da propriedade.
+                    Type valueType = value.GetType();
 
-			// Mapeia o valor de cada propriedade para um novo parâmetro com o mesmo nome da propriedade.
-			for (int i = 0; i < propertyInfoCollection.Length; i++) {
+                    // Deve ser um tipo básico ou Enum, e a única coleção permitida é string (coleção de chars).
+                    if ((valueType.IsClass == true && valueType.FullName.StartsWith("System") == false && valueType.IsEnum == false)) { continue; }
 
-				string parameterName = "@" + propertyInfoCollection[i].Name;
+                    // Verifica se é uma coleção que não seja uma string. Caso positivo, transforma os elementos da coleção para uma string.
+                    if (typeof(IEnumerable).IsAssignableFrom(valueType) && (value is string == false) && (value is byte[] == false)) {
 
-				// Verifica se o parâmetro realmente existe na query.
-				if (query.IndexOf(parameterName, StringComparison.OrdinalIgnoreCase) < 0) { continue; }
+                        // Converte a coleção para uma string a ser adicionada na query.
+                        value = CollectionToString((IEnumerable)value, ',', "'");
 
-				// Obtém ou valor da propriedade.
-				object value = propertyInfoCollection[i].GetValue(parameters, null);
+                        // Como o Sql não suporta coleções como parâmetros, atualiza a query dinamicamente.
+                        query = query.Replace("@" + propertyInfoCollection[i].Name, value as string);
 
-				// Verifica se existe valor para a propriedade.
-				if (value != null) {
+                        // Como o parâmetro já foi definido, passa para o próximo.
+                        continue;
+                    }
+                }
 
-					// Obtém o tipo da propriedade.
-					Type valueType = value.GetType();
+                // Cria um novo parâmetro de banco de dados.
+                SqlParameter parameter = command.CreateParameter();
 
-					// Deve ser um tipo básico ou Enum, e a única coleção permitida é string (coleção de chars).
-					if ((valueType.IsClass == true && valueType.FullName.StartsWith("System") == false && valueType.IsEnum == false)) { continue; }
+                // Cria o nome do parâmetro, assim como no SqlCommand, colocando o sinal de @ na frente do nome.
+                parameter.ParameterName = parameterName;
 
-					// Verifica se é uma coleção que não seja uma string. Caso positivo, transforma os elementos da coleção para uma string.
-					if (typeof(IEnumerable).IsAssignableFrom(valueType) && (value is string == false) && (value is byte[] == false)) {
+                // Se o valor for uma string nula, define o valor como DBNull. Caso contrário, utiliza o valor do objeto. Se o valor do objeto for nulo, utiliza novamente DBNull.
+                parameter.Value = value ?? DBNull.Value;
 
-						// Converte a coleção para uma string a ser adicionada na query.
-						value = ((IEnumerable)value).AsString(',', "'");
+                this.WriteOutput("AddParameters", string.Format("Adicionando parâmetro '{0}' com o valor '{1}'.", parameter.ParameterName, parameter.Value));
 
-						// Como o Sql não suporta coleções como parâmetros, atualiza a query dinamicamente.
-						query = query.Replace("@" + propertyInfoCollection[i].Name, value as string);
+                // Validações adicionais antes de preencher o valor do objeto.
+                if (value != null) {
 
-						// Como o parâmetro já foi definido, passa para o próximo.
-						continue;
-					}
-				}
+                    if (value is string && (value as string).Length == 0) { parameter.Value = DBNull.Value; }
+                    else if (value.GetType().IsEnum == true) { parameter.Value = value.ToString(); }
+                    else if (value is DateTime && (DateTime)value == DateTime.MinValue) { parameter.Value = DBNull.Value; }
+                }
 
-				// Cria um novo parâmetro de banco de dados.
-				SqlParameter parameter = command.CreateParameter();
+                // Define o motivo do parâmetro.
+                parameter.Direction = ParameterDirection.Input;
 
-				// Cria o nome do parâmetro, assim como no SqlCommand, colocando o sinal de @ na frente do nome.
-				parameter.ParameterName = parameterName;
+                // Adiciona o parâmetro no objeto command a ser executado.
+                command.Parameters.Add(parameter);
 
-				// Se o valor for uma string nula, define o valor como DBNull. Caso contrário, utiliza o valor do objeto. Se o valor do objeto for nulo, utiliza novamente DBNull.
-				parameter.Value = value ?? DBNull.Value;
+            }
 
-				this.WriteOutput("AddParameters", string.Format("Adicionando parâmetro '{0}' com o valor '{1}'.", parameter.ParameterName, parameter.Value));
+            // Redefine a query, pois ela pode ter sido modificada.
+            command.CommandText = query;
+        }
 
-				// Validações adicionais antes de preencher o valor do objeto.
-				if (value != null) {
+        /// <summary>
+        /// Executa a leitura dos dados de um DataReader.
+        /// </summary>
+        /// <typeparam name="T">Tipo do objeto que será preenchido.</typeparam>
+        /// <param name="reader">Reader a ser utilizado para obter as informações do banco de dados.</param>
+        /// <returns>Retorna uma coleção com os registros do tipo T encontrados no banco de dados.</returns>
+        private IEnumerable<T> InternalReader<T>(SqlDataReader reader) {
 
-					if (value is string && (value as string).Length == 0) { parameter.Value = DBNull.Value; }
-					else if (value.GetType().IsEnum == true) { parameter.Value = value.ToString(); }
-					else if (value is DateTime && (DateTime)value == DateTime.MinValue) { parameter.Value = DBNull.Value; }
-				}
+            Type returnType = typeof(T);
 
-				// Define o motivo do parâmetro.
-				parameter.Direction = ParameterDirection.Input;
+            this.WriteOutput("InternalReader", string.Format("Obtendo as propriedades do tipo '{0}'.", returnType.Name));
 
-				// Adiciona o parâmetro no objeto command a ser executado.
-				command.Parameters.Add(parameter);
+            // Armazena todas as propriedades do objeto. Importante obter a propriedade desta coleção para que a busca possa ser case insensitive, ao contrário do GetProperty do reflection.
+            PropertyInfo[] returnTypeProperties = returnType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
-			}
+            // Armazena o schema da tabela que será utilizado para fazer a tipagem e o mapeamento dos dados.
+            DataTable schemaTable = reader.GetSchemaTable();
 
-			// Redefine a query, pois ela pode ter sido modificada.
-			command.CommandText = query;
-		}
+            // Lê cada registro encontrado.
+            while (reader.Read()) {
 
-		/// <summary>
-		/// Executa a leitura dos dados de um DataReader.
-		/// </summary>
-		/// <typeparam name="T">Tipo do objeto que será preenchido.</typeparam>
-		/// <param name="reader">Reader a ser utilizado para obter as informações do banco de dados.</param>
-		/// <returns>Retorna uma coleção com os registros do tipo T encontrados no banco de dados.</returns>
-		private IEnumerable<T> InternalReader<T>(SqlDataReader reader) {
 
-			Type returnType = typeof(T);
+                // Caso seja um tipo primitivo do .Net, apenas obtém o valor.
+                if (returnType.FullName.IndexOf("System.") >= 0) {
 
-			this.WriteOutput("InternalReader", string.Format("Obtendo as propriedades do tipo '{0}'.", returnType.Name));
+                    // Caso o valor da coluna seja nulo, não é necessário fazer mapeamentos adicionais.
+                    if (reader.IsDBNull(0)) {
+                        this.WriteOutput("InternalReader", "Nada encontrado na consulta.");
+                        continue;
+                    }
 
-			// Armazena todas as propriedades do objeto. Importante obter a propriedade desta coleção para que a busca possa ser case insensitive, ao contrário do GetProperty do reflection.
-			PropertyInfo[] returnTypeProperties = returnType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                    this.WriteOutput("InternalReader", string.Format("Encontrado o valor '{0}'.", reader[0]));
+                    yield return (T)Convert.ChangeType(reader[0], returnType);
 
-			// Armazena o schema da tabela que será utilizado para fazer a tipagem e o mapeamento dos dados.
-			DataTable schemaTable = reader.GetSchemaTable();
+                }
+                else {
 
-			// Lê cada registro encontrado.
-			while (reader.Read()) {
+                    IList<KeyValuePair<string, object>> columns = new List<KeyValuePair<string, object>>();
 
+                    // Analisa todas as propriedades encontradas.
+                    for (int i = 0; i < reader.FieldCount; i++) {
+                        columns.Add(new KeyValuePair<string, object>(reader.GetName(i), reader[i]));
+                    }
 
-				// Caso seja um tipo primitivo do .Net, apenas obtém o valor.
-				if (returnType.FullName.IndexOf("System.") >= 0) {
+                    this.WriteOutput("InternalReader", string.Format("Criando a instancia do tipo '{0}'.", returnType.Name));
 
-					// Caso o valor da coluna seja nulo, não é necessário fazer mapeamentos adicionais.
-					if (reader.IsDBNull(0)) {
-						this.WriteOutput("InternalReader", "Nada encontrado na consulta.");
-						continue;
-					}
+                    T returnInstance = Activator.CreateInstance<T>();
+                    IList<string> mappedProperties = null;
+                    for (int i = 0; i < columns.Count; i++) {
 
-					this.WriteOutput("InternalReader", string.Format("Encontrado o valor '{0}'.", reader[0]));
-					yield return (T)Convert.ChangeType(reader[0], returnType);
+                        // Verifica se a coluna possui algum valor a ser mapeado.
+                        if (columns[i].Value == DBNull.Value || columns[i].Value == null) { continue; }
 
-				}
-				else {
+                        if (mappedProperties == null) { mappedProperties = new List<string>(); }
 
-					IList<KeyValuePair<string, object>> columns = new List<KeyValuePair<string, object>>();
+                        // Executa o mapeamento da propriedade encontrada.
+                        this.ParseProperty(returnType, returnTypeProperties, schemaTable, returnInstance, columns[i].Key, columns[i].Value, i, mappedProperties);
+                    }
 
-					// Analisa todas as propriedades encontradas.
-					for (int i = 0; i < reader.FieldCount; i++) {
-						columns.Add(new KeyValuePair<string, object>(reader.GetName(i), reader[i]));
-					}
+                    yield return returnInstance;
+                }
+            }
+        }
 
-					this.WriteOutput("InternalReader", string.Format("Criando a instancia do tipo '{0}'.", returnType.Name));
+        /// <summary>
+        /// Executa a leitura dos dados de um DataReader.
+        /// </summary>
+        /// <typeparam name="T">Tipo do objeto que será preenchido.</typeparam>
+        /// <param name="reader">Reader a ser utilizado para obter as informações do banco de dados.</param>
+        /// <returns>Retorna uma coleção com os registros do tipo T encontrados no banco de dados.</returns>
+        private IEnumerable<T> InternalReaderFetchAll<T>(SqlDataReader reader) {
 
-					T returnInstance = Activator.CreateInstance<T>();
-					IList<string> mappedProperties = null;
-					for (int i = 0; i < columns.Count; i++) {
+            Type returnType = typeof(T);
 
-						// Verifica se a coluna possui algum valor a ser mapeado.
-						if (columns[i].Value == DBNull.Value || columns[i].Value == null) { continue; }
+            this.WriteOutput("InternalReader", string.Format("Obtendo as propriedades do tipo '{0}'.", returnType.Name));
 
-						if (mappedProperties == null) { mappedProperties = new List<string>(); }
+            // Armazena todas as propriedades do objeto. Importante obter a propriedade desta coleção para que a busca possa ser case insensitive, ao contrário do GetProperty do reflection.
+            PropertyInfo[] returnTypeProperties = returnType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
-						// Executa o mapeamento da propriedade encontrada.
-						this.ParseProperty(returnType, returnTypeProperties, schemaTable, returnInstance, columns[i].Key, columns[i].Value, i, mappedProperties);
-					}
+            // Armazena o schema da tabela que será utilizado para fazer a tipagem e o mapeamento dos dados.
+            DataTable schemaTable = reader.GetSchemaTable();
 
-					yield return returnInstance;
-				}
-			}
-		}
+            // Coleção que será retornada.
+            List<T> returnCollection = new List<T>();
 
-		/// <summary>
-		/// Executa a leitura dos dados de um DataReader.
-		/// </summary>
-		/// <typeparam name="T">Tipo do objeto que será preenchido.</typeparam>
-		/// <param name="reader">Reader a ser utilizado para obter as informações do banco de dados.</param>
-		/// <returns>Retorna uma coleção com os registros do tipo T encontrados no banco de dados.</returns>
-		private IEnumerable<T> InternalReaderFetchAll<T>(SqlDataReader reader) {
+            TaskFactory taskFactory = new TaskFactory();
+            List<Task> taskList = new List<Task>();
 
-			Type returnType = typeof(T);
+            // Lê cada registro encontrado.
+            while (reader.Read() == true) {
 
-			this.WriteOutput("InternalReader", string.Format("Obtendo as propriedades do tipo '{0}'.", returnType.Name));
+                T returnInstance;
 
-			// Armazena todas as propriedades do objeto. Importante obter a propriedade desta coleção para que a busca possa ser case insensitive, ao contrário do GetProperty do reflection.
-			PropertyInfo[] returnTypeProperties = returnType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                // Caso seja um tipo primitivo do .Net, apenas obtém o valor.
+                if (returnType.FullName.IndexOf("System.") >= 0) {
 
-			// Armazena o schema da tabela que será utilizado para fazer a tipagem e o mapeamento dos dados.
-			DataTable schemaTable = reader.GetSchemaTable();
+                    // Caso o valor da coluna seja nulo, não é necessário fazer mapeamentos adicionais.
+                    if (reader.IsDBNull(0) == true) {
+                        this.WriteOutput("InternalReader", "Nada encontrado na consulta.");
+                        continue;
+                    }
 
-			// Coleção que será retornada.
-			List<T> returnCollection = new List<T>();
+                    // Obtém o valor encontrado na consulta.
+                    returnInstance = (T)Convert.ChangeType(reader[0], returnType);
 
-			TaskFactory taskFactory = new TaskFactory();
-			List<Task> taskList = new List<Task>();
+                    // Adiciona o registro preenchido na coleção que será retornada.
+                    returnCollection.Add(returnInstance);
 
-			// Lê cada registro encontrado.
-			while (reader.Read() == true) {
+                    this.WriteOutput("InternalReader", string.Format("Encontrado o valor '{0}'.", reader[0]));
+                }
+                else {
 
-				T returnInstance;
+                    List<string> mappedProperties = new List<string>();
 
-				// Caso seja um tipo primitivo do .Net, apenas obtém o valor.
-				if (returnType.FullName.IndexOf("System.") >= 0) {
+                    List<KeyValuePair<string, object>> columns = new List<KeyValuePair<string, object>>();
 
-					// Caso o valor da coluna seja nulo, não é necessário fazer mapeamentos adicionais.
-					if (reader.IsDBNull(0) == true) {
-						this.WriteOutput("InternalReader", "Nada encontrado na consulta.");
-						continue;
-					}
+                    // Analisa todas as propriedades encontradas.
+                    for (int i = 0; i < reader.FieldCount; i++) {
+                        columns.Add(new KeyValuePair<string, object>(reader.GetName(i), reader[i]));
+                    }
 
-					// Obtém o valor encontrado na consulta.
-					returnInstance = (T)Convert.ChangeType(reader[0], returnType);
+                    this.WriteOutput("InternalReader", string.Format("Criando a instancia do tipo '{0}'.", returnType.Name));
 
-					// Adiciona o registro preenchido na coleção que será retornada.
-					returnCollection.Add(returnInstance);
+                    returnInstance = Activator.CreateInstance<T>();
 
-					this.WriteOutput("InternalReader", string.Format("Encontrado o valor '{0}'.", reader[0]));
-				}
-				else {
+                    // Adiciona o registro preenchido na coleção que será retornada.
+                    returnCollection.Add(returnInstance);
 
-					List<string> mappedProperties = new List<string>();
+                    Task task = taskFactory.StartNew(() => {
 
-					List<KeyValuePair<string, object>> columns = new List<KeyValuePair<string, object>>();
+                        for (int i = 0; i < columns.Count; i++) {
 
-					// Analisa todas as propriedades encontradas.
-					for (int i = 0; i < reader.FieldCount; i++) {
-						columns.Add(new KeyValuePair<string, object>(reader.GetName(i), reader[i]));
-					}
+                            // Verifica se a coluna possui algum valor a ser mapeado.
+                            if (columns[i].Value == DBNull.Value || columns[i].Value == null) { continue; }
 
-					this.WriteOutput("InternalReader", string.Format("Criando a instancia do tipo '{0}'.", returnType.Name));
+                            // Executa o mapeamento da propriedade encontrada.
+                            this.ParseProperty(returnType, returnTypeProperties, schemaTable, returnInstance, columns[i].Key, columns[i].Value, i, mappedProperties);
+                        }
+                    });
 
-					returnInstance = Activator.CreateInstance<T>();
+                    taskList.Add(task);
+                }
 
-					// Adiciona o registro preenchido na coleção que será retornada.
-					returnCollection.Add(returnInstance);
+                // Adiciona o registro preenchido na coleção que será retornada.
+                //returnCollection.Add(returnInstance);
+            }
 
-					Task task = taskFactory.StartNew(() => {
+            Task.WaitAll(taskList.ToArray());
 
-						for (int i = 0; i < columns.Count; i++) {
+            return returnCollection;
+        }
 
-							// Verifica se a coluna possui algum valor a ser mapeado.
-							if (columns[i].Value == DBNull.Value || columns[i].Value == null) { continue; }
+        /// <summary>
+        /// Tenta mapear uma coluna encontrada no banco de dados para uma propriedade do objeto especificado.
+        /// </summary>
+        /// <param name="returnType">Tipo do objeto para onde os dados encontrados no banco serão mapeados.</param>
+        /// <param name="schemaTable">Objeto contendo os metadados da tabela a qual a coluna encontrada pertence.</param>
+        /// <param name="returnInstance">Instancia do objeto que será retornado.</param>
+        /// <param name="columnName">Nome da coluna encontrada no banco de dados.</param>
+        /// <param name="databaseValue">Valor encontrado no banco de dados.</param>
+        /// <param name="ordinal">Índice da coluna. Usado para identificar a qual tabela pertence um campo quando houver joins.</param>
+        /// <returns>Retorna true caso seja encontrada uma propriedade para a coluna, ou false, caso contrário.</returns>
+        private bool ParseProperty(Type returnType, PropertyInfo[] returnTypeProperties, DataTable schemaTable, object returnInstance, string columnName, object databaseValue, int ordinal, IList<string> mappedProperties) {
 
-							// Executa o mapeamento da propriedade encontrada.
-							this.ParseProperty(returnType, returnTypeProperties, schemaTable, returnInstance, columns[i].Key, columns[i].Value, i, mappedProperties);
-						}
-					});
+            // Caso o valor encontrado no banco seja nulo, não é necessário obter o seu valor, passa para a próxima propriedade.
+            if (databaseValue == null) { return false; }
 
-					taskList.Add(task);
-				}
+            this.WriteOutput("ParseProperty", string.Format("Mapeando os dados da coluna '{0}' para o objeto {1}.", columnName, returnType.Name));
 
-				// Adiciona o registro preenchido na coleção que será retornada.
-				//returnCollection.Add(returnInstance);
-			}
+            // Extrai os dados da coluna que estamos trabalhando, a partir do schema.
+            DataRow dataRow = schemaTable.Select("ColumnName = '" + columnName + "' AND ColumnOrdinal = " + ordinal).FirstOrDefault();
 
-			Task.WaitAll(taskList.ToArray());
+            // Obtém o nome da tabela a qual a coluna pertence. O nome fica armazenado na coluna 11 para Sql ou 8 para SqlCe.
+            string tableName = (dataRow != null) ? dataRow["BaseTableName"].ToString() : null;
 
-			return returnCollection;
-		}
+            // Obtém a propriedade que possui o mesmo nome da propriedade encontrada na consulta ao banco.
+            PropertyInfo propertyInfo = null;
 
-		/// <summary>
-		/// Tenta mapear uma coluna encontrada no banco de dados para uma propriedade do objeto especificado.
-		/// </summary>
-		/// <param name="returnType">Tipo do objeto para onde os dados encontrados no banco serão mapeados.</param>
-		/// <param name="schemaTable">Objeto contendo os metadados da tabela a qual a coluna encontrada pertence.</param>
-		/// <param name="returnInstance">Instancia do objeto que será retornado.</param>
-		/// <param name="columnName">Nome da coluna encontrada no banco de dados.</param>
-		/// <param name="databaseValue">Valor encontrado no banco de dados.</param>
-		/// <param name="ordinal">Índice da coluna. Usado para identificar a qual tabela pertence um campo quando houver joins.</param>
-		/// <returns>Retorna true caso seja encontrada uma propriedade para a coluna, ou false, caso contrário.</returns>
-		private bool ParseProperty(Type returnType, PropertyInfo[] returnTypeProperties, DataTable schemaTable, object returnInstance, string columnName, object databaseValue, int ordinal, IList<string> mappedProperties) {
+            string explicitClassName = null;
+            string explicitPropertyName = null;
 
-			// Caso o valor encontrado no banco seja nulo, não é necessário obter o seu valor, passa para a próxima propriedade.
-			if (databaseValue == null) { return false; }
+            // Verifica se existe um ponto no nome da coluna. Caso positivo, indica que foi seguido o padrão "Classe.Propriedade" no alias da coluna.
+            if (columnName.IndexOf('.') >= 0) {
 
-			this.WriteOutput("ParseProperty", string.Format("Mapeando os dados da coluna '{0}' para o objeto {1}.", columnName, returnType.Name));
+                string[] aliasData = columnName.Split(new char[] { '.' }, 2);
 
-			// Extrai os dados da coluna que estamos trabalhando, a partir do schema.
-			DataRow dataRow = schemaTable.Select("ColumnName = '" + columnName + "' AND ColumnOrdinal = " + ordinal).FirstOrDefault();
+                explicitClassName = aliasData[0];
+                explicitPropertyName = aliasData[1];
 
-			// Obtém o nome da tabela a qual a coluna pertence. O nome fica armazenado na coluna 11 para Sql ou 8 para SqlCe.
-			string tableName = (dataRow != null) ? dataRow["BaseTableName"].ToString() : null;
+                this.WriteOutput("ParseProperty", string.Format("Mapeamento explícito da propriedade '{0}' para o objeto {1}.", aliasData[1], aliasData[0]));
+            }
 
-			// Obtém a propriedade que possui o mesmo nome da propriedade encontrada na consulta ao banco.
-			PropertyInfo propertyInfo = null;
+            // Armazena o nome real da propriedade.
+            string propertyName = explicitPropertyName ?? columnName;
 
-			string explicitClassName = null;
-			string explicitPropertyName = null;
+            // Armazena o nome da propriedade esperada.
+            string memberName = explicitClassName ?? propertyName;
 
-			// Verifica se existe um ponto no nome da coluna. Caso positivo, indica que foi seguido o padrão "Classe.Propriedade" no alias da coluna.
-			if (columnName.IndexOf('.') >= 0) {
+            if (string.IsNullOrWhiteSpace(explicitClassName) == true) {
 
-				string[] aliasData = columnName.Split(new char[] { '.' }, 2);
+                // Verifica se a propriedade já foi mapeada.
+                if (mappedProperties.Contains(returnType.Name + "." + propertyName) == true) {
 
-				explicitClassName = aliasData[0];
-				explicitPropertyName = aliasData[1];
+                    //	// Caso a propriedade já tenha sido mapeada, verifica se existe alguma sub-propriedade com o mesmo nome da tabela, para verificar se não é uma propriedade filha.
+                    //	propertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(tableName, StringComparison.OrdinalIgnoreCase));
 
-				this.WriteOutput("ParseProperty", string.Format("Mapeamento explícito da propriedade '{0}' para o objeto {1}.", aliasData[1], aliasData[0]));
-			}
+                    //	// Caso não exista uma propriedade com o nome da tabela, nada será mapeado para a coluna atual.
+                    //	if (propertyInfo == null) { return false; }
 
-			// Armazena o nome real da propriedade.
-			string propertyName = explicitPropertyName ?? columnName;
+                    return true;
+                }
+            }
 
-			// Armazena o nome da propriedade esperada.
-			string memberName = explicitClassName ?? propertyName;
+            if (string.IsNullOrWhiteSpace(tableName) == true) { tableName = explicitClassName; }
 
-			if (string.IsNullOrWhiteSpace(explicitClassName) == true) {
+            if (propertyInfo == null) {
 
-				// Verifica se a propriedade já foi mapeada.
-				if (mappedProperties.Contains(returnType.Name + "." + propertyName) == true) {
+                // Verifica se existe um membro com o nome da tabela/classe, que possa conter a propriedade que receberá o valor da coluna.
+                propertyInfo = returnTypeProperties.FirstOrDefault(p => (p.Name.Equals(tableName, StringComparison.OrdinalIgnoreCase) || p.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase)) && p.PropertyType.FullName.IndexOf("System.") < 0 && p.PropertyType.IsEnum == false);
 
-					//	// Caso a propriedade já tenha sido mapeada, verifica se existe alguma sub-propriedade com o mesmo nome da tabela, para verificar se não é uma propriedade filha.
-					//	propertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(tableName, StringComparison.OrdinalIgnoreCase));
+                if (propertyInfo != null) {
 
-					//	// Caso não exista uma propriedade com o nome da tabela, nada será mapeado para a coluna atual.
-					//	if (propertyInfo == null) { return false; }
+                    // Armazena o tipo da sub-propriedade.
+                    Type subPropertyType = propertyInfo.PropertyType;
 
-					return true;
-				}
-			}
+                    // Tenta obter uma instancia para o sub-objeto. Caso não exista uma definida, cria uma nova.
+                    object subPropertyInstance = propertyInfo.GetValue(returnInstance, null) ?? Activator.CreateInstance(subPropertyType);
 
-			if (string.IsNullOrWhiteSpace(tableName) == true) { tableName = explicitClassName; }
+                    PropertyInfo[] subPropertyTypeProperties = subPropertyType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
-			if (propertyInfo == null) {
+                    if (this.ParseProperty(subPropertyType, subPropertyTypeProperties, schemaTable, subPropertyInstance, propertyName ?? columnName, databaseValue, ordinal, mappedProperties) == true) {
 
-				// Verifica se existe um membro com o nome da tabela/classe, que possa conter a propriedade que receberá o valor da coluna.
-				propertyInfo = returnTypeProperties.FirstOrDefault(p => (p.Name.Equals(tableName, StringComparison.OrdinalIgnoreCase) || p.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase)) && p.PropertyType.FullName.IndexOf("System.") < 0 && p.PropertyType.IsEnum == false);
+                        // Define o valor da propriedade encontrada.
+                        propertyInfo.SetValue(returnInstance, subPropertyInstance, null);
 
-				if (propertyInfo != null) {
+                        return true;
+                    }
+                    else { return false; }
+                }
+                else {
+                    // Obtém a propriedade que possui o mesmo nome da propriedade encontrada na consulta ao banco.
+                    propertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
+                }
+            }
 
-					// Armazena o tipo da sub-propriedade.
-					Type subPropertyType = propertyInfo.PropertyType;
+            // Caso não exista uma propriedade para receber o valor retornado, sai do método.
+            if (propertyInfo == null) { return false; }
 
-					// Tenta obter uma instancia para o sub-objeto. Caso não exista uma definida, cria uma nova.
-					object subPropertyInstance = propertyInfo.GetValue(returnInstance, null) ?? Activator.CreateInstance(subPropertyType);
+            //this.WriteOutput("ParseProperty", string.Format("Tabela de origem da coluna '{0}': '{1}'.", columnName, tableName));
 
-					PropertyInfo[] subPropertyTypeProperties = subPropertyType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            //if (propertyInfo == null && string.IsNullOrWhiteSpace(tableName) == true) { return false; }
 
-					if (this.ParseProperty(subPropertyType, subPropertyTypeProperties, schemaTable, subPropertyInstance, propertyName ?? columnName, databaseValue, ordinal, mappedProperties) == true) {
+            //if (string.IsNullOrWhiteSpace(tableName) == false) {
 
-						// Define o valor da propriedade encontrada.
-						propertyInfo.SetValue(returnInstance, subPropertyInstance, null);
+            //	//  Se a propriedade não foi encontrada, não é possível fazer o mapeamento do valor da coluna.
+            //	if ((returnType.GetProperty(memberName) != null || propertyInfo == null || mappedProperties.IndexOf(returnType.Name + "." + propertyInfo.Name) >= 0) && (propertyInfo == null || (propertyInfo.PropertyType.FullName.IndexOf("System.") < 0 && propertyInfo.PropertyType.IsEnum == false))) {
 
-						return true;
-					}
-					else { return false; }
-				}
-				else {
-					// Obtém a propriedade que possui o mesmo nome da propriedade encontrada na consulta ao banco.
-					propertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
-				}
-			}
+            //		this.WriteOutput("ParseProperty", string.Format("Nenhuma propriedade encontrada no objeto '{0}' para a coluna '{1}'.", returnType.Name, propertyName));
 
-			// Caso não exista uma propriedade para receber o valor retornado, sai do método.
-			if (propertyInfo == null) { return false; }
+            //		// Procura uma propriedade com o mesmo nome da tabela.
+            //		PropertyInfo subPropertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(explicitClassName ?? tableName, StringComparison.OrdinalIgnoreCase));
 
-			//this.WriteOutput("ParseProperty", string.Format("Tabela de origem da coluna '{0}': '{1}'.", columnName, tableName));
+            //		// Sai do método caso não exista uma propriedade com o nome da tabela.
+            //		if (subPropertyInfo == null) { return false; }
 
-			//if (propertyInfo == null && string.IsNullOrWhiteSpace(tableName) == true) { return false; }
+            //		// Armazena o tipo da sub-propriedade.
+            //		Type subPropertyType = subPropertyInfo.PropertyType;
 
-			//if (string.IsNullOrWhiteSpace(tableName) == false) {
+            //		// Sai do método caso a propriedade já tenha sido mapeada.
+            //		if (mappedProperties.Contains(returnType.Name + "." + subPropertyType.Name + "." + propertyName) == true) { return false; }
 
-			//	//  Se a propriedade não foi encontrada, não é possível fazer o mapeamento do valor da coluna.
-			//	if ((returnType.GetProperty(memberName) != null || propertyInfo == null || mappedProperties.IndexOf(returnType.Name + "." + propertyInfo.Name) >= 0) && (propertyInfo == null || (propertyInfo.PropertyType.FullName.IndexOf("System.") < 0 && propertyInfo.PropertyType.IsEnum == false))) {
+            //		// Verifica se a propriedade a ser mapeada é do tipo enum.
+            //		if (subPropertyType.IsEnum == true) {
 
-			//		this.WriteOutput("ParseProperty", string.Format("Nenhuma propriedade encontrada no objeto '{0}' para a coluna '{1}'.", returnType.Name, propertyName));
+            //			object value = Enum.Parse(subPropertyType, databaseValue.ToString(), true);
 
-			//		// Procura uma propriedade com o mesmo nome da tabela.
-			//		PropertyInfo subPropertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(explicitClassName ?? tableName, StringComparison.OrdinalIgnoreCase));
+            //			// Define o valor da propriedade.
+            //			subPropertyInfo.SetValue(returnInstance, value, null);
 
-			//		// Sai do método caso não exista uma propriedade com o nome da tabela.
-			//		if (subPropertyInfo == null) { return false; }
+            //			// Adiciona a propriedade na lista de dados já mapeados.
+            //			mappedProperties.Add(returnType.Name + "." + subPropertyType.Name + "." + propertyName);
 
-			//		// Armazena o tipo da sub-propriedade.
-			//		Type subPropertyType = subPropertyInfo.PropertyType;
+            //			return true;
+            //		}
 
-			//		// Sai do método caso a propriedade já tenha sido mapeada.
-			//		if (mappedProperties.Contains(returnType.Name + "." + subPropertyType.Name + "." + propertyName) == true) { return false; }
+            //		// Tenta obter uma instancia para o sub-objeto. Caso não exista uma definida, cria uma nova.
+            //		object subPropertyInstance = subPropertyInfo.GetValue(returnInstance, null) ?? Activator.CreateInstance(subPropertyType);
 
-			//		// Verifica se a propriedade a ser mapeada é do tipo enum.
-			//		if (subPropertyType.IsEnum == true) {
+            //		PropertyInfo[] subPropertyTypeProperties = subPropertyType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
-			//			object value = Enum.Parse(subPropertyType, databaseValue.ToString(), true);
+            //		// Verifica se a propriedade comporta o valor encontrado no banco de dados.
+            //		if (this.ParseProperty(subPropertyType, subPropertyTypeProperties, schemaTable, subPropertyInstance, propertyName ?? columnName, databaseValue, ordinal, mappedProperties) == true) {
 
-			//			// Define o valor da propriedade.
-			//			subPropertyInfo.SetValue(returnInstance, value, null);
+            //			// Define o valor da propriedade encontrada.
+            //			subPropertyInfo.SetValue(returnInstance, subPropertyInstance, null);
 
-			//			// Adiciona a propriedade na lista de dados já mapeados.
-			//			mappedProperties.Add(returnType.Name + "." + subPropertyType.Name + "." + propertyName);
+            //			// Adiciona a propriedade na lista de dados já mapeados.
+            //			mappedProperties.Add(returnType.Name + "." + subPropertyType.Name + "." + subPropertyInfo.Name);
 
-			//			return true;
-			//		}
+            //			return true;
+            //		}
 
-			//		// Tenta obter uma instancia para o sub-objeto. Caso não exista uma definida, cria uma nova.
-			//		object subPropertyInstance = subPropertyInfo.GetValue(returnInstance, null) ?? Activator.CreateInstance(subPropertyType);
+            //		return false;
+            //	}
+            //}
 
-			//		PropertyInfo[] subPropertyTypeProperties = subPropertyType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            // Define o valor da propriedade encontrada.
+            if (propertyInfo.CanWrite == true) {
 
-			//		// Verifica se a propriedade comporta o valor encontrado no banco de dados.
-			//		if (this.ParseProperty(subPropertyType, subPropertyTypeProperties, schemaTable, subPropertyInstance, propertyName ?? columnName, databaseValue, ordinal, mappedProperties) == true) {
+                object value = databaseValue;
 
-			//			// Define o valor da propriedade encontrada.
-			//			subPropertyInfo.SetValue(returnInstance, subPropertyInstance, null);
+                // Caso a propriedade seja um enum, converte a string para enum.
+                if (propertyInfo.PropertyType.IsEnum == true) { value = Enum.Parse(propertyInfo.PropertyType, databaseValue.ToString(), true); }
 
-			//			// Adiciona a propriedade na lista de dados já mapeados.
-			//			mappedProperties.Add(returnType.Name + "." + subPropertyType.Name + "." + subPropertyInfo.Name);
+                else {
+                    // Obtém o tipo de destino da propriedade.
+                    Type propertyType = (propertyInfo.PropertyType.IsGenericType == true) ? propertyInfo.PropertyType.GetGenericArguments()[0] : propertyInfo.PropertyType;
 
-			//			return true;
-			//		}
+                    // Converte o tipo do banco de dados para o tipo correto da propriedade que receberá o valor.
+                    if (value.GetType() != propertyType) { value = Convert.ChangeType(value, propertyType); }
+                }
 
-			//		return false;
-			//	}
-			//}
+                this.WriteOutput("ParseProperty", string.Format("Mapeando valor '{0}' para a propriedade '{1}' do objeto '{2}'.", value, propertyInfo.Name, returnType.Name));
 
-			// Define o valor da propriedade encontrada.
-			if (propertyInfo.CanWrite == true) {
+                // Define o valor da propriedade.
+                propertyInfo.SetValue(returnInstance, value, null);
 
-				object value = databaseValue;
+                // Adiciona a propriedade na lista de dados já mapeados.
+                mappedProperties.Add(returnType.Name + "." + propertyName);
+            }
 
-				// Caso a propriedade seja um enum, converte a string para enum.
-				if (propertyInfo.PropertyType.IsEnum == true) { value = Enum.Parse(propertyInfo.PropertyType, databaseValue.ToString(), true); }
+            return true;
+        }
 
-				else {
-					// Obtém o tipo de destino da propriedade.
-					Type propertyType = (propertyInfo.PropertyType.IsGenericType == true) ? propertyInfo.PropertyType.GetGenericArguments()[0] : propertyInfo.PropertyType;
+        /// <summary>
+        /// Starts a database transaction.
+        /// </summary>
+        /// <param name="isolationLevel">Transaction isolation level. Default: ReadUncommitted.</param>
+        /// <returns>Returns the SqlTransaction created for this connector.</returns>
+        public SqlTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadUncommitted) {
 
-					// Converte o tipo do banco de dados para o tipo correto da propriedade que receberá o valor.
-					if (value.GetType() != propertyType) { value = Convert.ChangeType(value, propertyType); }
-				}
+            // Abre a conexão com o banco de dados.
+            this.OpenConnection();
 
-				this.WriteOutput("ParseProperty", string.Format("Mapeando valor '{0}' para a propriedade '{1}' do objeto '{2}'.", value, propertyInfo.Name, returnType.Name));
+            // Inicializa uma transação de banco de dados.
+            this.Transaction = this.Connection.BeginTransaction(isolationLevel);
 
-				// Define o valor da propriedade.
-				propertyInfo.SetValue(returnInstance, value, null);
+            return this.Transaction;
+        }
 
-				// Adiciona a propriedade na lista de dados já mapeados.
-				mappedProperties.Add(returnType.Name + "." + propertyName);
-			}
+        /// <summary>
+        /// Commits the database transaction.
+        /// </summary>
+        public void Commit() {
 
-			return true;
-		}
+            // Sai do método caso não exista uma transação de banco de dados.
+            if (this.Transaction == null || this.Transaction.Connection == null) { throw new InvalidOperationException("Must have a valid database transaction."); }
 
-		/// <summary>
-		/// Starts a database transaction.
-		/// </summary>
-		/// <param name="isolationLevel">Transaction isolation level. Default: ReadUncommitted.</param>
-		/// <returns>Returns the SqlTransaction created for this connector.</returns>
-		public SqlTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadUncommitted) {
+            SqlConnection connection = this.Transaction.Connection;
 
-			// Abre a conexão com o banco de dados.
-			this.OpenConnection();
+            this.Transaction.Commit();
 
-			// Inicializa uma transação de banco de dados.
-			this.Transaction = this.Connection.BeginTransaction(isolationLevel);
+            connection.Close();
+            connection = null;
+            this.Transaction = null;
+        }
 
-			return this.Transaction;
-		}
+        /// <summary>
+        /// Rolls back a transaction from a pending state.
+        /// </summary>
+        public void Rollback() {
 
-		/// <summary>
-		/// Commits the database transaction.
-		/// </summary>
-		public void Commit() {
+            // Sai do método caso não exista uma transação de banco de dados.
+            if (this.Transaction == null || this.Transaction.Connection == null) { throw new InvalidOperationException("Must have a valid database transaction."); }
 
-			// Sai do método caso não exista uma transação de banco de dados.
-			if (this.Transaction == null || this.Transaction.Connection == null) { throw new InvalidOperationException("Must have a valid database transaction."); }
+            SqlConnection connection = this.Transaction.Connection;
 
-			SqlConnection connection = this.Transaction.Connection;
+            this.Transaction.Rollback();
 
-			this.Transaction.Commit();
+            connection.Close();
+            connection = null;
+            this.Transaction = null;
+        }
 
-			connection.Close();
-			connection = null;
-			this.Transaction = null;
-		}
+        #region Métodos estáticos públicos
 
-		/// <summary>
-		/// Rolls back a transaction from a pending state.
-		/// </summary>
-		public void Rollback() {
+        /// <summary>
+        /// Starts a database transaction. This static method reaches all the DatabaseConnector instances regardless they expect a database transaction or not.
+        /// </summary>
+        /// <param name="connectionString">The connection used to open the SQL Server database.</param>
+        /// <returns>Returns the created SqlTransaction.</returns>
+        /// <exception cref="System.ArgumentNullException">Missing the connection string parameter.</exception>
+        /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="SqlTransaction"]/*'/>
+        public static SqlTransaction BeginGlobalTransaction(string connectionString) {
 
-			// Sai do método caso não exista uma transação de banco de dados.
-			if (this.Transaction == null || this.Transaction.Connection == null) { throw new InvalidOperationException("Must have a valid database transaction."); }
+            // Verifica se a connection string foi especificada.
+            if (string.IsNullOrWhiteSpace(connectionString) == true) { throw new ArgumentNullException("connectionString"); }
 
-			SqlConnection connection = this.Transaction.Connection;
+            // Cria uma nova conexão com o banco de dados.
+            SqlConnection connection = new SqlConnection(connectionString);
 
-			this.Transaction.Rollback();
+            // Abre a conexão, para que a transação possa ser criada.
+            connection.Open();
 
-			connection.Close();
-			connection = null;
-			this.Transaction = null;
-		}
+            // Inicia a transação.
+            _sqlTransaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
-		#region Métodos estáticos públicos
+            return _sqlTransaction;
+        }
 
-		/// <summary>
-		/// Starts a database transaction. This static method reaches all the DatabaseConnector instances regardless they expect a database transaction or not.
-		/// </summary>
-		/// <param name="connectionString">The connection used to open the SQL Server database.</param>
-		/// <returns>Returns the created SqlTransaction.</returns>
-		/// <exception cref="System.ArgumentNullException">Missing the connection string parameter.</exception>
-		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="SqlTransaction"]/*'/>
-		public static SqlTransaction BeginGlobalTransaction(string connectionString) {
+        /// <summary>
+        /// Commits the database transaction. This static method reaches all the DatabaseConnector instances regardless they expect a database transaction or not.
+        /// </summary>
+        /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="SqlTransaction"]/*'/>
+        public static void CommitGlobalTransaction() {
 
-			// Verifica se a connection string foi especificada.
-			if (string.IsNullOrWhiteSpace(connectionString) == true) { throw new ArgumentNullException("connectionString"); }
+            // Sai do método caso não exista uma transação em progresso.
+            if (_sqlTransaction == null) { return; }
 
-			// Cria uma nova conexão com o banco de dados.
-			SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = _sqlTransaction.Connection;
 
-			// Abre a conexão, para que a transação possa ser criada.
-			connection.Open();
+            _sqlTransaction.Commit();
 
-			// Inicia a transação.
-			_sqlTransaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
+            connection.Close();
+            connection = null;
+            _sqlTransaction = null;
+        }
 
-			return _sqlTransaction;
-		}
+        /// <summary>
+        /// Rolls back a transaction from a pending state. This static method reaches all the DatabaseConnector instances regardless they expect a database transaction or not.
+        /// </summary>
+        /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="SqlTransaction"]/*'/>
+        public static void RollbackGlobalTransaction() {
 
-		/// <summary>
-		/// Commits the database transaction. This static method reaches all the DatabaseConnector instances regardless they expect a database transaction or not.
-		/// </summary>
-		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="SqlTransaction"]/*'/>
-		public static void CommitGlobalTransaction() {
+            // Sai do método caso não exista uma transação em progresso.
+            if (_sqlTransaction == null) { return; }
 
-			// Sai do método caso não exista uma transação em progresso.
-			if (_sqlTransaction == null) { return; }
+            SqlConnection connection = _sqlTransaction.Connection;
 
-			SqlConnection connection = _sqlTransaction.Connection;
+            _sqlTransaction.Rollback();
 
-			_sqlTransaction.Commit();
+            connection.Close();
+            connection = null;
+            _sqlTransaction = null;
+        }
 
-			connection.Close();
-			connection = null;
-			_sqlTransaction = null;
-		}
+        #endregion
 
-		/// <summary>
-		/// Rolls back a transaction from a pending state. This static method reaches all the DatabaseConnector instances regardless they expect a database transaction or not.
-		/// </summary>
-		/// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="SqlTransaction"]/*'/>
-		public static void RollbackGlobalTransaction() {
+        private void WriteOutput(string operationName, string description) {
 
-			// Sai do método caso não exista uma transação em progresso.
-			if (_sqlTransaction == null) { return; }
+            // Caso exista alguém aguardando pela saída das operações, dispara o evento.
+            if (this.OnOutput != null) {
 
-			SqlConnection connection = _sqlTransaction.Connection;
+                try {
+                    this.OnOutput(this, OutputEventArgs.Create(operationName, description));
+                }
+                catch (Exception) {
 
-			_sqlTransaction.Rollback();
+                }
+            }
+        }
 
-			connection.Close();
-			connection = null;
-			_sqlTransaction = null;
-		}
+        /// <summary>
+        /// Closes the connection to the database. This is the preferred method of closing any open connection.
+        /// </summary>
+        public void Close() {
 
-		#endregion
+            // Verifica se o acesso ao banco foi feito sem o uso de transações.
+            if (this.Transaction == null || this.Transaction.Connection == null) {
 
-		private void WriteOutput(string operationName, string description) {
+                // Verifica se existe uma conexão de banco disponível.
+                if (this.Connection != null) {
 
-			// Caso exista alguém aguardando pela saída das operações, dispara o evento.
-			if (this.OnOutput != null) {
+                    // Fecha a conexão, caso esteja aberta.
+                    if (this.Connection.State != ConnectionState.Closed) { this.Connection.Close(); }
 
-				try {
-					this.OnOutput(this, OutputEventArgs.Create(operationName, description));
-				}
-				catch (Exception) {
+                    this.Connection = null;
+                }
 
-				}
-			}
-		}
+                if (_sqlTransaction == this.Transaction) { _sqlTransaction = null; }
 
-		/// <summary>
-		/// Closes the connection to the database. This is the preferred method of closing any open connection.
-		/// </summary>
-		public void Close() {
+                this.Transaction = null;
+            }
+        }
 
-			// Verifica se o acesso ao banco foi feito sem o uso de transações.
-			if (this.Transaction == null || this.Transaction.Connection == null) {
+        /// <summary>
+        /// Disposes the DatabaseConnector instance.
+        /// </summary>
+        public void Dispose() {
 
-				// Verifica se existe uma conexão de banco disponível.
-				if (this.Connection != null) {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-					// Fecha a conexão, caso esteja aberta.
-					if (this.Connection.State != ConnectionState.Closed) { this.Connection.Close(); }
+        /// <summary>
+        /// Disposes the DatabaseConnector instance.
+        /// </summary>
+        /// <param name="disposing">Flag indicating the dispose process.</param>
+        protected virtual void Dispose(bool disposing) {
 
-					this.Connection = null;
-				}
+            if (disposing == true) { this.Close(); }
+        }
 
-				if (_sqlTransaction == this.Transaction) { _sqlTransaction = null; }
+        /// <summary>
+        /// Converts a collection into a string, where each element is separated with a comma, by default.
+        /// </summary>
+        /// <param name="source">Collection to be converted.</param>
+        /// <param name="separator">Char separator. The defalt separator is comma.</param>
+        /// <param name="surroundWith">Specify the surrounding chars for the elements. For example.: single quotation mark "'": 'element1','element2',...</param>
+        /// <returns>Returns a new string containing all the elements received, or null, if the source collection is null.</returns>
+        private static string CollectionToString(IEnumerable source, char separator = ',', string surroundWith = null) {
 
-				this.Transaction = null;
-			}
-		}
+            // Verifica se a coleção foi especificada.
+            if (source == null) { return null; }
 
-		/// <summary>
-		/// Disposes the DatabaseConnector instance.
-		/// </summary>
-		public void Dispose() {
+            StringBuilder stringBuilder = new StringBuilder();
 
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
+            // Converte cada elemento para string, adicionando o separador.
+            foreach (object t in source) { stringBuilder.AppendFormat("{0}{1}{0}{2}", surroundWith, t, separator); }
 
-		/// <summary>
-		/// Disposes the DatabaseConnector instance.
-		/// </summary>
-		/// <param name="disposing">Flag indicating the dispose process.</param>
-		protected virtual void Dispose(bool disposing) {
+            // Retorna a string, removendo o separador extra no final.
+            return stringBuilder.ToString().TrimEnd(separator);
+        }
+    }
 
-			if (disposing == true) { this.Close(); }
-		}
-	}
+    /// <summary>
+    /// Result for a paged query.
+    /// </summary>
+    /// <typeparam name="T">Type of the objects to be returned.</typeparam>
+    public class PagedResult<T> {
 
-	/// <summary>
-	/// Enumerates all the available options for sorting queries result.
-	/// </summary>
-	public enum SortDirection {
+        private PagedResult() { }
 
-		/// <summary>
-		/// Organize the result of a query in a descending order.
-		/// </summary>
-		DESC = 0,
+        internal static PagedResult<T> Create(int currentPage, int totalPages, int totalRecords, IEnumerable<T> data) {
 
-		/// <summary>
-		/// Organize the result of a query in as acending order.
-		/// </summary>
-		ASC = 1,
-	}
+            PagedResult<T> result = new PagedResult<T>();
+
+            result.TotalRecords = totalRecords;
+            result.CurrentPage = currentPage;
+            result.TotalPages = totalPages;
+            result.Data = data;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the total number of records available for current query.
+        /// </summary>
+        public int TotalRecords { get; private set; }
+
+        /// <summary>
+        /// Gets the page number for the returned data.
+        /// </summary>
+        public int CurrentPage { get; private set; }
+
+        /// <summary>
+        /// Gets the number of pages for current query.
+        /// </summary>
+        public int TotalPages { get; private set; }
+
+        /// <summary>
+        /// Gets the data for current page.
+        /// </summary>
+        public IEnumerable<T> Data { get; set; }
+    }
+
+    /// <summary>
+    /// Enumerates all the available options for sorting queries result.
+    /// </summary>
+    public enum SortDirection {
+
+        /// <summary>
+        /// Organize the result of a query in a descending order.
+        /// </summary>
+        DESC = 0,
+
+        /// <summary>
+        /// Organize the result of a query in as acending order.
+        /// </summary>
+        ASC = 1,
+    }
 }
