@@ -290,6 +290,13 @@ namespace Dlp.Connectors.Core {
                 }
             }
 
+            // Calcula a quantidade de páginas para a consulta realizada.
+            int totalPages = (countResult / pageSize);
+            if ((countResult % pageSize) > 0) { totalPages += 1; }
+
+            // Verifica se a página solicitada é maior que o total de páginas. Caso positivo, define a página atual como a última página.
+            if (pageNumber > totalPages) { pageNumber = totalPages; }
+
             // Monta a query que retornará apenas os dados da página solicitada.
             string paginationQuery = string.Format("{0} WITH SourceTable AS (SELECT TOP {1} ROW_NUMBER() OVER(ORDER BY {2} {3}) AS RowNumber, {4} FROM {5}) SELECT * FROM SourceTable WHERE RowNumber BETWEEN {6} AND {7};",
                 queryParts[0],
@@ -303,10 +310,6 @@ namespace Dlp.Connectors.Core {
 
             // Obtém os dados da página solicitada.
             object paginationResult = this.ExecuteReaderFetchAll<T>(paginationQuery, parameters);
-
-            // Calcula a quantidade de páginas para a consulta realizada.
-            int totalPages = (countResult / pageSize);
-            if ((countResult % pageSize) > 0) { totalPages += 1; }
 
             return PagedResult<T>.Create(pageNumber, totalPages, countResult, paginationResult as IEnumerable<T>);
         }
