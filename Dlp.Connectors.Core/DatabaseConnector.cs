@@ -240,10 +240,11 @@ namespace Dlp.Connectors.Core {
         /// <param name="orderByColumnName">Column name to ot used to order the retrieved data.</param>
         /// <param name="sortDirection">Sorting direction.</param>
         /// <param name="parameters">Query parameters, as a dynamic object, following the format: new {Param1 = value1, Param2 = value2, ...}.</param>
+        /// <param name="clamp">If the requested page exceeds the total number of pages, the last page is returned. Default = false.</param>
         /// <returns>Returns a KeyValuePair where Key = Number of rows available in database and Value = Data of type T returned for current page number.</returns>
         /// <exception cref="ArgumentNullException">Missing the query or the orderByColumnName parameter.</exception>
         /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReaderPaged"]/*'/>
-        public PagedResult<T> ExecuteReader<T>(string query, int pageNumber, int pageSize, string orderByColumnName, SortDirection sortDirection, dynamic parameters = null) where T : new() {
+        public PagedResult<T> ExecuteReader<T>(string query, int pageNumber, int pageSize, string orderByColumnName, SortDirection sortDirection, dynamic parameters = null, bool clamp = false) where T : new() {
 
             // Verifica se a query foi especificada.
             if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
@@ -295,7 +296,7 @@ namespace Dlp.Connectors.Core {
             if ((countResult % pageSize) > 0) { totalPages += 1; }
 
             // Verifica se a página solicitada é maior que o total de páginas. Caso positivo, define a página atual como a última página.
-            if (pageNumber > totalPages) { pageNumber = totalPages; }
+            if (clamp == true && pageNumber > totalPages) { pageNumber = totalPages; }
 
             // Monta a query que retornará apenas os dados da página solicitada.
             string paginationQuery = string.Format("{0} WITH SourceTable AS (SELECT TOP {1} ROW_NUMBER() OVER(ORDER BY {2} {3}) AS RowNumber, {4} FROM {5}) SELECT * FROM SourceTable WHERE RowNumber BETWEEN {6} AND {7};",

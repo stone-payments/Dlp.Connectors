@@ -4,7 +4,7 @@
     <id>Dlp.Connectors.dll</id>
 		<title>DLP Connectors</title>
 		<iconUrl>http://www.stone.com.br/img/stone32x32.png</iconUrl>
-    <version>1.0.4</version>
+    <version>1.0.7</version>
     <authors>Stone Pagamentos S/A</authors>
     <owners>Stone Pagamentos S/A</owners>
     <projectUrl>http://stone-payments.github.io/Dlp.Connectors</projectUrl>

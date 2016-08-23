@@ -1161,117 +1161,53 @@ namespace Dlp.Connectors.Test {
             Assert.AreEqual(2, actual.TotalRecords);
             Assert.AreEqual(1, actual.CurrentPage);
             Assert.AreEqual(1, actual.TotalPages);
+            Assert.IsNotNull(actual.Data);
+            Assert.AreEqual(2, actual.Data.Count());
         }
 
         [TestMethod]
-        public void MyTestMethod() {
+        public void LoadOutOfRangePageDataWithNestedClasses() {
 
-            int pageNumber = 1;
-            int pageSize = 2;
+            string query = @"SELECT Merchant.Name, Merchant.MerchantId, MerchantConfiguration.IsEnabled, MerchantConfiguration.Url
+                             FROM Merchant
+                             INNER JOIN MerchantConfiguration ON MerchantConfiguration.MerchantId = Merchant.MerchantId
+                             WHERE Merchant.MerchantId > 0;";
 
-            // The dlp connector is not mapping the City when we use its pagedQuery
-            // Uncomment after the fix
+            PagedResult<MerchantEntity> actual;
 
-            //            // Sql to execute.
-            string sql = @"SELECT mc.[Id]
-                                  ,mc.[CityId]
-                                  ,mc.[CountryStateIsoCode]
-                                  ,mc.[Apn]
-                                  ,mc.[MobileCarrierOperator]
-                                  ,mc.[Description]
-                                  ,mc.[GenerateDataInterval]
-                                  ,mc.[AlertThreshold]
-                                  ,mc.[IsActive]
-                                  ,c.[Id] as 'City.Id'
-                                  ,c.[Name] as 'City.Name'
-                                  ,cs.[Id] as 'City.CountryState.Id'
-                                  ,cs.[Name] as 'City.CountryState.Name'
-                                  ,cs.[IsoCode] as 'City.CountryState.IsoCode'
-                           FROM [PoiReportMonitoring].[MonitoringConfiguration] mc (NOLOCK)
-                           INNER JOIN [dbo].[City] c (NOLOCK) ON c.Id = mc.[CityId] 
-                           INNER JOIN [dbo].[CountryState] cs (NOLOCK) ON cs.Id = c.[StateId]
-                           WHERE IsActive = 1 ";
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+                actual = databaseConnector.ExecuteReader<MerchantEntity>(query, 999, 2, "Name", SortDirection.ASC);
+            }
 
-            // Execute sql.            
-            //KeyValuePair<int, IEnumerable<MonitoringConfiguration>> monitoringConfigurations = databaseConnector
-            //    .ExecuteReader<MonitoringConfiguration>(sql.ToString(), pageNumber, pageSize, "mc.Id", SortDirection.ASC);
+            Assert.AreEqual(3, actual.TotalRecords);
+            Assert.AreEqual(999, actual.CurrentPage);
+            Assert.AreEqual(2, actual.TotalPages);
+            Assert.IsNotNull(actual.Data);
+            Assert.AreEqual(0, actual.Data.Count());
+        }
 
-            //PagedResult<MonitoringConfiguration> pagedResult = new PagedResult<MonitoringConfiguration>();
+        [TestMethod]
+        public void LoadClampedOutOfRangePageDataWithNestedClasses() {
 
-            //pagedResult.TotalRows = monitoringConfigurations.Key;
-            //pagedResult.Data = monitoringConfigurations.Value.ToList();
+            string query = @"SELECT Merchant.Name, Merchant.MerchantId, MerchantConfiguration.IsEnabled, MerchantConfiguration.Url
+                             FROM Merchant
+                             INNER JOIN MerchantConfiguration ON MerchantConfiguration.MerchantId = Merchant.MerchantId
+                             WHERE Merchant.MerchantId > 0;";
 
-            //return pagedResult;
-            //-----------------------------
-            //            #region Exclude after DLP Connector fix
+            PagedResult<MerchantEntity> actual;
 
-            //            // Query to be executed.
-            //            StringBuilder pagedQuery = new StringBuilder(
-            //                @"SELECT * FROM 
-            //                (               
-            //                    @Query
-            //                ) AS TBL
-            //                WHERE RowNumber BETWEEN ((@PageNumber - 1)  @RowsPerPage + 1) AND (@PageNumber  @RowsPerPage)
-            //                ORDER BY Id "
-            //            );
+            using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
+                actual = databaseConnector.ExecuteReader<MerchantEntity>(query, 999, 2, "Name", SortDirection.ASC, null, true);
+            }
 
-            //            StringBuilder columns = new StringBuilder(
-            //                                  @" ROW_NUMBER() OVER(ORDER BY mc.[Id]) AS RowNumber 
-            //                                  ,mc.[Id]
-            //                                  ,mc.[CityId]
-            //                                  ,mc.[CountryStateIsoCode]
-            //                                  ,mc.[Apn]
-            //                                  ,mc.[MobileCarrierOperator]
-            //                                  ,mc.[Description]
-            //                                  ,mc.[GenerateDataInterval]
-            //                                  ,mc.[AlertThreshold]
-            //                                  ,mc.[IsActive]
-            //                                  ,c.[Id] as 'City.Id'
-            //                                  ,c.[Name] as 'City.Name'
-            //                                  ,cs.[Id] as 'City.CountryState.Id'
-            //                                  ,cs.[Name] as 'City.CountryState.Name'
-            //                                  ,cs.[IsoCode] as 'City.CountryState.IsoCode'
-            //                                  "
-            //                                  );
+            Assert.AreEqual(3, actual.TotalRecords);
+            Assert.AreEqual(2, actual.CurrentPage);
+            Assert.AreEqual(2, actual.TotalPages);
+            Assert.IsNotNull(actual.Data);
+            Assert.AreEqual(1, actual.Data.Count());
+        }
 
-            //            // Sql to execute.
-            //            StringBuilder query = new StringBuilder(
-            //                           @"SELECT @Columns
-            //                           FROM [PoiReportMonitoring].[MonitoringConfiguration] mc (NOLOCK)
-            //                           INNER JOIN City c (NOLOCK) on c.Id = mc.CityId
-            //                           INNER JOIN CountryState cs (NOLOCK) on cs.Id = c.StateId
-            //                           WHERE mc.IsActive = 1"
-            //                           );
-
-            //            //do all replaces
-            //            query.Replace("@Columns", columns.ToString());
-            //            pagedQuery.Replace("@Query", query.ToString());
-
-            //            // Execute sql.
-            //            IEnumerable<MonitoringConfiguration> result = databaseConnector
-            //                .ExecuteReader<MonitoringConfiguration>(pagedQuery.ToString(), new {
-            //                    PageNumber = pagingInformation.PageNumber,
-            //                    RowsPerPage = pagingInformation.RowsPerPage,
-            //                });
-
-            //            PagedResult<MonitoringConfiguration> response = new PagedResult<MonitoringConfiguration>();
-            //            response.Data = result.ToList();
-            //            response.PageNumber = pagingInformation.PageNumber;
-            //            response.RowsPerPage = pagingInformation.RowsPerPage;
-
-            //            // Get the total rows returned by the query.
-            //            query.Replace(columns.ToString(), "COUNT(1) as 'COUNT'");
-            //            response.TotalRows = databaseConnector.ExecuteScalar<long>(query.ToString());
-
-            //            return response;
-
-            //            #endregion
-
-        
-
-    }
-
-		[TestMethod]
+        [TestMethod]
 		public void LoadSingleRowWithColumnAlias() {
 
 			string query = @"SELECT Merchant.Name, MerchantConfiguration.Url AS 'Value', Merchant.CreateDate

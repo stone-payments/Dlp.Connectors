@@ -2,10 +2,8 @@ C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\UnitTestDatabase.mdf
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.Test.dll
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.Test.pdb
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.dll
-C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Framework.dll
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.pdb
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.xml
-C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Framework.xml
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.csprojResolveAssemblyReference.cache
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.dll
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.pdb

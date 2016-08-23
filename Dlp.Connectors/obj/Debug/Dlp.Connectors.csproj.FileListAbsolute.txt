@@ -13,8 +13,6 @@ C:\Bitbucket\Dlp.Connectors\Dlp.Connectors\obj\Debug\Dlp.Connectors.pdb
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Connectors.XML
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Connectors.dll
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Connectors.pdb
-C:\Bitbucket\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Framework.dll
-C:\Bitbucket\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Framework.xml
 C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors\obj\Debug\Dlp.Connectors.csprojResolveAssemblyReference.cache
 C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Connectors.XML
 C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Connectors.dll
