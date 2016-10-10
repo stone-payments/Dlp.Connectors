@@ -13,3 +13,8 @@ C:\Bitbucket\Dlp.Connectors\Dlp.Connectors\bin\Release\Dlp.Connectors.pdb
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors\obj\Release\Dlp.Connectors.csprojResolveAssemblyReference.cache
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors\obj\Release\Dlp.Connectors.dll
 C:\Bitbucket\Dlp.Connectors\Dlp.Connectors\obj\Release\Dlp.Connectors.pdb
+C:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Release\Dlp.Connectors.XML
+C:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Release\Dlp.Connectors.dll
+C:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Release\Dlp.Connectors.pdb
+C:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Release\Dlp.Connectors.dll
+C:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Release\Dlp.Connectors.pdb

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dlp.Connectors.Core;
+using System;
 using System.Linq;
 using System.Collections;
 using System.Reflection;
@@ -42,12 +43,12 @@ namespace Dlp.Connectors.Core.Test {
 
         public static void Main(string[] args) {
 
-            string connectionString = @"Server=RJ10_DSK006\SQLEXPRESS;Initial Catalog=Balthazar;Persist Security Info=False;Integrated Security=True;Application Name=Dlp.Scow;";
+            string connectionString = @"";
 
             // Query utilizada para obter as a chave da loja.
             string queryString = "SELECT MerchantId FROM scow.Merchant WHERE MerchantKey = @MerchantKey;";
 
-            Guid merchantKey = new Guid("FFDDC04F-36A6-4285-98CC-06326B4F3BCD");
+            Guid merchantKey = new Guid("B9A2EE95-5027-4D26-AA1C-0AB875D88A85");
 
             // Instancia o conector de acesso ao banco de dados.
             using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {

@@ -21,3 +21,9 @@ C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dl
 C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Framework.xml
 C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors\obj\Debug\Dlp.Connectors.dll
 C:\Users\bmiranda\Documents\Bitbucket\Dlp.Connectors\Dlp.Connectors\obj\Debug\Dlp.Connectors.pdb
+C:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Connectors.XML
+C:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Connectors.dll
+C:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Connectors.pdb
+C:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Debug\Dlp.Connectors.csprojResolveAssemblyReference.cache
+C:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Debug\Dlp.Connectors.dll
+C:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Debug\Dlp.Connectors.pdb
