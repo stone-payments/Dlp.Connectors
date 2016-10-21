@@ -58,7 +58,7 @@
     <Compile Include="OutputEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Samples\DatabaseConnector.xml" />
+    <None Include="Samples\DatabaseConnector.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dlp.Connectors.nuspec" />
