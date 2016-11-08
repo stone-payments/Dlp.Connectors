@@ -3,21 +3,6 @@
   "version": 2,
   "targets": {
     ".NETCoreApp,Version=v1.0": {
-      "Dlp.Connectors.Core.dll/1.0.7": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.CSharp": "4.0.1",
-          "NETStandard.Library": "1.6.0",
-          "System.Data.SqlClient": "4.1.0",
-          "System.Reflection.TypeExtensions": "4.1.0"
-        },
-        "compile": {
-          "lib/dotnet/Dlp.Connectors.Core.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/Dlp.Connectors.Core.dll": {}
-        }
-      },
       "Libuv/1.9.0": {
         "type": "package",
         "dependencies": {
@@ -2257,11 +2242,10 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
         }
-      }
-    },
-    ".NETCoreApp,Version=v1.0/win8-x64": {
-      "Dlp.Connectors.Core.dll/1.0.7": {
-        "type": "package",
+      },
+      "Dlp.Connectors.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v1.0",
         "dependencies": {
           "Microsoft.CSharp": "4.0.1",
           "NETStandard.Library": "1.6.0",
@@ -2269,12 +2253,14 @@
           "System.Reflection.TypeExtensions": "4.1.0"
         },
         "compile": {
-          "lib/dotnet/Dlp.Connectors.Core.dll": {}
+          "netcoreapp1.0/Dlp.Connectors.Core.dll": {}
         },
         "runtime": {
-          "lib/dotnet/Dlp.Connectors.Core.dll": {}
+          "netcoreapp1.0/Dlp.Connectors.Core.dll": {}
         }
-      },
+      }
+    },
+    ".NETCoreApp,Version=v1.0/win8-x64": {
       "Libuv/1.9.0": {
         "type": "package",
         "dependencies": {
@@ -4740,22 +4726,26 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
         }
+      },
+      "Dlp.Connectors.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v1.0",
+        "dependencies": {
+          "Microsoft.CSharp": "4.0.1",
+          "NETStandard.Library": "1.6.0",
+          "System.Data.SqlClient": "4.1.0",
+          "System.Reflection.TypeExtensions": "4.1.0"
+        },
+        "compile": {
+          "netcoreapp1.0/Dlp.Connectors.Core.dll": {}
+        },
+        "runtime": {
+          "netcoreapp1.0/Dlp.Connectors.Core.dll": {}
+        }
       }
     }
   },
   "libraries": {
-    "Dlp.Connectors.Core.dll/1.0.7": {
-      "sha512": "NzHt/JHFKudUYIMLXT0fqHS+mpY7M5O4CWoXUO6T3F5x/yUiT3P/04bQFRydMnLYDVVtk0tvlsY/BOqEAeF9fA==",
-      "type": "package",
-      "path": "Dlp.Connectors.Core.dll/1.0.7",
-      "files": [
-        "Dlp.Connectors.Core.dll.1.0.7.nupkg.sha512",
-        "Dlp.Connectors.Core.dll.nuspec",
-        "lib/dotnet/Dlp.Connectors.Core.deps.json",
-        "lib/dotnet/Dlp.Connectors.Core.dll",
-        "lib/dotnet/Dlp.Connectors.Core.pdb"
-      ]
-    },
     "Libuv/1.9.0": {
       "sha512": "9Q7AaqtQhS8JDSIvRBt6ODSLWDBI4c8YxNxyCQemWebBFUtBbc6M5Vi5Gz1ZyIUlTW3rZK9bIr5gnVyv0z7a2Q==",
       "type": "package",
@@ -10191,11 +10181,16 @@
         "ref/xamarintvos10/_._",
         "ref/xamarinwatchos10/_._"
       ]
+    },
+    "Dlp.Connectors.Core/1.0.0": {
+      "type": "project",
+      "path": "../Dlp.Connectors.Core/project.json",
+      "msbuildProject": "../Dlp.Connectors.Core/Dlp.Connectors.Core.xproj"
     }
   },
   "projectFileDependencyGroups": {
     "": [
-      "Dlp.Connectors.Core.dll >= 1.0.7",
+      "Dlp.Connectors.Core >= 1.0.0-*",
       "Microsoft.NETCore.App >= 1.0.1"
     ],
     ".NETCoreApp,Version=v1.0": []

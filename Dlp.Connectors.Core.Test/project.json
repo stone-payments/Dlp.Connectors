@@ -5,7 +5,7 @@
   },
 
   "dependencies": {
-    "Dlp.Connectors.Core.dll": "1.0.7",
+    "Dlp.Connectors.Core": "1.0.0-*",
     "Microsoft.NETCore.App": "1.0.1"
   },
 

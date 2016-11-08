@@ -883,7 +883,15 @@ namespace Dlp.Connectors.Core {
                     Type propertyType = (propertyInfo.PropertyType.IsGenericParameter == true) ? propertyInfo.PropertyType.GetGenericArguments()[0] : propertyInfo.PropertyType;
 
                     // Converte o tipo do banco de dados para o tipo correto da propriedade que receberá o valor.
-                    if (value.GetType() != propertyType) { value = Convert.ChangeType(value, propertyType); }
+                    if (value.GetType() != propertyType) {
+
+                        if (propertyType.GetGenericTypeDefinition() == typeof(Nullable<>)) {
+                            value = Convert.ChangeType(value, Nullable.GetUnderlyingType(propertyType));
+                        }
+                        else {
+                            value = Convert.ChangeType(value, propertyType);
+                        }
+                    }
                 }
 
                 // Define o valor da propriedade.
