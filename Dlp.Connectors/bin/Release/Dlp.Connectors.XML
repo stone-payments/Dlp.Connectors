@@ -50,6 +50,11 @@
             Destrutor que fechará os recursos utilizados, caso o usuário não tenha fechado explicitamente.
             </summary>
         </member>
+        <member name="P:Dlp.Connectors.DatabaseConnector.DefaultConnectionString">
+            <summary>
+            Gets or sets the default connection string to be used when not specified in the constructor.
+            </summary>
+        </member>
         <member name="P:Dlp.Connectors.DatabaseConnector.Connection">
             <summary>
             Gets the database connection used by this instance.

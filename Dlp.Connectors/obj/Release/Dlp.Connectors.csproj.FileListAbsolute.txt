@@ -18,3 +18,8 @@ C:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Release\Dlp.Connectors.dll
 C:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Release\Dlp.Connectors.pdb
 C:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Release\Dlp.Connectors.dll
 C:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Release\Dlp.Connectors.pdb
+E:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Release\Dlp.Connectors.XML
+E:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Release\Dlp.Connectors.dll
+E:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Release\Dlp.Connectors.pdb
+E:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Release\Dlp.Connectors.dll
+E:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Release\Dlp.Connectors.pdb
