@@ -982,10 +982,18 @@ namespace Dlp.Connectors {
         /// <returns>Returns the created SqlTransaction.</returns>
         /// <exception cref="System.ArgumentNullException">Missing the connection string parameter.</exception>
         /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="SqlTransaction"]/*'/>
-        public static SqlTransaction BeginGlobalTransaction(string connectionString) {
+        public static SqlTransaction BeginGlobalTransaction(string connectionString = null) {
 
-            // Verifica se a connection string foi especificada.
-            if (string.IsNullOrWhiteSpace(connectionString) == true) { throw new ArgumentNullException("connectionString"); }
+            // Verifica se a connection string foi especificada. Caso negativo, tenta utilizar a connection string default.
+            if (string.IsNullOrWhiteSpace(connectionString) == true) {
+
+                connectionString = DefaultConnectionString;
+
+                // Caso não exista uma connection string default, dispara uma exceção.
+                if (string.IsNullOrWhiteSpace(connectionString) == true) {
+                    throw new ArgumentNullException("connectionString");
+                }
+            }
 
             // Cria uma nova conexão com o banco de dados.
             SqlConnection connection = new SqlConnection(connectionString);
