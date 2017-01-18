@@ -202,8 +202,6 @@ namespace Dlp.Connectors.Test {
 
 		private const string _databaseDirectory = @"C:\temp";
 
-		private StringBuilder ConnectorOutput;
-
 		[ClassInitialize]
 		public static void PrepareDatabaseTests(TestContext context) {
 
@@ -236,24 +234,6 @@ namespace Dlp.Connectors.Test {
 			System.Threading.Thread.Sleep(1000);
 
 			ClearTempDatabase();
-		}
-
-		[TestInitialize]
-		public void InitializeOutput() {
-
-			this.ConnectorOutput = new StringBuilder();
-		}
-
-		[TestCleanup]
-		public void ClearOutput() {
-
-			this.ConnectorOutput.Clear();
-			this.ConnectorOutput = null;
-		}
-
-		private void databaseConnector_OnOutput(object sender, OutputEventArgs e) {
-
-			lock (this.ConnectorOutput) { this.ConnectorOutput.AppendLine(e.ToString()); }
 		}
 
 		private static void ClearTempDatabase() {
@@ -338,11 +318,8 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
 				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, request).FirstOrDefault();
 			}
-
-			string output = this.ConnectorOutput.ToString();
 
 			Assert.IsNotNull(actual);
 
@@ -405,12 +382,8 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
-
 				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, merchantEntity).FirstOrDefault();
 			}
-
-			string output = this.ConnectorOutput.ToString();
 		}
 
 		[TestMethod]
@@ -426,11 +399,8 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
 				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query);
 			}
-
-			string output = this.ConnectorOutput.ToString();
 
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(2, actual.Count());
@@ -493,11 +463,8 @@ namespace Dlp.Connectors.Test {
 			MerchantEntity actual = null;
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
 				actual = databaseConnector.ExecuteReaderFetchAll<MerchantEntity>(query).FirstOrDefault();
 			}
-
-			string output = this.ConnectorOutput.ToString();
 
 			Assert.IsNotNull(actual);
 			Assert.IsNotNull(actual.MerchantConfiguration);
@@ -517,11 +484,8 @@ namespace Dlp.Connectors.Test {
 			object actual;
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
 				actual = databaseConnector.ExecuteScalar<DateTime>(query);
 			}
-
-			string output = this.ConnectorOutput.ToString();
 
 			Assert.IsNotNull(actual);
 			Assert.IsInstanceOfType(actual, typeof(DateTime));
@@ -571,11 +535,8 @@ namespace Dlp.Connectors.Test {
 			string actual;
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
 				actual = databaseConnector.ExecuteScalar<string>(query, new { MerchantId = 1 });
 			}
-
-			string output = this.ConnectorOutput.ToString();
 
 			Assert.AreEqual("Merchant Number One", actual);
 		}
@@ -1020,12 +981,8 @@ namespace Dlp.Connectors.Test {
 
             using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
-
 				actual = databaseConnector.ExecuteReader<MerchantData>(query, 1, 2, "MerchantId", SortDirection.DESC, new { Status = StatusType.Disabled });
 			}
-
-			string output = this.ConnectorOutput.ToString();
 
 			Assert.AreEqual(1, actual.TotalRecords);
 			Assert.IsNotNull(actual.Data);
@@ -1313,11 +1270,8 @@ namespace Dlp.Connectors.Test {
 
 			using (DatabaseConnector databaseConnector = new DatabaseConnector(connectionString)) {
 
-				databaseConnector.OnOutput += databaseConnector_OnOutput;
 				actual = databaseConnector.ExecuteReaderFetchAll<MerchantData>(query, new { MerchantKeyCollection = merchantKeyCollection });
 			}
-
-			string output = this.ConnectorOutput.ToString();
 
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(2, actual.Count());

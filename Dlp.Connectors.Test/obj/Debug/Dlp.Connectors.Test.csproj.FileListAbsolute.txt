@@ -32,3 +32,13 @@ C:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.xml
 C:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.csprojResolveAssemblyReference.cache
 C:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.dll
 C:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.pdb
+E:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\UnitTestDatabase.mdf
+E:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.Test.dll
+E:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.Test.pdb
+E:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.dll
+E:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+E:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.pdb
+E:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\bin\Debug\Dlp.Connectors.xml
+E:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.csprojResolveAssemblyReference.cache
+E:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.dll
+E:\GitHub\Dlp.Connectors\Dlp.Connectors.Test\obj\Debug\Dlp.Connectors.Test.pdb

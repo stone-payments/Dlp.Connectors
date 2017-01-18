@@ -26,13 +26,23 @@ namespace Dlp.Connectors {
         public DatabaseConnector(int commandTimeoutInSeconds = 90) {
 
             // Verifica se existe uma transação de banco de dados em andamento.
-            if (_sqlTransaction == null || _sqlTransaction.Connection == null) { throw new InvalidOperationException("This constructor requires a sqlTransaction to be running. Start one with DatabaseConnector.BeginTransaction() method."); }
+            if (_sqlTransaction != null && _sqlTransaction.Connection != null) {
 
-            // Utiliza a conexão da transação em andamento.
-            this.Connection = _sqlTransaction.Connection;
+                // Utiliza a conexão da transação em andamento.
+                this.Connection = _sqlTransaction.Connection;
 
-            // Utiliza a transação de banco global.
-            this.Transaction = _sqlTransaction;
+                // Utiliza a transação de banco global.
+                this.Transaction = _sqlTransaction;
+            }
+            // Verifica se existe uma connection string default.
+            else if (string.IsNullOrWhiteSpace(DefaultConnectionString) == false) {
+
+                // Cria o objeto de conexão com o banco de dados.
+                this.Connection = new SqlConnection(DefaultConnectionString);
+            }
+            else {
+                throw new InvalidOperationException("This constructor requires the DatabaseConnector.DefaultConnectionString property to be set OR an existing sqlTransaction to be running. Start a sqlTransaction with DatabaseConnector.BeginTransaction() method.");
+            }
 
             // Define o timeout da operação.
             this.CommandTimeoutInSeconds = commandTimeoutInSeconds;
@@ -72,7 +82,10 @@ namespace Dlp.Connectors {
         /// </summary>
         ~DatabaseConnector() { this.Dispose(false); }
 
-        public event OutputEventHandler OnOutput;
+        /// <summary>
+        /// Gets or sets the default connection string to be used when not specified in the constructor.
+        /// </summary>
+        public static string DefaultConnectionString { get; set; }
 
         /// <summary>
         /// Gets the database connection used by this instance.
@@ -97,19 +110,8 @@ namespace Dlp.Connectors {
         /// </summary>
         private void OpenConnection() {
 
-            this.WriteOutput("OpenConnection", string.Format("Estado atual da conexão: {0}.", this.Connection.State));
-
             // Abre a conexão com o banco de dados, caso esteja fechada.
-            if (this.Connection.State == ConnectionState.Closed) {
-
-                this.WriteOutput("OpenConnection", "Abrindo conexão com o servidor de banco de dados.");
-                this.Connection.Open();
-            }
-
-            this.WriteOutput("OpenConnection", string.Format("ConnectionId: {0}", this.Connection.ClientConnectionId));
-            this.WriteOutput("OpenConnection", string.Format("ConnectionString: {0}", this.Connection.ConnectionString));
-            this.WriteOutput("OpenConnection", string.Format("ConnectionTimeout: {0}", this.Connection.ConnectionTimeout));
-            this.WriteOutput("OpenConnection", string.Format("CommandTimeout: {0}", this.CommandTimeoutInSeconds));
+            if (this.Connection.State == ConnectionState.Closed) { this.Connection.Open(); }
         }
 
         /// <summary>
@@ -139,12 +141,10 @@ namespace Dlp.Connectors {
         /// <returns>Retorna a query tratada.</returns>
         private string CleanQuery(string query) {
 
-            this.WriteOutput("CleanQuery", "Removendo espaços em branco e comentários da query.");
-
             // Remove os comentários da query.
-            query = Regex.Replace(query, @"--(.*)", "", RegexOptions.Multiline);
+            //query = Regex.Replace(query, @"--(.*)", "", RegexOptions.Multiline);
 
-            query = Regex.Replace(query, @"(?<=^([^']| '[^']*')*)\s+", " ");
+            //query = Regex.Replace(query, @"(?<=^([^']| '[^']*')*)\s+", " ");
 
             return query;
         }
@@ -164,8 +164,6 @@ namespace Dlp.Connectors {
         /// <exception cref="System.ObjectDisposedException"></exception>
         /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteScalar"]/*'/>
         public T ExecuteScalar<T>(string query, dynamic parameters = null) {
-
-            this.WriteOutput("ExecuteScalar", "Iniciando ExecuteScalar.");
 
             // Verifica se a query foi especificada.
             if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
@@ -219,8 +217,6 @@ namespace Dlp.Connectors {
         /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteNonQuery"]/*'/>
         public int ExecuteNonQuery(string query, dynamic parameters = null) {
 
-            this.WriteOutput("ExecuteNonQuery", "Iniciando ExecuteNonQuery.");
-
             // Verifica se a query foi especificada.
             if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
 
@@ -265,8 +261,6 @@ namespace Dlp.Connectors {
         /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReaderPaged"]/*'/>
         public PagedResult<T> ExecuteReader<T>(string query, int pageNumber, int pageSize, string orderByColumnName, SortDirection sortDirection, dynamic parameters = null, bool clamp = false) where T : new() {
 
-            this.WriteOutput("ExecuteReader", "Iniciando ExecuteReader.");
-
             // Verifica se a query foi especificada.
             if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
 
@@ -281,8 +275,6 @@ namespace Dlp.Connectors {
 
             // Verifica se o tamanho da página é válido.
             if (pageSize < 1) { pageSize = 1; }
-
-            this.WriteOutput("ExecuteReader", "Preparando query para paginação.");
 
             // Separa a query em colunas a serem retornadas e em filtros a serem aplicados.
             string[] queryParts = query.Split(new[] { "SELECT", "FROM" }, 3, StringSplitOptions.None);
@@ -374,8 +366,6 @@ namespace Dlp.Connectors {
         /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReader"]/*'/>
         public IEnumerable<T> ExecuteReaderFetchAll<T>(string query, dynamic parameters = null) {
 
-            this.WriteOutput("ExecuteReader", "Iniciando ExecuteReader.");
-
             // Verifica se a query foi especificada.
             if (string.IsNullOrWhiteSpace(query) == true) { throw new ArgumentNullException("query"); }
 
@@ -386,23 +376,17 @@ namespace Dlp.Connectors {
                 // Abre a conexão com o banco de dados.
                 this.OpenConnection();
 
-                this.WriteOutput("ExecuteReader", "Criando o objeto SqlCommand.");
-
                 // Instancia o objeto command que será executado no banco de dados.
                 using (SqlCommand command = SqlCommandFactory(query, this.Connection, this.Transaction, this.CommandTimeoutInSeconds)) {
 
                     // Adiciona os parâmetros.
                     this.AddParameters(query, command, parameters as object);
 
-                    this.WriteOutput("ExecuteReader", "Executando o comando ExecuteReader.");
-
                     // Instancia o reader responsável pela leitura dos dados.
                     using (SqlDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo)) {
 
                         // Mapeia e armazena todos os registros encontrados.
                         IEnumerable<T> result = this.InternalReaderFetchAll<T>(reader);
-
-                        this.WriteOutput("ExecuteReader", "Operação concluída.");
 
                         return result;
                     }
@@ -411,8 +395,6 @@ namespace Dlp.Connectors {
             catch (Exception ex) {
 
                 this.Close();
-
-                this.WriteOutput("ExecuteReader", string.Format("Exceção no processamento: {0}.", ex));
 
                 throw;
             }
@@ -464,8 +446,6 @@ namespace Dlp.Connectors {
         /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="ExecuteReader"]/*'/>
         public IDisposableEnumerable<T> ExecuteReaderAsEnumerable<T>(string query, dynamic parameters = null, bool closeOnDispose = true) {
 
-            this.WriteOutput("ExecuteReader", "Iniciando ExecuteReader.");
-
             // Verifica se a query foi especificada.
             if (string.IsNullOrWhiteSpace(query)) {
                 throw new ArgumentNullException("query");
@@ -478,15 +458,11 @@ namespace Dlp.Connectors {
                 // Abre a conexão com o banco de dados.
                 this.OpenConnection();
 
-                this.WriteOutput("ExecuteReader", "Criando o objeto SqlCommand.");
-
                 // Instancia o objeto command que será executado no banco de dados.
                 SqlCommand command = SqlCommandFactory(query, this.Connection, this.Transaction, this.CommandTimeoutInSeconds);
 
                 // Adiciona os parâmetros.
                 this.AddParameters(query, command, parameters as object);
-
-                this.WriteOutput("ExecuteReader", "Executando o comando ExecuteReader.");
 
                 // Instancia o reader responsável pela leitura dos dados.
                 SqlDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo);
@@ -497,8 +473,6 @@ namespace Dlp.Connectors {
             catch (Exception ex) {
 
                 this.Close();
-
-                this.WriteOutput("ExecuteReader", string.Format("Exceção no processamento: {0}.", ex));
 
                 throw;
             }
@@ -513,8 +487,6 @@ namespace Dlp.Connectors {
         /// <include file='Samples/DatabaseConnector.xml' path='Docs/Members[@name="BulkInsert"]/*'/>
         public void BulkInsert(string tableName, IEnumerable collection, SqlBulkCopyOptions sqlBulkCopyOptions = SqlBulkCopyOptions.Default) {
 
-            this.WriteOutput("BulkInsert", "Iniciando BulkInsert.");
-
             // O método não pode prosseguir caso não tenha sido definido o nome da tabela.
             if (string.IsNullOrEmpty(tableName) == true) { throw new ArgumentNullException("tableName"); }
 
@@ -527,17 +499,11 @@ namespace Dlp.Connectors {
             // Acessa o primeiro item da coleção.
             enumerator.MoveNext();
 
-            this.WriteOutput("BulkInsert", "Obtendo as propriedades públicas do objeto a ser inserido.");
-
             // Obtém as informações sobre as propriedades de cada item da coleção.
             PropertyInfo[] propertyInfoCollection = enumerator.Current.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-            this.WriteOutput("BulkInsert", string.Format("Criando o DataTable para a tabela '{0}'.", tableName));
-
             // Cria o DataTable que será usado para copiar as informações para o banco de dados.
             DataTable dataTable = new DataTable(tableName);
-
-            this.WriteOutput("BulkInsert", "Iniciando o mapeando das propriedades dos objetos a serem inseridos.");
 
             // Dicionário que conterá o nome das colunas no banco de dados e a propriedade que será salva nesta coluna.
             Dictionary<string, PropertyInfo> propertyTableDictionary = new Dictionary<string, PropertyInfo>(propertyInfoCollection.Length);
@@ -549,8 +515,6 @@ namespace Dlp.Connectors {
 
                 // Verifica se a propriedade é Nullable. Caso seja, obtém o tipo genérico.
                 if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>)) { propertyType = propertyType.GetGenericArguments()[0]; }
-
-                this.WriteOutput("BulkInsert", string.Format("Mapeando a coluna '{0}' para o tipo '{1}'.", propertyInfo.Name, propertyType.Name));
 
                 // Obtém os atributos da propriedade.
                 Attribute[] attributes = Attribute.GetCustomAttributes(propertyInfo);
@@ -577,8 +541,6 @@ namespace Dlp.Connectors {
                 propertyTableDictionary.Add(columnName, propertyInfo);
             }
 
-            this.WriteOutput("BulkInsert", "Iniciando o preenchimento DataTable com os dados recebidos.");
-
             do {
                 // Cria uma nova linha que será adicionada ao Datatable.
                 DataRow dataRow = dataTable.NewRow();
@@ -600,15 +562,8 @@ namespace Dlp.Connectors {
                     // Define o timeout da operação.
                     sqlBulkCopy.BulkCopyTimeout = this.CommandTimeoutInSeconds;
 
-                    this.WriteOutput("BulkInsert", "Abrindo a conexão com o banco de dados.");
-
                     // Abre a conexão com o banco de dados.
                     this.OpenConnection();
-
-                    this.WriteOutput("BulkInsert", string.Format("Transaction Isolation Level: {0}", (this.Transaction != null) ? this.Transaction.IsolationLevel.ToString() : "null"));
-                    this.WriteOutput("BulkInsert", string.Format("SqlBulkCopyOptions: {0}", sqlBulkCopyOptions));
-
-                    this.WriteOutput("BulkInsert", "Mapeando as colunas do DataTable com as colunas do banco de dados.");
 
                     // Mapeia cada coluna do DataTable com sua respectiva coluna no banco de dados. Por isso é necessário que as propriedades tenham o mesmo nome das colunas no banco de dados.
                     for (int i = 0; i < dataTable.Columns.Count; i++) { sqlBulkCopy.ColumnMappings.Add(dataTable.Columns[i].Caption, dataTable.Columns[i].Caption); }
@@ -619,19 +574,13 @@ namespace Dlp.Connectors {
                     // Define a quantidade máxima de registros a serem enviados por vez para o servidor. Utilizar entre 5000 e 10000 para evitar timeouts.
                     sqlBulkCopy.BatchSize = 5000;
 
-                    this.WriteOutput("BulkInsert", "Enviando as instruções para serem executadas no servidor.");
-
                     // Insere as informações no banco de dados.
                     sqlBulkCopy.WriteToServer(dataTable);
-
-                    this.WriteOutput("BulkInsert", "Operação concluída.");
                 }
             }
             catch (Exception ex) {
 
                 this.Close();
-
-                this.WriteOutput("BulkInsert", string.Format("Exceção no processamento: {0}.", ex));
 
                 throw;
             }
@@ -644,8 +593,6 @@ namespace Dlp.Connectors {
         /// <param name="command">Command responsável pela execução da query.</param>
         /// <param name="parameters">Objeto contendo as propriedades a serem mepeadas para os parâmetros.</param>
         private void AddParameters(string query, SqlCommand command, object parameters) {
-
-            this.WriteOutput("AddParameters", "Adicionando os parâmetros da query.");
 
             // Verifica se existem parâmetros a serem adicionados.
             if (parameters == null) { return; }
@@ -699,8 +646,6 @@ namespace Dlp.Connectors {
                 // Se o valor for uma string nula, define o valor como DBNull. Caso contrário, utiliza o valor do objeto. Se o valor do objeto for nulo, utiliza novamente DBNull.
                 parameter.Value = value ?? DBNull.Value;
 
-                this.WriteOutput("AddParameters", string.Format("Adicionando parâmetro '{0}' com o valor '{1}'.", parameter.ParameterName, parameter.Value));
-
                 // Validações adicionais antes de preencher o valor do objeto.
                 if (value != null) {
 
@@ -731,8 +676,6 @@ namespace Dlp.Connectors {
 
             Type returnType = typeof(T);
 
-            this.WriteOutput("InternalReader", string.Format("Obtendo as propriedades do tipo '{0}'.", returnType.Name));
-
             // Armazena todas as propriedades do objeto. Importante obter a propriedade desta coleção para que a busca possa ser case insensitive, ao contrário do GetProperty do reflection.
             PropertyInfo[] returnTypeProperties = returnType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
@@ -748,11 +691,9 @@ namespace Dlp.Connectors {
 
                     // Caso o valor da coluna seja nulo, não é necessário fazer mapeamentos adicionais.
                     if (reader.IsDBNull(0)) {
-                        this.WriteOutput("InternalReader", "Nada encontrado na consulta.");
                         continue;
                     }
 
-                    this.WriteOutput("InternalReader", string.Format("Encontrado o valor '{0}'.", reader[0]));
                     yield return (T)Convert.ChangeType(reader[0], returnType);
 
                 }
@@ -764,8 +705,6 @@ namespace Dlp.Connectors {
                     for (int i = 0; i < reader.FieldCount; i++) {
                         columns.Add(new KeyValuePair<string, object>(reader.GetName(i), reader[i]));
                     }
-
-                    this.WriteOutput("InternalReader", string.Format("Criando a instancia do tipo '{0}'.", returnType.Name));
 
                     T returnInstance = Activator.CreateInstance<T>();
                     IList<string> mappedProperties = null;
@@ -795,8 +734,6 @@ namespace Dlp.Connectors {
 
             Type returnType = typeof(T);
 
-            this.WriteOutput("InternalReader", string.Format("Obtendo as propriedades do tipo '{0}'.", returnType.Name));
-
             // Armazena todas as propriedades do objeto. Importante obter a propriedade desta coleção para que a busca possa ser case insensitive, ao contrário do GetProperty do reflection.
             PropertyInfo[] returnTypeProperties = returnType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
@@ -819,7 +756,6 @@ namespace Dlp.Connectors {
 
                     // Caso o valor da coluna seja nulo, não é necessário fazer mapeamentos adicionais.
                     if (reader.IsDBNull(0) == true) {
-                        this.WriteOutput("InternalReader", "Nada encontrado na consulta.");
                         continue;
                     }
 
@@ -828,8 +764,6 @@ namespace Dlp.Connectors {
 
                     // Adiciona o registro preenchido na coleção que será retornada.
                     returnCollection.Add(returnInstance);
-
-                    this.WriteOutput("InternalReader", string.Format("Encontrado o valor '{0}'.", reader[0]));
                 }
                 else {
 
@@ -841,8 +775,6 @@ namespace Dlp.Connectors {
                     for (int i = 0; i < reader.FieldCount; i++) {
                         columns.Add(new KeyValuePair<string, object>(reader.GetName(i), reader[i]));
                     }
-
-                    this.WriteOutput("InternalReader", string.Format("Criando a instancia do tipo '{0}'.", returnType.Name));
 
                     returnInstance = Activator.CreateInstance<T>();
 
@@ -888,8 +820,6 @@ namespace Dlp.Connectors {
             // Caso o valor encontrado no banco seja nulo, não é necessário obter o seu valor, passa para a próxima propriedade.
             if (databaseValue == null) { return false; }
 
-            this.WriteOutput("ParseProperty", string.Format("Mapeando os dados da coluna '{0}' para o objeto {1}.", columnName, returnType.Name));
-
             // Extrai os dados da coluna que estamos trabalhando, a partir do schema.
             DataRow dataRow = schemaTable.Select("ColumnName = '" + columnName + "' AND ColumnOrdinal = " + ordinal).FirstOrDefault();
 
@@ -909,8 +839,6 @@ namespace Dlp.Connectors {
 
                 explicitClassName = aliasData[0];
                 explicitPropertyName = aliasData[1];
-
-                this.WriteOutput("ParseProperty", string.Format("Mapeamento explícito da propriedade '{0}' para o objeto {1}.", aliasData[1], aliasData[0]));
             }
 
             // Armazena o nome real da propriedade.
@@ -969,64 +897,6 @@ namespace Dlp.Connectors {
             // Caso não exista uma propriedade para receber o valor retornado, sai do método.
             if (propertyInfo == null) { return false; }
 
-            //this.WriteOutput("ParseProperty", string.Format("Tabela de origem da coluna '{0}': '{1}'.", columnName, tableName));
-
-            //if (propertyInfo == null && string.IsNullOrWhiteSpace(tableName) == true) { return false; }
-
-            //if (string.IsNullOrWhiteSpace(tableName) == false) {
-
-            //	//  Se a propriedade não foi encontrada, não é possível fazer o mapeamento do valor da coluna.
-            //	if ((returnType.GetProperty(memberName) != null || propertyInfo == null || mappedProperties.IndexOf(returnType.Name + "." + propertyInfo.Name) >= 0) && (propertyInfo == null || (propertyInfo.PropertyType.FullName.IndexOf("System.") < 0 && propertyInfo.PropertyType.IsEnum == false))) {
-
-            //		this.WriteOutput("ParseProperty", string.Format("Nenhuma propriedade encontrada no objeto '{0}' para a coluna '{1}'.", returnType.Name, propertyName));
-
-            //		// Procura uma propriedade com o mesmo nome da tabela.
-            //		PropertyInfo subPropertyInfo = returnTypeProperties.FirstOrDefault(p => p.Name.Equals(explicitClassName ?? tableName, StringComparison.OrdinalIgnoreCase));
-
-            //		// Sai do método caso não exista uma propriedade com o nome da tabela.
-            //		if (subPropertyInfo == null) { return false; }
-
-            //		// Armazena o tipo da sub-propriedade.
-            //		Type subPropertyType = subPropertyInfo.PropertyType;
-
-            //		// Sai do método caso a propriedade já tenha sido mapeada.
-            //		if (mappedProperties.Contains(returnType.Name + "." + subPropertyType.Name + "." + propertyName) == true) { return false; }
-
-            //		// Verifica se a propriedade a ser mapeada é do tipo enum.
-            //		if (subPropertyType.IsEnum == true) {
-
-            //			object value = Enum.Parse(subPropertyType, databaseValue.ToString(), true);
-
-            //			// Define o valor da propriedade.
-            //			subPropertyInfo.SetValue(returnInstance, value, null);
-
-            //			// Adiciona a propriedade na lista de dados já mapeados.
-            //			mappedProperties.Add(returnType.Name + "." + subPropertyType.Name + "." + propertyName);
-
-            //			return true;
-            //		}
-
-            //		// Tenta obter uma instancia para o sub-objeto. Caso não exista uma definida, cria uma nova.
-            //		object subPropertyInstance = subPropertyInfo.GetValue(returnInstance, null) ?? Activator.CreateInstance(subPropertyType);
-
-            //		PropertyInfo[] subPropertyTypeProperties = subPropertyType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-
-            //		// Verifica se a propriedade comporta o valor encontrado no banco de dados.
-            //		if (this.ParseProperty(subPropertyType, subPropertyTypeProperties, schemaTable, subPropertyInstance, propertyName ?? columnName, databaseValue, ordinal, mappedProperties) == true) {
-
-            //			// Define o valor da propriedade encontrada.
-            //			subPropertyInfo.SetValue(returnInstance, subPropertyInstance, null);
-
-            //			// Adiciona a propriedade na lista de dados já mapeados.
-            //			mappedProperties.Add(returnType.Name + "." + subPropertyType.Name + "." + subPropertyInfo.Name);
-
-            //			return true;
-            //		}
-
-            //		return false;
-            //	}
-            //}
-
             // Define o valor da propriedade encontrada.
             if (propertyInfo.CanWrite == true) {
 
@@ -1042,8 +912,6 @@ namespace Dlp.Connectors {
                     // Converte o tipo do banco de dados para o tipo correto da propriedade que receberá o valor.
                     if (value.GetType() != propertyType) { value = Convert.ChangeType(value, propertyType); }
                 }
-
-                this.WriteOutput("ParseProperty", string.Format("Mapeando valor '{0}' para a propriedade '{1}' do objeto '{2}'.", value, propertyInfo.Name, returnType.Name));
 
                 // Define o valor da propriedade.
                 propertyInfo.SetValue(returnInstance, value, null);
@@ -1168,20 +1036,6 @@ namespace Dlp.Connectors {
         }
 
         #endregion
-
-        private void WriteOutput(string operationName, string description) {
-
-            // Caso exista alguém aguardando pela saída das operações, dispara o evento.
-            if (this.OnOutput != null) {
-
-                try {
-                    this.OnOutput(this, OutputEventArgs.Create(operationName, description));
-                }
-                catch (Exception) {
-
-                }
-            }
-        }
 
         /// <summary>
         /// Closes the connection to the database. This is the preferred method of closing any open connection.

@@ -4,13 +4,13 @@
     <id>Dlp.Connectors.dll</id>
 		<title>DLP Connectors</title>
 		<iconUrl>http://www.stone.com.br/img/stone32x32.png</iconUrl>
-    <version>1.0.8</version>
+    <version>1.1.0</version>
     <authors>Stone Pagamentos S/A</authors>
     <owners>Stone Pagamentos S/A</owners>
     <projectUrl>http://stone-payments.github.io/Dlp.Connectors</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Database connector for MSSQL with ADO.</description>
-    <releaseNotes>Changed the return type for paged queries with the ExecuteReader method.</releaseNotes>
+    <releaseNotes>New property DefaultConnectionString. Set this property with your connection string, so you don't need to inform it each time you create a new instance of the DatabaseConnector.</releaseNotes>
     <copyright>Stone Pagamentos S/A - Copyright 2015</copyright>
     <tags>Database ADO</tags>
     <dependencies>

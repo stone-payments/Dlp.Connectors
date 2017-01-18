@@ -27,3 +27,9 @@ C:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Connectors.pdb
 C:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Debug\Dlp.Connectors.csprojResolveAssemblyReference.cache
 C:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Debug\Dlp.Connectors.dll
 C:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Debug\Dlp.Connectors.pdb
+E:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Connectors.XML
+E:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Connectors.dll
+E:\GitHub\Dlp.Connectors\Dlp.Connectors\bin\Debug\Dlp.Connectors.pdb
+E:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Debug\Dlp.Connectors.csprojResolveAssemblyReference.cache
+E:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Debug\Dlp.Connectors.dll
+E:\GitHub\Dlp.Connectors\Dlp.Connectors\obj\Debug\Dlp.Connectors.pdb
